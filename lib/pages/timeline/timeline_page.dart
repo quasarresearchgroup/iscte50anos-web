@@ -47,7 +47,7 @@ class _TimelinePageState extends State<TimelinePage> {
     });
     mapdata.then((value) {
       if (value.isEmpty) {
-        deleteGetAllEventsFromCsv();
+        deleteGetAllEvents();
       }
     });
   }
@@ -61,29 +61,29 @@ class _TimelinePageState extends State<TimelinePage> {
         title: AppLocalizations.of(context)!.timelineScreen,
         trailing: (!PlatformService.instance.isIos)
             ? IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(TimelineFilterPage.pageRoute);
-                },
-                icon: const Icon(Icons.search),
-              )
+          onPressed: () {
+            Navigator.of(context).pushNamed(TimelineFilterPage.pageRoute);
+          },
+          icon: const Icon(Icons.search),
+        )
             : CupertinoButton(
-                child: const Icon(
-                  CupertinoIcons.search,
-                  color: CupertinoColors.white,
-                ),
-                //color: CupertinoTheme.of(context).primaryContrastingColor,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(TimelineFilterPage.pageRoute);
-                },
-              ),
+          child: const Icon(
+            CupertinoIcons.search,
+            color: CupertinoColors.white,
+          ),
+          //color: CupertinoTheme.of(context).primaryContrastingColor,
+          onPressed: () {
+            Navigator.of(context).pushNamed(TimelineFilterPage.pageRoute);
+          },
+        ),
         leading: DynamicBackIconButton(),
       ),
       floatingActionButton: TimelineDial(
           isDialOpen: isDialOpen,
           deleteTimelineData: deleteTimelineData,
-          refreshTimelineData: deleteGetAllEventsFromCsv),
+          refreshTimelineData: deleteGetAllEvents),
       body: RefreshIndicator(
-        onRefresh: deleteGetAllEventsFromCsv,
+        onRefresh: deleteGetAllEvents,
         child: FutureBuilder<List<Event>>(
           future: mapdata,
           builder: (context, snapshot) {
@@ -95,7 +95,7 @@ class _TimelinePageState extends State<TimelinePage> {
               } else {
                 return Center(
                   child:
-                      Text(AppLocalizations.of(context)!.timelineNothingFound),
+                  Text(AppLocalizations.of(context)!.timelineNothingFound),
                 );
               }
             } else if (snapshot.connectionState != ConnectionState.done) {
@@ -114,16 +114,16 @@ class _TimelinePageState extends State<TimelinePage> {
     return PlatformService.instance.isIos
         ? scaffold
         : Theme(
-            data: Theme.of(context).copyWith(
-              appBarTheme: Theme.of(context)
-                  .appBarTheme
-                  .copyWith(shape: const ContinuousRectangleBorder()),
-            ),
-            child: scaffold,
-          );
+      data: Theme.of(context).copyWith(
+        appBarTheme: Theme.of(context)
+            .appBarTheme
+            .copyWith(shape: const ContinuousRectangleBorder()),
+      ),
+      child: scaffold,
+    );
   }
 
-  Future<void> deleteGetAllEventsFromCsv() async {
+  Future<void> deleteGetAllEvents() async {
     setState(() {
       // _loading = true;
     });
@@ -166,9 +166,9 @@ class _TimelinePageState extends State<TimelinePage> {
     List<Event> databaseEventTable = await DatabaseEventTable.getAll();
     List<Topic> databaseTopicTable = await DatabaseTopicTable.getAll();
     List<EventTopicDBConnection> databaseEventTopicTable =
-        await DatabaseEventTopicTable.getAll();
+    await DatabaseEventTopicTable.getAll();
     List<EventContentDBConnection> databaseEventContentTable =
-        await DatabaseEventContentTable.getAll();
+    await DatabaseEventContentTable.getAll();
 
     widget._logger.d("""databaseContentTable: ${databaseContentTable.length}
     databaseEventTable: ${databaseEventTable.length}

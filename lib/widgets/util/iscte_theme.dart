@@ -9,7 +9,7 @@ class IscteTheme {
   static const Radius appbarRadius = Radius.circular(20);
 
   static const BorderRadius borderRadious =
-      BorderRadius.all(Radius.circular(10));
+  BorderRadius.all(Radius.circular(10));
 
   static final AppBarTheme _appBarTheme = AppBarTheme(
     //backgroundColor: Color.fromRGBO(14, 41, 194, 1),
@@ -36,12 +36,23 @@ class IscteTheme {
   );
 
   static NavigationRailThemeData navigationRailThemeData =
-      const NavigationRailThemeData(
+  const NavigationRailThemeData(
     backgroundColor: iscteColor,
     selectedIconTheme: const IconThemeData(color: Colors.white),
     unselectedIconTheme: const IconThemeData(color: Colors.white70),
     useIndicator: false,
   );
+
+  static ElevatedButtonThemeData get elevatedButtonTheme {
+    return ElevatedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor:
+        MaterialStateColor.resolveWith((states) => Colors.white),
+        backgroundColor:
+        MaterialStateColor.resolveWith((states) => iscteColor),
+      ),
+    );
+  }
 
   static ThemeData get lightThemeData {
     return ThemeData.light().copyWith(
@@ -59,23 +70,16 @@ class IscteTheme {
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           foregroundColor:
-              MaterialStateColor.resolveWith((states) => iscteColor),
+          MaterialStateColor.resolveWith((states) => iscteColor),
         ),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor:
-              MaterialStateColor.resolveWith((states) => Colors.white),
-          backgroundColor:
-              MaterialStateColor.resolveWith((states) => iscteColor),
-        ),
-      ),
+      elevatedButtonTheme: elevatedButtonTheme,
     );
   }
 
   static ThemeData darkThemeData = ThemeData.dark().copyWith(
     floatingActionButtonTheme:
-        const FloatingActionButtonThemeData(backgroundColor: iscteColor),
+    const FloatingActionButtonThemeData(backgroundColor: iscteColor),
     scaffoldBackgroundColor: Colors.black,
     backgroundColor: Colors.black,
     primaryColor: iscteColor,
@@ -92,7 +96,7 @@ class IscteTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         foregroundColor:
-            MaterialStateColor.resolveWith((states) => Colors.white),
+        MaterialStateColor.resolveWith((states) => Colors.white),
         backgroundColor: MaterialStateColor.resolveWith((states) => iscteColor),
       ),
     ),
@@ -105,6 +109,7 @@ class IscteTheme {
     primaryContrastingColor: CupertinoColors.black,
     primaryColor: IscteTheme.iscteColor,
   );
+
 
   static CupertinoThemeData cupertinoDarkThemeData = const CupertinoThemeData(
     barBackgroundColor: IscteTheme.iscteColor,
@@ -119,7 +124,7 @@ class IscteTheme {
     return InputDecoration(
       contentPadding: const EdgeInsets.only(left: 25, right: 25),
       border: const UnderlineInputBorder(
-          //border: OutlineInputBorder(
+        //border: OutlineInputBorder(
           borderRadius: BorderRadius.all(IscteTheme.appbarRadius)),
       hintText: hint,
       errorText: errorText,
