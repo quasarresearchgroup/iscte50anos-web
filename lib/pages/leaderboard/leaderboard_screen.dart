@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iscte_spots/services/leaderboard/leaderboard_service.dart';
-import 'package:iscte_spots/widgets/util/constants.dart';
+import 'package:iscte_spots/helper/constants.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:logger/logger.dart';
 
@@ -43,7 +43,8 @@ class _LeaderBoardPageState extends State<LeaderBoardPage>
   late Map<String, dynamic> affiliationMap;
 
   Future<String> loadAffiliationData() async {
-    var jsonText = await rootBundle.loadString('Resources/affiliations.json');
+    var jsonText =
+        await rootBundle.loadString('Resources/Affiliations/affiliations.json');
     setState(
         () => affiliationMap = json.decode(utf8.decode(jsonText.codeUnits)));
     return 'success';
@@ -179,7 +180,8 @@ class _AffiliationLeaderboardState extends State<AffiliationLeaderboard>
   }
 
   Future<String> loadAffiliationData() async {
-    var jsonText = await rootBundle.loadString('Resources/affiliations.json');
+    var jsonText =
+        await rootBundle.loadString('Resources/Affiliations/affiliations.json');
     readJson = true;
     setState(
         () => affiliationMap = json.decode(utf8.decode(jsonText.codeUnits)));

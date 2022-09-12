@@ -1,3 +1,4 @@
+import 'package:iscte_spots/models/database/tables/database_spot_table.dart';
 import 'package:iscte_spots/models/puzzle_piece.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
@@ -9,6 +10,7 @@ class DatabasePuzzlePieceTable {
 
   static const table = 'puzzlePieceTable';
 
+  static const columnSpotId = "spot_id";
   static const columnRow = "row";
   static const columnColumn = "column";
   static const columnMaxRow = "max_row";
@@ -16,16 +18,30 @@ class DatabasePuzzlePieceTable {
   static const columnLeft = "left";
   static const columnTop = "top";
 
-  static Future onCreate(Database db, int version) async {
+  /* static String initScript = '''
+      CREATE TABLE puzzlePieceTable(
+      row INTEGER NOT NULL,
+      column INTEGER NOT NULL,
+      max_row INTEGER NOT NULL,
+      max_column INTEGER NOT NULL,
+      left REAL NOT NULL,
+      top REAL NOT NULL,
+      PRIMARY KEY( row,  column )
+      )
+    ''';*/
+
+  static Future onCreate(Database db) async {
     db.execute('''
       CREATE TABLE $table(
+      $columnSpotId INTEGER NOT NULL,
       $columnRow INTEGER NOT NULL,
       $columnColumn INTEGER NOT NULL,
       $columnMaxRow INTEGER NOT NULL,
       $columnMaxColumn INTEGER NOT NULL,
       $columnLeft REAL NOT NULL,
       $columnTop REAL NOT NULL,
-      PRIMARY KEY( $columnRow,  $columnColumn )
+      PRIMARY KEY( $columnRow,  $columnColumn ),
+      FOREIGN KEY (`$columnSpotId`) REFERENCES `${DatabaseSpotTable.table}` (`${DatabaseSpotTable.columnId}`)
       )
     ''');
     _logger.d("Created $table");
@@ -46,7 +62,29 @@ class DatabasePuzzlePieceTable {
     return contentList;
   }
 
-  static void add(PuzzlePiece puzzlePiece) async {
+  static Future<List<PuzzlePiece>> getAllFromSpot(int spotId,
+      {int? row, int? col}) async {
+    DatabaseHelper instance = DatabaseHelper.instance;
+    Database db = await instance.database;
+    List<Map<String, Object?>> contents = row != null && col != null
+        ? await db.query(
+            table,
+            where: '$columnSpotId = ? AND $columnRow = ? AND $columnColumn = ?',
+            whereArgs: [spotId, row, col],
+          )
+        : await db.query(
+            table,
+            where: '$columnSpotId = ?',
+            whereArgs: [spotId],
+          );
+
+    List<PuzzlePiece> contentList = contents.isNotEmpty
+        ? contents.map((e) => PuzzlePiece.fromMap(e)).toList()
+        : [];
+    return contentList;
+  }
+
+  static Future<void> add(PuzzlePiece puzzlePiece) async {
     DatabaseHelper instance = DatabaseHelper.instance;
     Database db = await instance.database;
     await db.insert(
@@ -57,7 +95,7 @@ class DatabasePuzzlePieceTable {
     _logger.d("Inserted: $puzzlePiece into $table");
   }
 
-  static void addBatch(List<PuzzlePiece> contents) async {
+  static Future<void> addBatch(List<PuzzlePiece> contents) async {
     DatabaseHelper instance = DatabaseHelper.instance;
     Database db = await instance.database;
     Batch batch = db.batch();

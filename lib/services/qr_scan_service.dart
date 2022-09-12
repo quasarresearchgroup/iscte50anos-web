@@ -5,10 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
-import 'package:iscte_spots/models/content.dart';
+import 'package:iscte_spots/helper/constants.dart';
 import 'package:iscte_spots/models/database/tables/database_page_table.dart';
 import 'package:iscte_spots/models/requests/spot_info_request.dart';
 import 'package:iscte_spots/models/requests/topic_request.dart';
+import 'package:iscte_spots/models/timeline/content.dart';
 import 'package:iscte_spots/models/visited_url.dart';
 import 'package:iscte_spots/pages/home/scanPage/qr_scan_page.dart';
 import 'package:iscte_spots/services/auth/exceptions.dart';
@@ -16,7 +17,6 @@ import 'package:logger/logger.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../widgets/util/constants.dart';
 import 'auth/auth_service.dart';
 import 'auth/openday_login_service.dart';
 

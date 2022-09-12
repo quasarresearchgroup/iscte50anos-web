@@ -1,14 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iscte_spots/models/database/tables/database_spot_table.dart';
 import 'package:iscte_spots/models/requests/spot_info_request.dart';
-import 'package:iscte_spots/models/requests/spot_request.dart';
 import 'package:iscte_spots/models/requests/topic_request.dart';
+import 'package:iscte_spots/models/spot.dart';
 import 'package:iscte_spots/pages/home/scanPage/qr_scan_camera_controls.dart';
 import 'package:iscte_spots/pages/home/scanPage/qr_scan_results.dart';
 import 'package:iscte_spots/services/auth/exceptions.dart';
+import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/services/qr_scan_service.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
@@ -17,10 +17,11 @@ import 'package:synchronized/synchronized.dart';
 
 class QRScanPageOpenDay extends StatefulWidget {
   QRScanPageOpenDay(
-      {Key? key, required this.changeImage, required this.completedAllPuzzle})
+      {Key? key /*, required this.changeImage*/,
+      required this.completedAllPuzzle})
       : super(key: key);
   final Logger _logger = Logger();
-  final void Function(Future<SpotRequest> request) changeImage;
+  //final void Function(Future<SpotRequest> request) changeImage;
   final void Function() completedAllPuzzle;
   @override
   State<StatefulWidget> createState() => QRScanPageOpenDayState();
@@ -108,13 +109,23 @@ class QRScanPageOpenDayState extends State<QRScanPageOpenDay> {
 
             if (continueScan && spotInfoRequest.id != null) {
               _lastScan = now;
+
+              Spot spot =
+                  (await DatabaseSpotTable.getAllWithIds([spotInfoRequest.id!]))
+                      .first;
+              if (!spot.visited) {
+                spot.visited = true;
+                await DatabaseSpotTable.update(spot);
+              }
               Future<TopicRequest> topicRequest = QRScanService.topicRequest(
                   context: context, topicID: spotInfoRequest.id!);
               TopicRequest topicRequestCompleted = await topicRequest;
               widget._logger.d("spotInfoRequest: $topicRequestCompleted");
 
-              Navigator.of(context).pushNamed(QRScanResults.pageRoute,
-                  arguments: topicRequestCompleted.contentList);
+              Navigator.of(context).pushNamed(
+                QRScanResults.pageRoute,
+                arguments: topicRequestCompleted.contentList,
+              );
             }
           }
         } on LoginException {
@@ -133,7 +144,7 @@ class QRScanPageOpenDayState extends State<QRScanPageOpenDay> {
   Future<bool> launchConfirmationDialog(context, String topicTitle) async {
     bool continueScan = false;
 
-    if (Platform.isIOS) {
+    if (PlatformService.instance.isIos) {
       await showCupertinoDialog(
           context: context,
           builder: (context) {
@@ -141,7 +152,7 @@ class QRScanPageOpenDayState extends State<QRScanPageOpenDay> {
               title: Text(AppLocalizations.of(context)!.qrScanConfirmation),
               content: Text(topicTitle),
               actions: [
-                TextButton(
+                CupertinoButton(
                   child: Text(
                       AppLocalizations.of(context)!.qrScanConfirmationCancel),
                   onPressed: () {
@@ -150,7 +161,7 @@ class QRScanPageOpenDayState extends State<QRScanPageOpenDay> {
                     Navigator.pop(context);
                   },
                 ),
-                TextButton(
+                CupertinoButton(
                   child: Text(
                       AppLocalizations.of(context)!.qrScanConfirmationAccept),
                   onPressed: () {
