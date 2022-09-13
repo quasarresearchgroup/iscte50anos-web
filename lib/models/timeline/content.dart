@@ -1,5 +1,4 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:iscte_spots/models/database/tables/database_content_table.dart';
 import 'package:logger/logger.dart';
 
 enum ContentType {
@@ -27,6 +26,7 @@ class Content {
     this.type,
     this.eventId,
   });
+
   final int? id;
   final String? description;
   final String link;
@@ -41,20 +41,20 @@ class Content {
   }
 
   factory Content.fromMap(Map<String, dynamic> json) => Content(
-        id: json[DatabaseContentTable.columnId],
-        description: json[DatabaseContentTable.columnDescription],
-        link: json[DatabaseContentTable.columnLink],
-        type: contentTypefromString(json[DatabaseContentTable.columnType]),
-        eventId: json[DatabaseContentTable.columnEventId],
+        id: json["_id"],
+        description: json["description"],
+        link: json["link"],
+        type: contentTypefromString(json["type"]),
+        eventId: json["event_id"],
       );
 
   Map<String, dynamic> toMap() {
     return {
-      DatabaseContentTable.columnId: id,
-      DatabaseContentTable.columnDescription: description,
-      DatabaseContentTable.columnLink: link,
-      DatabaseContentTable.columnType: type != null ? type!.name : null,
-      DatabaseContentTable.columnEventId: eventId,
+      "_id": id,
+      "description": description,
+      "link": link,
+      "type": type != null ? type!.name : null,
+      "event_id": eventId,
     };
   }
 

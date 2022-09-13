@@ -118,7 +118,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   ClipRRect buildmaterial(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.only(
+      borderRadius: const BorderRadius.only(
         topLeft: IscteTheme.appbarRadius,
         topRight: IscteTheme.appbarRadius,
       ),

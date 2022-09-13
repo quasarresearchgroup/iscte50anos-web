@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/helper/datetime_extension.dart';
-import 'package:iscte_spots/models/database/tables/database_event_table.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/timeline_details_page.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
@@ -59,7 +58,6 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
           setState(() {
             widget.data.visited = true;
           });
-          await DatabaseEventTable.update(widget.data);
           Navigator.pushNamed(
             context,
             TimeLineDetailsPage.pageRoute,

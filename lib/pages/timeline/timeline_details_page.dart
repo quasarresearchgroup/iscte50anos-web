@@ -8,19 +8,19 @@ import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/flickr/flickr_url_converter_service.dart';
+import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
+import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/network/error.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
-import 'package:iscte_spots/widgets/my_app_bar.dart';
 
 class TimeLineDetailsPage extends StatefulWidget {
   static const String pageRoute = "${TimelinePage.pageRoute}/detail";
 
-  TimeLineDetailsPage({
+  const TimeLineDetailsPage({
     required this.event,
     Key? key,
   }) : super(key: key);
@@ -35,7 +35,7 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
 
   final Logger _logger = Logger();
 
-  List<YoutubePlayerController> _youtubeControllers = [];
+  final List<YoutubePlayerController> _youtubeControllers = [];
 
   @override
   void initState() {}
@@ -44,15 +44,15 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   Widget build(BuildContext context) {
     Future<List<Content>> allContentFromEvent = widget.event.getContentList;
     Future<List<Topic>> allTopicFromEvent = widget.event.getTopicsList;
-    String subtitleText = "id: " + widget.event.id.toString();
+    String subtitleText = "id: ${widget.event.id}";
     allTopicFromEvent.then((value) {
-      subtitleText += "; topics: " + value.map((e) => e.title ?? "").join(", ");
+      subtitleText += "; topics: ${value.map((e) => e.title ?? "").join(", ")}";
     });
 
     return Scaffold(
       appBar: MyAppBar(
         title: AppLocalizations.of(context)!.timelineDetailsScreen,
-        leading: DynamicBackIconButton(),
+        leading: const DynamicBackIconButton(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

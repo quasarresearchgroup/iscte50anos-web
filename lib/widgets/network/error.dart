@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class NetworkError extends StatelessWidget {
-
   final Function() onRefresh;
 
   const NetworkError({Key? key, required this.onRefresh}) : super(key: key);

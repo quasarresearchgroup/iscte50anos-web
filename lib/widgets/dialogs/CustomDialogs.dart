@@ -1,36 +1,26 @@
-
 import 'package:flutter/material.dart';
 
-showYesNoWarningDialog(String text, Function() yes, BuildContext context){
+showYesNoWarningDialog(String text, Function() yes, BuildContext context) {
   showDialog(
     useRootNavigator: false,
     context: context,
-    builder: (BuildContext
-    context) {
+    builder: (BuildContext context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              20),
+          borderRadius: BorderRadius.circular(20),
         ),
-        title: const Center(
-            child: Text(
-                "Aviso")),
+        title: const Center(child: Text("Aviso")),
         content: Text(text),
-        actionsAlignment: MainAxisAlignment
-            .center,
+        actionsAlignment: MainAxisAlignment.center,
         actions: [
           TextButton(
-            child: const Text(
-                'Não'),
+            child: const Text('Não'),
             onPressed: () {
-              Navigator.of(
-                  context)
-                  .pop();
+              Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: const Text(
-                'Sim'),
+            child: const Text('Sim'),
             onPressed: yes,
           ),
         ],

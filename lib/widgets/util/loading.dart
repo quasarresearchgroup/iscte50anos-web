@@ -15,6 +15,7 @@ class LoadingWidget extends StatelessWidget {
   final Color? backgroundColor;
   final Animation<Color?>? valueColor;
   final double strokeWidth;
+
   @override
   Widget build(BuildContext context) {
     if (!PlatformService.instance.isIos) {

@@ -2,13 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:iscte_spots/models/database/tables/database_event_table.dart';
-import 'package:iscte_spots/models/database/tables/database_topic_table.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/platform_service.dart';
+import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_field.dart';
@@ -18,9 +17,10 @@ import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 
 class TimelineFilterPage extends StatefulWidget {
-  TimelineFilterPage({Key? key}) : super(key: key);
+  TimelineFilterPage({Key? key, required this.defaultEvents}) : super(key: key);
   static const String pageRoute = "${TimelinePage.pageRoute}/filter";
   final Logger _logger = Logger();
+  final List<Event> defaultEvents;
 
   @override
   State<TimelineFilterPage> createState() => _TimelineFilterPageState();
@@ -38,7 +38,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   void initState() {
     searchBarController = TextEditingController();
     super.initState();
-    availableTopics = DatabaseTopicTable.getAll();
+    availableTopics = TimelineTopicService.fetchAllTopics();
   }
 
   @override
@@ -353,14 +353,18 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
 
   void _submitSelection() async {
     Set<Event> setOfEvents = {};
+    /*
     Iterable<Future<void>> map = selectedTopics.map((e) => e.getEventsList.then(
           (List<Event> value) => setOfEvents.addAll(value),
         ));
     for (Future future in map) {
       await future;
-    }
+    }*/
+    List<int> topicIds = selectedTopics.map((e) => e.id).toList();
+    setOfEvents
+        .addAll(await TimelineTopicService.fetchEvents(topicIds: topicIds));
     if (selectedTopics.isEmpty) {
-      setOfEvents.addAll(await DatabaseEventTable.getAll());
+      setOfEvents.addAll(widget.defaultEvents);
     }
 
     widget._logger.d("events from topics: $setOfEvents");

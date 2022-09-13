@@ -1,4 +1,6 @@
+/*
 import 'package:flutter/services.dart';
+
 import 'package:iscte_spots/models/database/tables/database_content_table.dart';
 import 'package:iscte_spots/models/database/tables/database_event_content_table.dart';
 import 'package:iscte_spots/models/database/tables/database_event_table.dart';
@@ -165,3 +167,4 @@ class TimelineCSVService {
     }
   }
 }
+*/

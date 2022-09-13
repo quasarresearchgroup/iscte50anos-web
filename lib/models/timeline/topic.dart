@@ -1,15 +1,12 @@
-import 'package:iscte_spots/models/database/tables/database_event_table.dart';
-import 'package:iscte_spots/models/database/tables/database_event_topic_table.dart';
-import 'package:iscte_spots/models/database/tables/database_topic_table.dart';
-import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:logger/logger.dart';
 
 class Topic {
   Topic({
-    this.id,
+    required this.id,
     this.title,
   });
-  final int? id;
+
+  final int id;
   final String? title;
 
   static Logger logger = Logger();
@@ -20,18 +17,20 @@ class Topic {
   }
 
   factory Topic.fromMap(Map<String, dynamic> json) => Topic(
-        id: json[DatabaseTopicTable.columnId],
-        title: json[DatabaseTopicTable.columnTitle],
+        id: json["id"],
+        title: json["title"],
       );
 
   Map<String, dynamic> toMap() {
     return {
-      DatabaseTopicTable.columnId: id,
-      DatabaseTopicTable.columnTitle: title,
+      "id": id,
+      "title": title,
     };
   }
 
+/*
   Future<List<Event>> get getEventsList async {
+    return TimelineTopicService.fetchEvents(topicIds: [id]);
     assert(id != null);
     List<int> allIdsWithEventId =
         await DatabaseEventTopicTable.getEventIdsFromTopicId(id!);
@@ -39,4 +38,5 @@ class Topic {
         await DatabaseEventTable.getAllWithIds(allIdsWithEventId);
     return topicsList;
   }
+  */
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:iscte_spots/pages/home/nav_drawer/page_routes.dart';
-import 'package:iscte_spots/pages/home/splashScreen/splash.dart';
+import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 
@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
             : IscteTheme.cupertinoLightThemeData,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: SplashScreen(),
+        home: TimelinePage(),
         onGenerateRoute: generatedRoutes,
       );
     } else {
@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
         theme: IscteTheme.lightThemeData,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: SplashScreen(),
+        home: TimelinePage(),
         onGenerateRoute: generatedRoutes,
       );
     }
