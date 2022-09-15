@@ -50,7 +50,7 @@ class _MyAppBarState extends State<MyAppBar> {
         ? AppBar(
             leadingWidth: 100,
             automaticallyImplyLeading: widget.automaticallyImplyLeading,
-            leading: widget.leading ?? const DynamicBackIconButton(),
+            leading: widget.leading,
             title: middle,
             actions: widget.trailing != null ? [widget.trailing!] : null,
           )
