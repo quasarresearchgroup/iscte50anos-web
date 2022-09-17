@@ -33,16 +33,15 @@ class _TimelinePageState extends State<TimelinePage> {
     isDialOpen = ValueNotifier<bool>(false);
   }
 
-  void resetMapData() {
+  Future<void> resetMapData() async {
     setState(() {
       mapdata = TimelineEventService.fetchAllEvents();
     });
-    mapdata.then((value) {
-      FlutterNativeSplash.remove();
-      if (value.isEmpty) {
-        deleteGetAllEvents();
-      }
-    });
+    var list = await mapdata;
+    FlutterNativeSplash.remove();
+    if (list.isEmpty) {
+      deleteGetAllEvents();
+    }
   }
 
   @override

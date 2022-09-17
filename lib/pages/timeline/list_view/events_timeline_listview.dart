@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/timeline_tile.dart';
+import 'package:iscte_spots/pages/timeline/web_scroll_behaviour.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class EventTimelineListView extends StatefulWidget {
@@ -57,15 +58,18 @@ class _EventTimelineListViewState extends State<EventTimelineListView> {
         LineStyle(color: Theme.of(context).focusColor, thickness: 6);
     List<Widget> timelineTiles = [];
 
-    return ListView.builder(
-      itemCount: chosenTimelineList.length,
-      itemBuilder: (context, index) => EventTimelineTile(
-        index: index,
-        isEven: index % 2 == 0,
-        data: chosenTimelineList[index],
-        isFirst: index == 0,
-        isLast: index == chosenTimelineList.length - 1,
-        lineStyle: lineStyle,
+    return ScrollConfiguration(
+      behavior: WebScrollBehaviour(),
+      child: ListView.builder(
+        itemCount: chosenTimelineList.length,
+        itemBuilder: (context, index) => EventTimelineTile(
+          index: index,
+          isEven: index % 2 == 0,
+          data: chosenTimelineList[index],
+          isFirst: index == 0,
+          isLast: index == chosenTimelineList.length - 1,
+          lineStyle: lineStyle,
+        ),
       ),
     );
   }

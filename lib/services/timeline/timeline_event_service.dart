@@ -55,4 +55,17 @@ class TimelineEventService {
     }
     return eventsList;
   }
+
+  static Future<Event> fetchEvent({required int id}) async {
+    http.Response response = await http.get(
+        Uri.parse('${BackEndConstants.API_ADDRESS}/api/events/$id'),
+        headers: <String, String>{
+          'content-type': 'application/json',
+        });
+    var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
+    _logger.d(decodedResponse);
+    // return response.statusCode;
+
+    return Event.fromMap(decodedResponse);
+  }
 }

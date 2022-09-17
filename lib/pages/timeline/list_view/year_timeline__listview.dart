@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iscte_spots/pages/timeline/web_scroll_behaviour.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class YearTimelineListView extends StatefulWidget {
@@ -19,13 +21,13 @@ class YearTimelineListView extends StatefulWidget {
 }
 
 class _YearTimelineListViewState extends State<YearTimelineListView> {
-  //late ScrollController scrollController;
+  late ScrollController scrollController;
   List<Widget> yearsList = [];
 
   @override
   void initState() {
     super.initState();
-    //scrollController = ScrollController();
+    scrollController = ScrollController();
 /*
     for (int index in widget.yearsList) {
       yearsList.add(
@@ -47,7 +49,7 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
   @override
   void dispose() {
     super.dispose();
-    //scrollController.dispose();
+    scrollController.dispose();
   }
 
   @override
@@ -55,23 +57,27 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
     //Scrollable.ensureVisible(yearsList[widget.selectedYear].);
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-      child: ListView.builder(
-          //controller: scrollController,
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.yearsList.length,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: YearTimelineTile(
-                changeYearFunction: widget.changeYearFunction,
-                year: widget.yearsList[index],
-                isSelected: widget.selectedYear == widget.yearsList[index],
-                isFirst: index == 0,
-                isLast: index == widget.yearsList.length - 1,
-              ),
-            );
-          }),
+      child: ScrollConfiguration(
+        behavior: WebScrollBehaviour(),
+        child: ListView.builder(
+            dragStartBehavior: DragStartBehavior.down,
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.yearsList.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: YearTimelineTile(
+                  changeYearFunction: widget.changeYearFunction,
+                  year: widget.yearsList[index],
+                  isSelected: widget.selectedYear == widget.yearsList[index],
+                  isFirst: index == 0,
+                  isLast: index == widget.yearsList.length - 1,
+                ),
+              );
+            }),
+      ),
     );
   }
 }

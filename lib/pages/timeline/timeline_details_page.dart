@@ -8,6 +8,7 @@ import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/flickr/flickr_url_converter_service.dart';
+import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/network/error.dart';
@@ -21,10 +22,10 @@ class TimeLineDetailsPage extends StatefulWidget {
   static const String pageRoute = "${TimelinePage.pageRoute}/detail";
 
   const TimeLineDetailsPage({
-    required this.event,
+    required this.eventId,
     Key? key,
   }) : super(key: key);
-  final Event event;
+  final int eventId;
 
   @override
   State<TimeLineDetailsPage> createState() => _TimeLineDetailsPageState();
@@ -32,67 +33,82 @@ class TimeLineDetailsPage extends StatefulWidget {
 
 class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   final double textweight = 2;
-
   final Logger _logger = Logger();
+  late final Future<Event> event;
 
   final List<YoutubePlayerController> _youtubeControllers = [];
 
   @override
-  void initState() {}
+  void initState() {
+    event = TimelineEventService.fetchEvent(id: widget.eventId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Future<List<Content>> allContentFromEvent = widget.event.getContentList;
-    Future<List<Topic>> allTopicFromEvent = widget.event.getTopicsList;
-    String subtitleText = "id: ${widget.event.id}";
-    allTopicFromEvent.then((value) {
-      subtitleText += "; topics: ${value.map((e) => e.title ?? "").join(", ")}";
-    });
-
     return Scaffold(
       appBar: MyAppBar(
         title: AppLocalizations.of(context)!.timelineDetailsScreen,
         leading: const DynamicBackIconButton(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: FutureBuilder<List<Content>>(
-              future: allContentFromEvent,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  _logger.d("event: ${widget.event} , data:${snapshot.data!} ");
-                  return ListView.builder(
-                    addAutomaticKeepAlives: true,
-                    itemCount: (snapshot.data?.length)! + 2,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return ListTile(
-                          //leading: widget.event.scopeIcon,
-                          title: Text(widget.event.title),
-                          subtitle: Text(subtitleText),
-                        );
-                      } else if (index == 1) {
-                        return const Divider(
-                          color: Colors.white,
-                        );
-                      } else {
-                        return buildContent(snapshot.data![index - 2]);
-                      }
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return NetworkError(onRefresh: () {
-                    setState(() {
-                      allContentFromEvent = widget.event.getContentList;
-                    });
-                  });
-                } else {
-                  return const LoadingWidget();
-                }
-              }),
-        ),
-      ),
+      body: FutureBuilder<Event>(
+          future: event,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              Event snapshotEvent = snapshot.data!;
+              Future<List<Content>> allContentFromEvent =
+                  snapshotEvent.getContentList;
+              Future<List<Topic>> allTopicFromEvent =
+                  snapshotEvent.getTopicsList;
+              String subtitleText = "id: ${snapshotEvent.id}";
+              allTopicFromEvent.then((value) {
+                subtitleText +=
+                    "; topics: ${value.map((e) => e.title ?? "").join(", ")}";
+              });
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: FutureBuilder<List<Content>>(
+                      future: allContentFromEvent,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          _logger.d(
+                              "event: $snapshotEvent , data:${snapshot.data!} ");
+                          return ListView.builder(
+                            addAutomaticKeepAlives: true,
+                            itemCount: (snapshot.data?.length)! + 2,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return ListTile(
+                                  //leading: snapshotEvent.scopeIcon,
+                                  title: Text(snapshotEvent.title),
+                                  subtitle: Text(subtitleText),
+                                );
+                              } else if (index == 1) {
+                                return const Divider(
+                                  color: Colors.white,
+                                );
+                              } else {
+                                return buildContent(snapshot.data![index - 2]);
+                              }
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return NetworkError(onRefresh: () {
+                            setState(() {
+                              allContentFromEvent =
+                                  snapshotEvent.getContentList;
+                            });
+                          });
+                        } else {
+                          return const LoadingWidget();
+                        }
+                      }),
+                ),
+              );
+            } else {
+              return LoadingWidget();
+            }
+          }),
     );
   }
 

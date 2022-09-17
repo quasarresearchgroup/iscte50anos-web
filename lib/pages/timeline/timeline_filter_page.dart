@@ -7,6 +7,7 @@ import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/platform_service.dart';
+import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
@@ -17,10 +18,10 @@ import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 
 class TimelineFilterPage extends StatefulWidget {
-  TimelineFilterPage({Key? key, required this.defaultEvents}) : super(key: key);
+  TimelineFilterPage({Key? key, this.defaultEvents}) : super(key: key);
   static const String pageRoute = "${TimelinePage.pageRoute}/filter";
   final Logger _logger = Logger();
-  final List<Event> defaultEvents;
+  List<Event>? defaultEvents;
 
   @override
   State<TimelineFilterPage> createState() => _TimelineFilterPageState();
@@ -39,6 +40,13 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
     searchBarController = TextEditingController();
     super.initState();
     availableTopics = TimelineTopicService.fetchAllTopics();
+    if (widget.defaultEvents == null) {
+      Future<List<Event>> fetchAllEvents =
+          TimelineEventService.fetchAllEvents();
+      fetchAllEvents.then((value) {
+        widget.defaultEvents = value ?? [];
+      });
+    }
   }
 
   @override
@@ -364,7 +372,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
     setOfEvents
         .addAll(await TimelineTopicService.fetchEvents(topicIds: topicIds));
     if (selectedTopics.isEmpty) {
-      setOfEvents.addAll(widget.defaultEvents);
+      setOfEvents.addAll(widget.defaultEvents ?? []);
     }
 
     widget._logger.d("events from topics: $setOfEvents");
