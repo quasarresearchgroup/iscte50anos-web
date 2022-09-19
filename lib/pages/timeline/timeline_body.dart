@@ -9,10 +9,12 @@ class TimeLineBody extends StatefulWidget {
     Key? key,
     required this.mapdata,
     this.initialchosenYear,
+    required this.handleEventSelection,
   }) : super(key: key);
 
   final int? initialchosenYear;
   final List<Event> mapdata;
+  final void Function(int) handleEventSelection;
 
   @override
   State<TimeLineBody> createState() => _TimeLineBodyState();
@@ -77,6 +79,7 @@ class _TimeLineBodyState extends State<TimeLineBody> {
               key: UniqueKey(),
               timeLineMap: widget.mapdata,
               timelineYear: chosenYear!,
+              handleEventSelection: widget.handleEventSelection,
             ),
           ),
         ),

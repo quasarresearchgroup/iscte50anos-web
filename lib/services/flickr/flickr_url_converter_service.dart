@@ -16,7 +16,7 @@ class FlickrUrlConverterService {
           'https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${FlickrService.key}&photo_id=$photoId&format=json&nojsoncallback=1'));
       if (photoData.statusCode == 200) {
         final jsonPhotoData = jsonDecode(photoData.body)["photo"];
-        _logger.d(jsonPhotoData);
+        _logger.v(jsonPhotoData);
 
         var farm = jsonPhotoData["farm"];
         var server = jsonPhotoData["server"];
@@ -35,7 +35,7 @@ class FlickrUrlConverterService {
         throw Exception(photoData.statusCode);
       }
     } catch (e) {
-      _logger.d(e);
+      _logger.e(e);
       rethrow;
     }
   }

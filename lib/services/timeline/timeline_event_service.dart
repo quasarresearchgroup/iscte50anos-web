@@ -24,7 +24,7 @@ class TimelineEventService {
         headers: <String, String>{
           'content-type': 'application/json',
         });
-    _logger.d(response.body);
+    //_logger.d(response.body);
 
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
     // _logger.d(decodedResponse);
@@ -33,8 +33,8 @@ class TimelineEventService {
     for (var entry in decodedResponse) {
       eventsList.add(Event.fromMap(entry));
     }
-
-    _logger.d(eventsList);
+    _logger.i("fetched events from server");
+    //_logger.d(eventsList);
     return eventsList;
   }
 

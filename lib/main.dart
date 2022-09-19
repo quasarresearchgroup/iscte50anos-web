@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:iscte_spots/pages/home/nav_drawer/page_routes.dart';
 import 'package:iscte_spots/services/routes/timeline_route_information_parser.dart';
 import 'package:iscte_spots/services/routes/timeline_router_delegate.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
@@ -13,8 +10,8 @@ const int qrPageIndex = 1;
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  usePathUrlStrategy();
+  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  //usePathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -67,7 +64,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
+/*
 Route? generatedRoutes(RouteSettings routeSettings) {
   Widget widget =
       PageRouter.resolve(routeSettings.name ?? "", routeSettings.arguments);
@@ -87,4 +84,4 @@ Route? generatedRoutes(RouteSettings routeSettings) {
       );
     },
   );
-}
+}*/

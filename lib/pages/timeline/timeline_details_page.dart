@@ -6,7 +6,6 @@ import 'package:iscte_spots/models/flickr/flickr_photo.dart';
 import 'package:iscte_spots/models/timeline/content.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
-import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/flickr/flickr_url_converter_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
@@ -19,13 +18,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TimeLineDetailsPage extends StatefulWidget {
-  static const String pageRoute = "${TimelinePage.pageRoute}/detail";
-
   const TimeLineDetailsPage({
     required this.eventId,
     Key? key,
   }) : super(key: key);
   final int eventId;
+  static const String pageRoute = "event";
+  static const ValueKey pageKey = ValueKey(pageRoute);
 
   @override
   State<TimeLineDetailsPage> createState() => _TimeLineDetailsPageState();

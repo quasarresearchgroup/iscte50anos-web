@@ -9,9 +9,11 @@ class EventTimelineListView extends StatefulWidget {
     Key? key,
     required this.timeLineMap,
     required this.timelineYear,
+    required this.handleEventSelection,
   }) : super(key: key);
   final List<Event> timeLineMap;
   final int timelineYear;
+  final void Function(int) handleEventSelection;
 
   @override
   State<EventTimelineListView> createState() => _EventTimelineListViewState();
@@ -65,10 +67,11 @@ class _EventTimelineListViewState extends State<EventTimelineListView> {
         itemBuilder: (context, index) => EventTimelineTile(
           index: index,
           isEven: index % 2 == 0,
-          data: chosenTimelineList[index],
+          event: chosenTimelineList[index],
           isFirst: index == 0,
           isLast: index == chosenTimelineList.length - 1,
           lineStyle: lineStyle,
+          handleEventSelection: widget.handleEventSelection,
         ),
       ),
     );

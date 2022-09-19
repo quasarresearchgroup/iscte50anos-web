@@ -17,7 +17,7 @@ class TimelineTopicService {
         return "$previousValue&topic=$element";
       }
     });
-    _logger.d(string);
+    //_logger.d(string);
     http.Response response = await http.get(
         Uri.parse('${BackEndConstants.API_ADDRESS}/api/events/?$string'),
         headers: <String, String>{
@@ -25,12 +25,13 @@ class TimelineTopicService {
         });
 
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
-    _logger.d(decodedResponse);
+    //_logger.d(decodedResponse);
     // return response.statusCode;
     List<Event> eventsList = [];
     for (var entry in decodedResponse) {
       eventsList.add(Event.fromMap(entry));
     }
+    _logger.i("fetched events with topics: $topicIds");
     return eventsList;
   }
 
@@ -42,12 +43,13 @@ class TimelineTopicService {
         });
 
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
-    _logger.d(decodedResponse);
+    //_logger.d(decodedResponse);
     // return response.statusCode;
     List<Topic> topicsList = [];
     for (var entry in decodedResponse) {
       topicsList.add(Topic.fromMap(entry));
     }
+    _logger.i("fetched topics from event: $eventId");
     return topicsList;
   }
 
@@ -59,12 +61,13 @@ class TimelineTopicService {
         });
 
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
-    _logger.d(decodedResponse);
+    //_logger.d(decodedResponse);
     // return response.statusCode;
     List<Topic> topicsList = [];
     for (var entry in decodedResponse) {
       topicsList.add(Topic.fromMap(entry));
     }
+    _logger.i("fetched all topics");
     return topicsList;
   }
 }

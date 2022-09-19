@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
-import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
@@ -18,10 +17,16 @@ import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 
 class TimelineFilterPage extends StatefulWidget {
-  TimelineFilterPage({Key? key, this.defaultEvents}) : super(key: key);
-  static const String pageRoute = "${TimelinePage.pageRoute}/filter";
+  TimelineFilterPage({
+    Key? key,
+    this.defaultEvents,
+    required this.handleEventSelection,
+  }) : super(key: key);
+  static const String pageRoute = "filter";
+  static const ValueKey pageKey = ValueKey(pageRoute);
   final Logger _logger = Logger();
   List<Event>? defaultEvents;
+  final Function(int) handleEventSelection;
 
   @override
   State<TimelineFilterPage> createState() => _TimelineFilterPageState();
@@ -33,7 +38,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   late final Future<List<Topic>> availableTopics;
   late final TextEditingController searchBarController;
 
-  bool advancedSearch = false;
+  bool advancedSearch = true;
 
   @override
   void initState() {
@@ -44,7 +49,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       Future<List<Event>> fetchAllEvents =
           TimelineEventService.fetchAllEvents();
       fetchAllEvents.then((value) {
-        widget.defaultEvents = value ?? [];
+        widget.defaultEvents = value;
       });
     }
   }
@@ -383,7 +388,8 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         return eventTitle.contains(textSearchBar) ||
             textSearchBar.contains(eventTitle);
       }).toSet();
-      widget._logger.d("filtered events: $setOfEvents");
+      widget._logger
+          .d("filtering with $textSearchBar; resulting events: $setOfEvents");
     }
     if (mounted) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -400,6 +406,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
             ),
             body: TimeLineBody(
               mapdata: setOfEvents.toList(),
+              handleEventSelection: widget.handleEventSelection,
             ),
           ),
         ),

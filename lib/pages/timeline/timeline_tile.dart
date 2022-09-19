@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/helper/datetime_extension.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
-import 'package:iscte_spots/pages/timeline/timeline_details_page.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class EventTimelineTile extends StatefulWidget {
@@ -10,17 +9,19 @@ class EventTimelineTile extends StatefulWidget {
     required this.lineStyle,
     required this.isFirst,
     required this.isLast,
-    required this.data,
+    required this.event,
     required this.isEven,
     required this.index,
+    required this.handleEventSelection,
   }) : super(key: key);
 
   final int index;
   final bool isFirst;
   final bool isLast;
   final bool isEven;
-  final Event data;
+  final Event event;
   final LineStyle lineStyle;
+  final void Function(int) handleEventSelection;
 
   @override
   State<EventTimelineTile> createState() => _EventTimelineTileState();
@@ -55,12 +56,13 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
         customBorder: const StadiumBorder(),
         onTap: () async {
           setState(() {
-            widget.data.visited = true;
+            widget.event.visited = true;
           });
-          Navigator.pushNamed(
+          widget.handleEventSelection(widget.event.id);
+          /* Navigator.pushNamed(
             context,
             "${TimeLineDetailsPage.pageRoute}/${widget.data.id}",
-          );
+          );*/
         },
         child: TimelineTile(
           beforeLineStyle: widget.lineStyle,
@@ -86,7 +88,7 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    widget.data.dateTime.monthName(),
+                    widget.event.dateTime.monthName(),
                     style: TextStyle(
                       color: widget.isEven ? Colors.white : null,
                     ),
@@ -94,7 +96,7 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                     maxLines: 1,
                   ),
                   Text(
-                    widget.data.dateTime.day.toString(),
+                    widget.event.dateTime.day.toString(),
                     style: TextStyle(
                       color: widget.isEven ? Colors.white : null,
                     ),
@@ -104,8 +106,8 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
             ),
           ),
           endChild: TimelineInformationChild(
-              isEven: widget.isEven, data: widget.data),
-          startChild: Center(child: widget.data.scopeIcon),
+              isEven: widget.isEven, data: widget.event),
+          startChild: Center(child: widget.event.scopeIcon),
         ),
       ),
     );
