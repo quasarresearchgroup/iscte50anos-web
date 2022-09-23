@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/helper/datetime_extension.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
+import 'package:iscte_spots/pages/timeline/timeline_custom_list_tile.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class EventTimelineTile extends StatefulWidget {
@@ -10,7 +11,6 @@ class EventTimelineTile extends StatefulWidget {
     required this.isFirst,
     required this.isLast,
     required this.event,
-    required this.isEven,
     required this.index,
     required this.handleEventSelection,
   }) : super(key: key);
@@ -18,7 +18,6 @@ class EventTimelineTile extends StatefulWidget {
   final int index;
   final bool isFirst;
   final bool isLast;
-  final bool isEven;
   final Event event;
   final LineStyle lineStyle;
   final void Function(int) handleEventSelection;
@@ -31,9 +30,12 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
   final Color color2 = Colors.white.withOpacity(0.3);
   double opacity = 0;
 
+  late bool isEven;
+
   @override
   void initState() {
     super.initState();
+    isEven = widget.index % 2 == 0;
     Future.delayed(
       Duration(milliseconds: 100 * (widget.index + 1)),
       () {
@@ -46,7 +48,23 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(builder: (context, orientation) {
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: opacity,
+      child: EventCustomTimelineTile(
+        isFirst: widget.isFirst,
+        isLast: widget.isLast,
+        indicator: EventTimelineIndicator(isEven: isEven, event: widget.event),
+        endChild: TimelineInformationChild(isEven: isEven, data: widget.event),
+        startChild: Center(child: widget.event.scopeIcon),
+        isEven: isEven,
+        onTap: () {
+          widget.handleEventSelection(widget.index);
+        },
+      ),
+    );
+
+    /*return OrientationBuilder(builder: (context, orientation) {
       return InkWell(
         splashColor: color2,
         highlightColor: color2,
@@ -125,7 +143,50 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
           ),
         ),
       );
-    });
+    });*/
+  }
+}
+
+class EventTimelineIndicator extends StatelessWidget {
+  const EventTimelineIndicator({
+    Key? key,
+    required this.isEven,
+    required this.event,
+  }) : super(key: key);
+
+  final bool isEven;
+  final Event event;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: isEven ? Colors.transparent : Theme.of(context).primaryColor,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              event.dateTime.monthName(),
+              style: TextStyle(
+                color: isEven ? Colors.white : null,
+              ),
+              textScaleFactor: 1,
+              maxLines: 1,
+            ),
+            Text(
+              event.dateTime.day.toString(),
+              style: TextStyle(
+                color: isEven ? Colors.white : null,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -138,54 +199,51 @@ class TimelineInformationChild extends StatelessWidget {
 
   final bool isEven;
   final Event data;
-  final double padding = 20;
+  final double padding = 10;
 
   @override
   Widget build(BuildContext context) {
     Color? textColor = !isEven ? Colors.white : null;
-    return Padding(
-      padding: EdgeInsets.all(padding),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isEven ? Colors.transparent : Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(padding),
-                child: Text(
-                  data.title,
-                  maxLines: 3,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.05,
-                    color: textColor,
-                  ),
+    return Container(
+      decoration: BoxDecoration(
+        color: !isEven ? Colors.transparent : Theme.of(context).primaryColor,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: Text(
+                data.title,
+                maxLines: 3,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  //fontSize: MediaQuery.of(context).size.width * 0.05,
+                  color: textColor,
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Icon(
-                    Icons.adaptive.arrow_forward,
-                    color: textColor,
-                  ),
-                  data.visited
-                      ? Icon(Icons.check, color: textColor)
-                      //? const Icon(Icons.check, color: Colors.lightGreenAccent)
-                      : Container(),
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(padding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(
+                  Icons.adaptive.arrow_forward,
+                  color: textColor,
+                ),
+                data.visited
+                    ? Icon(Icons.check, color: textColor)
+                    //? const Icon(Icons.check, color: Colors.lightGreenAccent)
+                    : Container(),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

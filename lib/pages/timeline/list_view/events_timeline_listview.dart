@@ -66,7 +66,6 @@ class _EventTimelineListViewState extends State<EventTimelineListView> {
         itemCount: chosenTimelineList.length,
         itemBuilder: (context, index) => EventTimelineTile(
           index: index,
-          isEven: index % 2 == 0,
           event: chosenTimelineList[index],
           isFirst: index == 0,
           isLast: index == chosenTimelineList.length - 1,
