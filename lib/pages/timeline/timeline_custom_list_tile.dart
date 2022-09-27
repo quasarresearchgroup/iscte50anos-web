@@ -41,8 +41,9 @@ class EventCustomTimelineTile extends StatelessWidget {
           child: Card(
             color: Colors.transparent,
             elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             child:
                 Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               Flexible(flex: (100 * lineXY).round(), child: startChild),

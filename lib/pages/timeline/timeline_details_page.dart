@@ -70,8 +70,15 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                       future: allContentFromEvent,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
+                          snapshot.data!.sort((Content a, Content b) {
+                            if (a.type != null && b.type != null) {
+                              return b.type!.index - a.type!.index;
+                            } else {
+                              return b.id - a.id;
+                            }
+                          });
                           _logger.d(
-                              "event: $snapshotEvent , data:${snapshot.data!} ");
+                              "event: $snapshotEvent\ndata:${snapshot.data!} ");
                           return ListView.builder(
                             addAutomaticKeepAlives: true,
                             itemCount: (snapshot.data?.length)! + 2,

@@ -29,6 +29,7 @@ class Event {
     required this.date,
     required this.scope,
 //    required this.topics,
+    required this.contentCount,
     this.visited = false,
   });
 
@@ -37,13 +38,15 @@ class Event {
   final int date;
   final EventScope? scope;
   bool visited;
+  int contentCount;
   //final List<Topic> topics;
 
   static Logger logger = Logger();
 
   @override
   String toString() {
-    return 'Event{id: $id, title: $title, date: $date, scope: $scope, visited: $visited}';
+    // return 'Event{id: $id, title: $title, date: $date, scope: $scope, visited: $visited}';
+    return 'Event{id: $id, title: $title, date: $date, scope: $scope, visited: $visited,contentCount: $contentCount}';
   }
 
   String getDateString() {
@@ -72,6 +75,7 @@ class Event {
           : json["visited"] == 1
               ? true
               : false,
+      contentCount: json["num_content"],
       //topics: topics,
     );
   }

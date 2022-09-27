@@ -2,12 +2,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 
 enum ContentType {
-  image,
-  video,
+  doc,
   web_page,
   social_media,
-  doc,
+  video,
   music,
+  image,
 }
 
 ContentType? contentTypefromString(String? input) {
@@ -20,14 +20,14 @@ ContentType? contentTypefromString(String? input) {
 
 class Content {
   Content({
-    this.id,
+    required this.id,
     this.description,
     required this.link,
     this.type,
     this.eventId,
   });
 
-  final int? id;
+  final int id;
   final String? description;
   final String link;
   final ContentType? type;
@@ -41,7 +41,7 @@ class Content {
   }
 
   factory Content.fromMap(Map<String, dynamic> json) => Content(
-        id: json["_id"],
+        id: json["id"],
         description: json["description"],
         link: json["link"],
         type: contentTypefromString(json["type"]),
@@ -50,7 +50,7 @@ class Content {
 
   Map<String, dynamic> toMap() {
     return {
-      "_id": id,
+      "id": id,
       "description": description,
       "link": link,
       "type": type != null ? type!.name : null,

@@ -28,40 +28,28 @@ class EventTimelineTile extends StatefulWidget {
 
 class _EventTimelineTileState extends State<EventTimelineTile> {
   final Color color2 = Colors.white.withOpacity(0.3);
-  double opacity = 0;
-
   late bool isEven;
 
   @override
   void initState() {
     super.initState();
     isEven = widget.index % 2 == 0;
-    Future.delayed(
-      Duration(milliseconds: 100 * (widget.index + 1)),
-      () {
-        setState(() {
-          opacity = 1;
-        });
-      },
-    ).onError((error, stackTrace) => null);
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
-      opacity: opacity,
-      child: EventCustomTimelineTile(
-        isFirst: widget.isFirst,
-        isLast: widget.isLast,
-        indicator: EventTimelineIndicator(isEven: isEven, event: widget.event),
-        endChild: TimelineInformationChild(isEven: isEven, data: widget.event),
-        startChild: Center(child: widget.event.scopeIcon),
-        isEven: isEven,
-        onTap: () {
-          widget.handleEventSelection(widget.index);
-        },
-      ),
+    return EventCustomTimelineTile(
+      isFirst: widget.isFirst,
+      isLast: widget.isLast,
+      indicator: EventTimelineIndicator(isEven: isEven, event: widget.event),
+      endChild: TimelineInformationChild(isEven: isEven, data: widget.event),
+      startChild: Center(child: widget.event.scopeIcon),
+      isEven: isEven,
+      onTap: widget.event.contentCount > 0
+          ? () {
+              widget.handleEventSelection(widget.event.id);
+            }
+          : null,
     );
 
     /*return OrientationBuilder(builder: (context, orientation) {
@@ -209,41 +197,61 @@ class TimelineInformationChild extends StatelessWidget {
         color: !isEven ? Colors.transparent : Theme.of(context).primaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: Text(
-                data.title,
-                maxLines: 3,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  //fontSize: MediaQuery.of(context).size.width * 0.05,
-                  color: textColor,
+      child: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(padding),
+                child: Text(
+                  data.title,
+                  maxLines: 3,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    //fontSize: MediaQuery.of(context).size.width * 0.05,
+                    color: textColor,
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(padding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  Icons.adaptive.arrow_forward,
-                  color: textColor,
-                ),
-                data.visited
-                    ? Icon(Icons.check, color: textColor)
-                    //? const Icon(Icons.check, color: Colors.lightGreenAccent)
-                    : Container(),
-              ],
-            ),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.all(padding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (data.contentCount > 0)
+                    Icon(
+                      Icons.adaptive.arrow_forward,
+                      color: textColor,
+                    ),
+                  if (data.contentCount > 0)
+                    data.visited
+                        ? Icon(Icons.check, color: textColor)
+                        //? const Icon(Icons.check, color: Colors.lightGreenAccent)
+                        : Container(),
+                  if (data.contentCount > 0)
+                    Container(
+                      decoration: BoxDecoration(
+                          color: isEven
+                              ? Theme.of(context).backgroundColor
+                              : Theme.of(context).primaryColor,
+                          shape: BoxShape.circle),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                            Center(child: Text(data.contentCount.toString())),
+                      ),
+                    )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
