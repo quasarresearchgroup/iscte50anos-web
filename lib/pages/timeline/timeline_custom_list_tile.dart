@@ -21,7 +21,7 @@ class EventCustomTimelineTile extends StatelessWidget {
 
   final bool isEven;
   final void Function()? onTap;
-  final Color color2 = Colors.white.withOpacity(0.3);
+
   @override
   Widget build(BuildContext context) {
     Widget sizedBox = const SizedBox(
@@ -44,20 +44,22 @@ class EventCustomTimelineTile extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            child:
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Flexible(flex: (100 * lineXY).round(), child: startChild),
-              sizedBox,
-              Column(
-                children: [
-                  verticalConnector,
-                  indicator,
-                  verticalConnector,
-                ],
-              ),
-              sizedBox,
-              Flexible(flex: (100 * (1 - lineXY)).round(), child: endChild),
-            ]),
+            child: Row(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                startChild,
+                sizedBox,
+                Column(
+                  children: [
+                    verticalConnector,
+                    indicator,
+                    verticalConnector,
+                  ],
+                ),
+                sizedBox,
+                endChild,
+              ],
+            ),
           ),
         );
       }),

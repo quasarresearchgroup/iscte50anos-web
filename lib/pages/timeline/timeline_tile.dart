@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/helper/datetime_extension.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
-import 'package:iscte_spots/pages/timeline/timeline_custom_list_tile.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class EventTimelineTile extends StatefulWidget {
@@ -38,100 +37,70 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
 
   @override
   Widget build(BuildContext context) {
-    return EventCustomTimelineTile(
-      isFirst: widget.isFirst,
-      isLast: widget.isLast,
-      indicator: EventTimelineIndicator(isEven: isEven, event: widget.event),
-      endChild: TimelineInformationChild(isEven: isEven, data: widget.event),
-      startChild: Center(child: widget.event.scopeIcon),
-      isEven: isEven,
-      onTap: widget.event.contentCount > 0
-          ? () {
-              widget.handleEventSelection(widget.event.id);
-            }
-          : null,
+    Widget sizedBox = const SizedBox(
+      width: 10,
     );
 
-    /*return OrientationBuilder(builder: (context, orientation) {
-      return InkWell(
-        splashColor: color2,
-        highlightColor: color2,
-        enableFeedback: true,
-        customBorder: const StadiumBorder(),
-        onTap: () async {
-          setState(() {
-            widget.event.visited = true;
-          });
-          widget.handleEventSelection(widget.event.id);
-          /* Navigator.pushNamed(
-              context,
-              "${TimeLineDetailsPage.pageRoute}/${widget.data.id}",
-            );*/
-        },
-        child: TimelineTile(
-          beforeLineStyle: widget.lineStyle,
-          afterLineStyle: widget.lineStyle,
-          axis: TimelineAxis.vertical,
-          alignment: TimelineAlign.manual,
-          lineXY: 0.30,
-          isFirst: widget.isFirst,
-          isLast: widget.isLast,
-          indicatorStyle: IndicatorStyle(
-            width: MediaQuery.of(context).size.width * 0.08,
-            height: MediaQuery.of(context).size.width * 0.1,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-            indicator: Container(
-              decoration: BoxDecoration(
-                color: !widget.isEven
-                    ? Colors.transparent
-                    : Theme.of(context).primaryColor,
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+    Widget verticalConnector = Expanded(
+      child: Container(
+        width: 5,
+        color: Colors.white,
+      ),
+    );
+
+    return SizedBox(
+      height: 100,
+      child: InkWell(
+        onTap: widget.event.contentCount > 0
+            ? () {
+                widget.handleEventSelection(widget.event.id);
+              }
+            : null,
+        child: Card(
+          margin: EdgeInsets.zero,
+          color: Colors.transparent,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              if (widget.event.scopeIcon != null)
+                SizedBox(
+                    width: 300,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: widget.event.scopeIcon!,
+                    )),
+              sizedBox,
+              SizedBox(
+                width: 100,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          widget.event.dateTime.monthName(),
-                          style: TextStyle(
-                            color: widget.isEven ? Colors.white : null,
-                          ),
-                          textScaleFactor: 1,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          widget.event.dateTime.day.toString(),
-                          style: TextStyle(
-                            color: widget.isEven ? Colors.white : null,
-                          ),
-                        ),
-                      ),
-                    ),
+                    !widget.isFirst ? verticalConnector : const Spacer(),
+                    EventTimelineIndicator(isEven: isEven, event: widget.event),
+                    !widget.isLast ? verticalConnector : const Spacer(),
                   ],
                 ),
               ),
-            ),
-          ),
-          endChild: TimelineInformationChild(
-              isEven: widget.isEven, data: widget.event),
-          startChild: Padding(
-            padding:
-                EdgeInsets.all(orientation == Orientation.landscape ? 20 : 0),
-            child: Center(child: widget.event.scopeIcon),
+              sizedBox,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TimelineInformationChild(
+                      isEven: isEven, data: widget.event),
+                ),
+              ),
+            ],
           ),
         ),
-      );
-    });*/
+      ),
+    );
   }
 }
 
@@ -148,11 +117,13 @@ class EventTimelineIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 70,
       decoration: BoxDecoration(
-          color: isEven ? Colors.transparent : Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
+        color: isEven ? Colors.transparent : Theme.of(context).primaryColor,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,31 +168,30 @@ class TimelineInformationChild extends StatelessWidget {
         color: !isEven ? Colors.transparent : Theme.of(context).primaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(0.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(padding),
-                child: Text(
-                  data.title,
-                  maxLines: 3,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    //fontSize: MediaQuery.of(context).size.width * 0.05,
-                    color: textColor,
-                  ),
+            Padding(
+              padding: EdgeInsets.all(padding),
+              child: Text(
+                data.title,
+                maxLines: 3,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  //fontSize: MediaQuery.of(context).size.width * 0.05,
+                  color: textColor,
                 ),
               ),
             ),
             Padding(
               padding: EdgeInsets.all(padding),
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   if (data.contentCount > 0)
