@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
-import 'package:iscte_spots/pages/timeline/timeline_dial.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
@@ -90,11 +89,11 @@ class _TimelinePageState extends State<TimelinePage> {
                       },
                     ),
             ),
-            floatingActionButton: TimelineDial(
+            /*floatingActionButton: TimelineDial(
               isDialOpen: isDialOpen,
               deleteTimelineData: deleteTimelineData,
               refreshTimelineData: deleteGetAllEvents,
-            ),
+            ),*/
             body: RefreshIndicator(
               onRefresh: deleteGetAllEvents,
               child: Builder(

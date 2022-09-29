@@ -168,60 +168,56 @@ class TimelineInformationChild extends StatelessWidget {
         color: !isEven ? Colors.transparent : Theme.of(context).primaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Padding(
               padding: EdgeInsets.all(padding),
               child: Text(
                 data.title,
                 maxLines: 3,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  //fontSize: MediaQuery.of(context).size.width * 0.05,
-                  color: textColor,
-                ),
+                style: TextStyle(color: textColor),
+                //fontSize: MediaQuery.of(context).size.width * 0.05,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (data.contentCount > 0)
-                    Icon(
-                      Icons.adaptive.arrow_forward,
-                      color: textColor,
+          ),
+          Padding(
+            padding: EdgeInsets.all(padding),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (data.contentCount > 0)
+                  Icon(
+                    Icons.adaptive.arrow_forward,
+                    color: textColor,
+                  ),
+                if (data.contentCount > 0)
+                  data.visited
+                      ? Icon(Icons.check, color: textColor)
+                      //? const Icon(Icons.check, color: Colors.lightGreenAccent)
+                      : Container(),
+                if (data.contentCount > 0)
+                  Container(
+                    decoration: BoxDecoration(
+                        color: isEven
+                            ? Theme.of(context).backgroundColor
+                            : Theme.of(context).primaryColor,
+                        shape: BoxShape.circle),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: Text(data.contentCount.toString())),
                     ),
-                  if (data.contentCount > 0)
-                    data.visited
-                        ? Icon(Icons.check, color: textColor)
-                        //? const Icon(Icons.check, color: Colors.lightGreenAccent)
-                        : Container(),
-                  if (data.contentCount > 0)
-                    Container(
-                      decoration: BoxDecoration(
-                          color: isEven
-                              ? Theme.of(context).backgroundColor
-                              : Theme.of(context).primaryColor,
-                          shape: BoxShape.circle),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:
-                            Center(child: Text(data.contentCount.toString())),
-                      ),
-                    )
-                ],
-              ),
-            )
-          ],
-        ),
+                  )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
