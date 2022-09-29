@@ -208,29 +208,19 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   Widget selectedTopicsWidget(final bool isEmptySelectedTopics,
       final double dividerWidth, final double dividerThickness) {
     Widget wrap = Wrap(
+      spacing: 5,
+      runSpacing: 5,
       alignment: WrapAlignment.start,
       direction: Axis.horizontal,
       children: selectedTopics
-          .map((e) => Card(
-                color: IscteTheme.iscteColor,
-                shape: const StadiumBorder(),
-                child: InkWell(
-                  customBorder: const StadiumBorder(),
-                  onTap: () {
-                    setState(() {
-                      selectedTopics.remove(e);
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      e.title ?? "",
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
+          .map((Topic topic) => Chip(
+                label: Text(topic.title ?? ""),
+                backgroundColor: IscteTheme.iscteColor,
+                onDeleted: () {
+                  setState(() {
+                    selectedTopics.remove(topic);
+                  });
+                },
               ))
           .toList(),
     );
@@ -240,7 +230,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
           ? Container()
           : Column(children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
