@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/helper/helper_methods.dart';
 import 'package:iscte_spots/models/flickr/flickr_photo.dart';
 import 'package:iscte_spots/models/timeline/content.dart';
@@ -34,19 +33,29 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   final double textweight = 2;
   final Logger _logger = Logger();
   late final Future<Event> event;
+  late final Future<String> eventTitle;
 
   final List<YoutubePlayerController> _youtubeControllers = [];
 
   @override
   void initState() {
     event = TimelineEventService.fetchEvent(id: widget.eventId);
+    eventTitle = event.then((value) => value.title);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: AppLocalizations.of(context)!.timelineDetailsScreen,
+        middle: FutureBuilder<String>(
+            future: eventTitle,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text("Details: ${snapshot.data!}");
+              } else {
+                return const Text("Details");
+              }
+            }),
         leading: const DynamicBackIconButton(),
       ),
       body: FutureBuilder<Event>(
