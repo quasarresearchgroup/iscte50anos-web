@@ -14,7 +14,7 @@ import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class TimeLineDetailsPage extends StatefulWidget {
   const TimeLineDetailsPage({
@@ -34,8 +34,7 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   final Logger _logger = Logger();
   late final Future<Event> event;
   late final Future<String> eventTitle;
-
-  final List<YoutubePlayerController> _youtubeControllers = [];
+  final List<YoutubePlayerController> _videoControllers = [];
 
   @override
   void initState() {
@@ -129,26 +128,22 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
 
   Widget buildContent(Content content) {
     if (content.link.contains("youtube")) {
-      YoutubePlayerController _controller = YoutubePlayerController(
-        initialVideoId: YoutubePlayer.convertUrlToId(content.link)!,
-        flags: const YoutubePlayerFlags(
-          autoPlay: false,
+      late YoutubePlayerController controller;
+      controller = YoutubePlayerController(
+        params: const YoutubePlayerParams(
+          showControls: true,
           mute: false,
+          showFullscreenButton: true,
           loop: false,
-          hideControls: false,
-          isLive: false,
-          forceHD: false,
         ),
-      );
-      return Wrap(
-        children: [
-          YoutubePlayerBuilder(
-              player: YoutubePlayer(
-                controller: _controller,
-                showVideoProgressIndicator: true,
-              ),
-              builder: (context, player) => player),
-        ],
+      )..onInit = () {
+          controller.loadVideo(content.link);
+          controller.pauseVideo();
+        };
+      _videoControllers.add(controller);
+
+      return YoutubePlayer(
+        controller: controller,
       );
     } else if (content.link.contains("www.flickr.com/photos")) {
       return FutureBuilder<FlickrPhoto>(
@@ -210,16 +205,16 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
 
   @override
   void deactivate() {
-    for (YoutubePlayerController controller in _youtubeControllers) {
-      controller.pause();
+    for (YoutubePlayerController controller in _videoControllers) {
+      controller.pauseVideo();
     }
     super.deactivate();
   }
 
   @override
   void dispose() {
-    for (YoutubePlayerController controller in _youtubeControllers) {
-      controller.dispose();
+    for (YoutubePlayerController controller in _videoControllers) {
+      controller.close();
     }
     super.dispose();
   }
