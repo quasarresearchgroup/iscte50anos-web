@@ -28,6 +28,9 @@ class EventTimelineTile extends StatefulWidget {
 class _EventTimelineTileState extends State<EventTimelineTile> {
   final Color color2 = Colors.white.withOpacity(0.3);
   late bool isEven;
+  final int flagFlex = 15;
+  final int informationFlex = 85;
+  final int dateFlex = 10;
 
   @override
   void initState() {
@@ -66,18 +69,17 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               if (widget.event.scopeIcon != null)
-                SizedBox(
-                    width: 300,
+                Flexible(
+                    flex: flagFlex,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: widget.event.scopeIcon!,
                     )),
-              sizedBox,
-              SizedBox(
-                width: 100,
+              Flexible(
+                flex: dateFlex,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,8 +90,8 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                   ],
                 ),
               ),
-              sizedBox,
               Expanded(
+                flex: informationFlex,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TimelineInformationChild(
@@ -191,6 +193,7 @@ class TimelineInformationChild extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (data.contentCount > 0)
                   Icon(
@@ -203,16 +206,10 @@ class TimelineInformationChild extends StatelessWidget {
                       //? const Icon(Icons.check, color: Colors.lightGreenAccent)
                       : Container(),
                 if (data.contentCount > 0)
-                  Container(
-                    decoration: BoxDecoration(
-                        color: isEven
-                            ? Theme.of(context).backgroundColor
-                            : Theme.of(context).primaryColor,
-                        shape: BoxShape.circle),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(child: Text(data.contentCount.toString())),
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                        Center(child: Text("#${data.contentCount.toString()}")),
                   )
               ],
             ),
