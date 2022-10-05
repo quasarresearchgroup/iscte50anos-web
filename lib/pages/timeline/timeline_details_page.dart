@@ -35,23 +35,27 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   late final Future<Event> event;
   late final Future<String> eventTitle;
   final List<YoutubePlayerController> _videoControllers = [];
+  late Future<List<Topic>> allTopicFromEvent;
+  late Future<List<Content>> allContentFromEvent;
+  String subtitleText = "";
 
   @override
   void initState() {
     event = TimelineEventService.fetchEvent(id: widget.eventId);
     eventTitle = event.then((value) => value.title);
+    event.then((value) {
+      allContentFromEvent = value.getContentList;
+      allTopicFromEvent = value.getTopicsList;
+      subtitleText = "id: ${value.id}";
+      allTopicFromEvent.then((value) {
+        subtitleText +=
+            "; topics: ${value.map((e) => e.title ?? "").join(", ")}";
+      });
+    });
   }
 
   void addVideoController(YoutubePlayerController controller) {
     _videoControllers.add(controller);
-  }
-
-  Widget contentListChildBuilder(context, index, snapshot) {
-    return TimelineDetailContent(
-      content: snapshot.data![index],
-      isEven: index % 2 == 0,
-      addVideoControllerCallback: addVideoController,
-    );
   }
 
   @override
@@ -74,95 +78,100 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Event snapshotEvent = snapshot.data!;
-              Future<List<Content>> allContentFromEvent =
-                  snapshotEvent.getContentList;
-              Future<List<Topic>> allTopicFromEvent =
-                  snapshotEvent.getTopicsList;
-              String subtitleText = "id: ${snapshotEvent.id}";
-              allTopicFromEvent.then((value) {
-                subtitleText +=
-                    "; topics: ${value.map((e) => e.title ?? "").join(", ")}";
-              });
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Center(
-                  child: FutureBuilder<List<Content>>(
-                      future: allContentFromEvent,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          snapshot.data!.sort((Content a, Content b) {
-                            if (a.type != null && b.type != null) {
-                              return b.type!.index - a.type!.index;
-                            } else {
-                              return b.id - a.id;
-                            }
-                          });
-                          _logger.d(
-                              "event: $snapshotEvent\ndata:${snapshot.data!} ");
-                          double mediaQuerryWidth =
-                              MediaQuery.of(context).size.width;
-                          int gridViewCrossAxisCountMediaQuery =
-                              mediaQuerryWidth > 500
-                                  ? mediaQuerryWidth > 1000
-                                      ? 4
-                                      : 2
-                                  : 1;
-                          return SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ListTile(
-                                  leading: snapshotEvent.scopeIcon,
-                                  title: Text(snapshotEvent.title),
-                                  subtitle: Text(subtitleText),
-                                ),
-                                const Divider(
-                                  color: Colors.white,
-                                ),
-                                gridViewCrossAxisCountMediaQuery != 1
-                                    ? GridView.builder(
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: (snapshot
-                                                      .data?.length)! <
-                                                  gridViewCrossAxisCountMediaQuery
-                                              ? (snapshot.data?.length)!
-                                              : gridViewCrossAxisCountMediaQuery,
-                                        ),
-                                        scrollDirection: Axis.vertical,
-                                        addAutomaticKeepAlives: true,
-                                        shrinkWrap: true,
-                                        itemCount: (snapshot.data?.length)!,
-                                        itemBuilder: (context, index) {
-                                          return contentListChildBuilder(
-                                              context, index, snapshot);
-                                        })
-                                    : ListView.builder(
-                                        scrollDirection: Axis.vertical,
-                                        addAutomaticKeepAlives: true,
-                                        shrinkWrap: true,
-                                        itemCount: (snapshot.data?.length)!,
-                                        itemBuilder: (context, index) {
-                                          return contentListChildBuilder(
-                                              context, index, snapshot);
-                                        }),
-                              ],
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return NetworkError(onRefresh: () {
-                            setState(() {
-                              allContentFromEvent =
-                                  snapshotEvent.getContentList;
-                            });
-                          });
+
+              return FutureBuilder<List<Content>>(
+                  future: allContentFromEvent,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      snapshot.data!.sort((Content a, Content b) {
+                        if (a.type != null && b.type != null) {
+                          return b.type!.index - a.type!.index;
                         } else {
-                          return const LoadingWidget();
+                          return b.id - a.id;
                         }
-                      }),
-                ),
-              );
+                      });
+
+                      List<Content> gridContents = [];
+                      List<Content> listContents = [];
+                      for (Content content in snapshot.data!) {
+                        if (content.type == ContentType.image ||
+                            content.type == ContentType.video) {
+                          gridContents.add(content);
+                        } else {
+                          listContents.add(content);
+                        }
+                      }
+
+                      _logger.d(
+                          "event: $snapshotEvent\ndata:${snapshot.data!}\nlistContents: $listContents\ngridContents: $gridContents");
+                      double mediaQuerryWidth =
+                          MediaQuery.of(context).size.width;
+                      int gridViewCrossAxisCountMediaQuery =
+                          mediaQuerryWidth > 500
+                              ? mediaQuerryWidth > 1000
+                                  ? 4
+                                  : 2
+                              : 1;
+                      return CustomScrollView(
+                        scrollDirection: Axis.vertical,
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: ListTile(
+                              leading: snapshotEvent.scopeIcon,
+                              title: Text(snapshotEvent.title),
+                              subtitle: Text(subtitleText),
+                            ),
+                          ),
+                          const SliverToBoxAdapter(
+                            child: Divider(),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return TimelineDetailListContent(
+                                  content: listContents[index],
+                                  isEven: index % 2 == 0,
+                                );
+                              },
+                              childCount: (listContents.length),
+                            ),
+                          ),
+                          const SliverToBoxAdapter(
+                            child: Divider(),
+                          ),
+                          SliverGrid(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return TimelineDetailGridContent(
+                                  content: gridContents[index],
+                                  isEven: index % 2 == 0,
+                                  addVideoControllerCallback:
+                                      addVideoController,
+                                );
+                              },
+                              addAutomaticKeepAlives: true,
+                              childCount: (gridContents.length),
+                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: (snapshot.data?.length)! <
+                                      gridViewCrossAxisCountMediaQuery
+                                  ? (snapshot.data?.length)!
+                                  : gridViewCrossAxisCountMediaQuery,
+                            ),
+                          )
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return NetworkError(onRefresh: () {
+                        setState(() {
+                          allContentFromEvent = snapshotEvent.getContentList;
+                        });
+                      });
+                    } else {
+                      return const LoadingWidget();
+                    }
+                  });
             } else {
               return const LoadingWidget();
             }
@@ -187,13 +196,40 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   }
 }
 
-class TimelineDetailContent extends StatelessWidget {
-  TimelineDetailContent(
-      {Key? key,
-      required this.content,
-      required this.isEven,
-      required this.addVideoControllerCallback})
-      : super(key: key);
+class TimelineDetailListContent extends StatelessWidget {
+  TimelineDetailListContent({
+    Key? key,
+    required this.isEven,
+    required this.content,
+  }) : super(key: key);
+
+  final bool isEven;
+  final Content content;
+  final Logger _logger = Logger();
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        _logger.d("Tapped $content");
+        if (content.link.isNotEmpty) {
+          HelperMethods.launchURL(content.link);
+        }
+      },
+      tileColor: isEven ? IscteTheme.iscteColor : Colors.transparent,
+      leading: content.contentIcon,
+      title: Text(content.description ?? content.link,
+          maxLines: 2, overflow: TextOverflow.ellipsis),
+    );
+  }
+}
+
+class TimelineDetailGridContent extends StatelessWidget {
+  TimelineDetailGridContent({
+    Key? key,
+    required this.content,
+    required this.isEven,
+    required this.addVideoControllerCallback,
+  }) : super(key: key);
 
   final Content content;
   final bool isEven;
@@ -231,7 +267,6 @@ class TimelineDetailContent extends StatelessWidget {
               return Expanded(
                 child: CachedNetworkImage(
                   fit: BoxFit.contain,
-                  height: 100,
                   imageUrl: photo.url,
                   fadeOutDuration: const Duration(seconds: 1),
                   fadeInDuration: const Duration(seconds: 3),
@@ -250,9 +285,17 @@ class TimelineDetailContent extends StatelessWidget {
       child = null;
     }
     return GridTile(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isEven ? IscteTheme.iscteColor : Colors.transparent,
+            style: BorderStyle.solid,
+            width: 10,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               onTap: () {
@@ -261,7 +304,7 @@ class TimelineDetailContent extends StatelessWidget {
                   HelperMethods.launchURL(content.link);
                 }
               },
-              tileColor: isEven ? IscteTheme.iscteColor : Colors.transparent,
+              // tileColor: isEven ? IscteTheme.iscteColor : Colors.transparent,
               leading: content.contentIcon,
               title: Text(content.description ?? content.link,
                   maxLines: 2, overflow: TextOverflow.ellipsis),
