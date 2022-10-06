@@ -136,9 +136,10 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                               childCount: (listContents.length),
                             ),
                           ),
-                          const SliverToBoxAdapter(
-                            child: Divider(),
-                          ),
+                          if (listContents.isNotEmpty)
+                            const SliverToBoxAdapter(
+                              child: Divider(),
+                            ),
                           SliverGrid(
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
@@ -154,10 +155,11 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                             ),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: (snapshot.data?.length)! <
+                              crossAxisCount: (gridContents.length) <
                                       gridViewCrossAxisCountMediaQuery
-                                  ? (snapshot.data?.length)!
+                                  ? (gridContents.length)
                                   : gridViewCrossAxisCountMediaQuery,
+                              childAspectRatio: 16 / 9,
                             ),
                           )
                         ],
@@ -264,16 +266,13 @@ class TimelineDetailGridContent extends StatelessWidget {
             if (snapshot.hasData) {
               FlickrPhoto photo = snapshot.data!;
 
-              return Expanded(
-                child: CachedNetworkImage(
-                  fit: BoxFit.contain,
-                  imageUrl: photo.url,
-                  fadeOutDuration: const Duration(seconds: 1),
-                  fadeInDuration: const Duration(seconds: 3),
-                  progressIndicatorBuilder: (BuildContext context, String url,
-                          DownloadProgress progress) =>
-                      const LoadingWidget(),
-                ),
+              return CachedNetworkImage(
+                imageUrl: photo.url,
+                fadeOutDuration: const Duration(seconds: 1),
+                fadeInDuration: const Duration(seconds: 3),
+                progressIndicatorBuilder: (BuildContext context, String url,
+                        DownloadProgress progress) =>
+                    const LoadingWidget(),
               );
             } else if (snapshot.hasError) {
               return NetworkError(onRefresh: () {});
@@ -284,34 +283,37 @@ class TimelineDetailGridContent extends StatelessWidget {
     } else {
       child = null;
     }
-    return GridTile(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isEven ? IscteTheme.iscteColor : Colors.transparent,
-            style: BorderStyle.solid,
-            width: 10,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+    return Container(
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isEven ? IscteTheme.iscteColor : Colors.transparent,
+          style: BorderStyle.solid,
+          width: 10,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              onTap: () {
-                _logger.d("Tapped $content");
-                if (content.link.isNotEmpty) {
-                  HelperMethods.launchURL(content.link);
-                }
-              },
-              // tileColor: isEven ? IscteTheme.iscteColor : Colors.transparent,
-              leading: content.contentIcon,
-              title: Text(content.description ?? content.link,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              _logger.d("Tapped $content");
+              if (content.link.isNotEmpty) {
+                HelperMethods.launchURL(content.link);
+              }
+            },
+            child: Row(children: [
+              content.contentIcon,
+              Text(content.description ?? content.link,
                   maxLines: 2, overflow: TextOverflow.ellipsis),
-            ),
-            if (child != null) child,
-          ],
-        ),
+            ]),
+          ),
+          if (child != null) Expanded(child: child),
+        ],
       ),
     );
   }
