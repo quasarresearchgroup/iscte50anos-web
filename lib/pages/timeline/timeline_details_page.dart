@@ -107,8 +107,8 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                       double mediaQuerryWidth =
                           MediaQuery.of(context).size.width;
                       int gridViewCrossAxisCountMediaQuery =
-                          mediaQuerryWidth > 500
-                              ? mediaQuerryWidth > 1000
+                          mediaQuerryWidth > 1000
+                              ? mediaQuerryWidth > 3000
                                   ? 4
                                   : 2
                               : 1;
@@ -125,43 +125,45 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                           const SliverToBoxAdapter(
                             child: Divider(),
                           ),
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                return TimelineDetailListContent(
-                                  content: listContents[index],
-                                  isEven: index % 2 == 0,
-                                );
-                              },
-                              childCount: (listContents.length),
+                          if (listContents.isNotEmpty)
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  return TimelineDetailListContent(
+                                    content: listContents[index],
+                                    isEven: index % 2 == 0,
+                                  );
+                                },
+                                childCount: (listContents.length),
+                              ),
                             ),
-                          ),
                           if (listContents.isNotEmpty)
                             const SliverToBoxAdapter(
                               child: Divider(),
                             ),
-                          SliverGrid(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                return TimelineDetailGridContent(
-                                  content: gridContents[index],
-                                  isEven: index % 2 == 0,
-                                  addVideoControllerCallback:
-                                      addVideoController,
-                                );
-                              },
-                              addAutomaticKeepAlives: true,
-                              childCount: (gridContents.length),
-                            ),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: (gridContents.length) <
-                                      gridViewCrossAxisCountMediaQuery
-                                  ? (gridContents.length)
-                                  : gridViewCrossAxisCountMediaQuery,
-                              childAspectRatio: 16 / 9,
-                            ),
-                          )
+                          if (gridContents.isNotEmpty)
+                            SliverGrid(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  return TimelineDetailGridContent(
+                                    content: gridContents[index],
+                                    isEven: index % 2 == 0,
+                                    addVideoControllerCallback:
+                                        addVideoController,
+                                  );
+                                },
+                                addAutomaticKeepAlives: true,
+                                childCount: (gridContents.length),
+                              ),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: (gridContents.length) <
+                                        gridViewCrossAxisCountMediaQuery
+                                    ? gridContents.length
+                                    : gridViewCrossAxisCountMediaQuery,
+                                childAspectRatio: 16 / 9,
+                              ),
+                            )
                         ],
                       );
                     } else if (snapshot.hasError) {
@@ -252,7 +254,6 @@ class TimelineDetailGridContent extends StatelessWidget {
         ),
       )..onInit = () {
           controller.loadVideo(content.link);
-          controller.pauseVideo();
         };
       addVideoControllerCallback(controller);
 
@@ -288,7 +289,7 @@ class TimelineDetailGridContent extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(
-          color: isEven ? IscteTheme.iscteColor : Colors.transparent,
+          color: IscteTheme.iscteColor,
           style: BorderStyle.solid,
           width: 10,
         ),
@@ -296,21 +297,22 @@ class TimelineDetailGridContent extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {
-              _logger.d("Tapped $content");
-              if (content.link.isNotEmpty) {
-                HelperMethods.launchURL(content.link);
-              }
-            },
-            child: Row(children: [
-              content.contentIcon,
-              Text(content.description ?? content.link,
-                  maxLines: 2, overflow: TextOverflow.ellipsis),
-            ]),
+          ListTile(
+            onTap: content.link.isNotEmpty
+                ? () {
+                    _logger.d("Tapped $content");
+                    HelperMethods.launchURL(content.link);
+                  }
+                : null,
+            title: Text(
+              content.description ?? content.link,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            leading: content.contentIcon,
           ),
           if (child != null) Expanded(child: child),
         ],
