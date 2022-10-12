@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/timeline_details_page.dart';
@@ -25,6 +26,8 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   final Future<List<int>> yearsList = TimelineEventService.fetchYearsList();
   final Future<List<Topic>> availableTopics =
       TimelineTopicService.fetchAllTopics();
+  final Future<List<EventScope>> availableScopes =
+      Future.delayed(Duration(seconds: 2), () => EventScope.values);
 
   final Logger _logger = Logger();
 
@@ -96,6 +99,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
               filterParams: _selectedFilterParams,
               yearsList: yearsList,
               availableTopics: availableTopics,
+              availableScopes: availableScopes,
             ),
           )
         else if (_showFilterPageResult)

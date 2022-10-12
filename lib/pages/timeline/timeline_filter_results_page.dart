@@ -40,11 +40,12 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
         widget.timelineFilterParams.getTopics.map((e) => e.id).toList();
 
     Future<List<Event>> setOfEvents;
-    if (widget.timelineFilterParams.isEmpty()) {
-      setOfEvents = TimelineEventService.fetchAllEvents();
-    } else {
-      setOfEvents = TimelineTopicService.fetchEvents(topicIds: topicIds);
-    }
+
+      setOfEvents = TimelineTopicService.fetchEvents(
+          topicIds: topicIds,
+          scopes: widget.timelineFilterParams.getScopes
+              .map((e) => e.name)
+              .toList());
     filteredEvents = setOfEvents.then((value) {
       widget._logger.d("events from topics: $setOfEvents");
       String textSearchBar =

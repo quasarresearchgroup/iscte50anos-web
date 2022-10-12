@@ -14,7 +14,8 @@ class TimelineRouteInformationParser
   Future<TimelineRoute> parseRouteInformation(
       RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location ?? "");
-    _logger.d("parseRouteInformation: uri:$uri");
+    _logger.d(
+        "parseRouteInformation\nuri:$uri\n${uri.pathSegments}\n${uri.pathSegments.length}");
 
     if (uri.pathSegments.length == 2) {
       if (uri.pathSegments[0] == TimelinePage.pageRoute) {
@@ -34,7 +35,6 @@ class TimelineRouteInformationParser
         uri.pathSegments[0] == TimelinePage.pageRoute) {
       if (uri.pathSegments[1] == TimelineFilterPage.pageRoute) {
         try {
-          _logger.d("${uri.pathSegments}\n${uri.pathSegments.length}");
           TimelineFilterParams timelineFilterParams =
               TimelineFilterParams.decode(uri.pathSegments[2]);
           // Handle '/timeline/filter/:params/result'
@@ -80,10 +80,10 @@ class TimelineRouteInformationParser
           '/${TimelinePage.pageRoute}/${TimeLineDetailsPage.pageRoute}/${configuration.event_id}';
     } else if (configuration.isFilterPage) {
       location =
-          '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${configuration.filterParams?.encode() ?? ""}';
+          '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}';
     } else if (configuration.isFilterResultPage) {
       location =
-          '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${configuration.filterParams?.encode() ?? ""}/results';
+          '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}/results';
     } else {
       return null;
     }

@@ -9,7 +9,8 @@ import 'package:logger/logger.dart';
 class TimelineTopicService {
   static final Logger _logger = Logger();
 
-  static Future<List<Event>> fetchEvents({required List<int> topicIds}) async {
+  static Future<List<Event>> fetchEvents(
+      {List<int> topicIds = const [], List<String> scopes = const []}) async {
     String string = topicIds.fold("", (previousValue, element) {
       if (previousValue.isEmpty) {
         return "topic=$element";
@@ -17,7 +18,12 @@ class TimelineTopicService {
         return "$previousValue&topic=$element";
       }
     });
-    //_logger.d(string);
+    string = string +
+        scopes.fold(topicIds.isEmpty ? "" : "&",
+            (previousValue, String element) {
+          return "$previousValue&scope=$element";
+        });
+    _logger.d(string);
     http.Response response = await http.get(
         Uri.parse('${BackEndConstants.API_ADDRESS}/api/events/?$string'),
         headers: <String, String>{
@@ -46,7 +52,7 @@ class TimelineTopicService {
     // return response.statusCode;
     List<Topic> topicsList = [];
     for (var entry in decodedResponse) {
-      topicsList.add(Topic.fromMap(entry));
+      topicsList.add(Topic.fromJson(entry));
     }
     _logger.i("fetched topics from event: $eventId");
     return topicsList;
@@ -64,7 +70,7 @@ class TimelineTopicService {
     // return response.statusCode;
     List<Topic> topicsList = [];
     for (var entry in decodedResponse) {
-      topicsList.add(Topic.fromMap(entry));
+      topicsList.add(Topic.fromJson(entry));
     }
     _logger.i("fetched all topics");
     return topicsList;

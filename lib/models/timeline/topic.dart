@@ -16,10 +16,11 @@ class Topic {
     return '$id|$title';
   }
 
-  factory Topic.fromMap(Map<String, dynamic> json) => Topic(
+  factory Topic.fromJson(Map<String, dynamic> json) => Topic(
         id: json["id"],
         title: json["title"],
       );
+
   factory Topic.fromString(String string) {
     final List<String> split = string.split("|");
     final int? id = int.tryParse(split[0]);
@@ -32,7 +33,7 @@ class Topic {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "title": title,
