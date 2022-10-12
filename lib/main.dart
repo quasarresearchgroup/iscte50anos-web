@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/services/routes/timeline_route_information_parser.dart';
@@ -9,7 +8,7 @@ const int puzzlePageIndex = 0;
 const int qrPageIndex = 1;
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //usePathUrlStrategy();
   runApp(const MyApp());

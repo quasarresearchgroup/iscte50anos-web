@@ -12,15 +12,17 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
     this.title,
     this.leading,
     this.middle,
+    this.roundedCorners = false,
     this.automaticallyImplyLeading = false,
   }) : super(key: key);
   final Logger _logger = Logger();
 
-  Widget? trailing;
-  String? title;
-  Widget? leading;
-  Widget? middle;
-  bool automaticallyImplyLeading;
+  final Widget? trailing;
+  final String? title;
+  final Widget? leading;
+  final Widget? middle;
+  final bool automaticallyImplyLeading;
+  final bool roundedCorners;
 
   @override
   State<MyAppBar> createState() => _MyAppBarState();
@@ -46,7 +48,7 @@ class _MyAppBarState extends State<MyAppBar> {
             style: const TextStyle(color: Colors.white),
           )
         : widget.middle;
-    return !PlatformService.instance.isIos
+    Widget bar = !PlatformService.instance.isIos
         ? AppBar(
             leadingWidth: 100,
             automaticallyImplyLeading: widget.automaticallyImplyLeading,
@@ -63,5 +65,14 @@ class _MyAppBarState extends State<MyAppBar> {
             middle: middle,
             trailing: widget.trailing,
           );
+    return widget.roundedCorners
+        ? bar
+        : Theme(
+            data: Theme.of(context).copyWith(
+              appBarTheme: Theme.of(context)
+                  .appBarTheme
+                  .copyWith(shape: const ContinuousRectangleBorder()),
+            ),
+            child: bar);
   }
 }

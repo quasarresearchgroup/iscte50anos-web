@@ -25,13 +25,12 @@ class TimelineTopicService {
         });
 
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
-    //_logger.d(decodedResponse);
-    // return response.statusCode;
+
     List<Event> eventsList = [];
     for (var entry in decodedResponse) {
       eventsList.add(Event.fromMap(entry));
     }
-    _logger.i("fetched events with topics: $topicIds");
+    _logger.i("fetched ${eventsList.length} events with topics: $topicIds");
     return eventsList;
   }
 

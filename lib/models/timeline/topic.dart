@@ -13,13 +13,24 @@ class Topic {
 
   @override
   String toString() {
-    return 'Topic{id: $id, title: $title}';
+    return '$id|$title';
   }
 
   factory Topic.fromMap(Map<String, dynamic> json) => Topic(
         id: json["id"],
         title: json["title"],
       );
+  factory Topic.fromString(String string) {
+    final List<String> split = string.split("|");
+    final int? id = int.tryParse(split[0]);
+    if (id == null) {
+      throw const FormatException();
+    }
+    return Topic(
+      id: id,
+      title: split[1],
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,6 +38,17 @@ class Topic {
       "title": title,
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Topic &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          title == other.title;
+
+  @override
+  int get hashCode => id.hashCode ^ title.hashCode;
 
 /*
   Future<List<Event>> get getEventsList async {

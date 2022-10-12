@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:iscte_spots/helper/helper_methods.dart';
 import 'package:iscte_spots/models/flickr/flickr_photo.dart';
 import 'package:iscte_spots/models/timeline/content.dart';
@@ -41,6 +40,7 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
 
   @override
   void initState() {
+    super.initState();
     event = TimelineEventService.fetchEvent(id: widget.eventId);
     eventTitle = event.then((value) => value.title);
     event.then((value) {
@@ -78,7 +78,6 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Event snapshotEvent = snapshot.data!;
-
               return FutureBuilder<List<Content>>(
                   future: allContentFromEvent,
                   builder: (context, snapshot) {
@@ -94,8 +93,8 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                       List<Content> gridContents = [];
                       List<Content> listContents = [];
                       for (Content content in snapshot.data!) {
-                        if (content.type == ContentType.image ||
-                            content.type == ContentType.video) {
+                        if (content.link.contains("flickr") ||
+                            content.link.contains("youtube")) {
                           gridContents.add(content);
                         } else {
                           listContents.add(content);
@@ -227,7 +226,7 @@ class TimelineDetailListContent extends StatelessWidget {
   }
 }
 
-class TimelineDetailGridContent extends StatelessWidget {
+class TimelineDetailGridContent extends StatefulWidget {
   TimelineDetailGridContent({
     Key? key,
     required this.content,
@@ -239,12 +238,21 @@ class TimelineDetailGridContent extends StatelessWidget {
   final bool isEven;
   final void Function(YoutubePlayerController controller)
       addVideoControllerCallback;
-  final Logger _logger = Logger();
+
   @override
-  Widget build(BuildContext context) {
-    Widget? child;
-    if (content.link.contains("youtube")) {
-      late YoutubePlayerController controller;
+  State<TimelineDetailGridContent> createState() =>
+      _TimelineDetailGridContentState();
+}
+
+class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
+  final Logger _logger = Logger();
+  Widget? child;
+  late YoutubePlayerController controller;
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.content.link.contains("youtube")) {
       controller = YoutubePlayerController(
         params: const YoutubePlayerParams(
           showControls: true,
@@ -253,16 +261,17 @@ class TimelineDetailGridContent extends StatelessWidget {
           loop: false,
         ),
       )..onInit = () {
-          controller.loadVideo(content.link);
+          controller.loadVideo(widget.content.link);
         };
-      addVideoControllerCallback(controller);
+      widget.addVideoControllerCallback(controller);
 
       child = YoutubePlayer(
         controller: controller,
       );
-    } else if (content.link.contains("www.flickr.com/photos")) {
+    } else if (widget.content.link.contains("www.flickr.com/photos")) {
       child = FutureBuilder<FlickrPhoto>(
-          future: FlickrUrlConverterService.getPhotofromFlickrURL(content.link),
+          future: FlickrUrlConverterService.getPhotofromFlickrURL(
+              widget.content.link),
           builder: (BuildContext context, AsyncSnapshot<FlickrPhoto> snapshot) {
             if (snapshot.hasData) {
               FlickrPhoto photo = snapshot.data!;
@@ -284,6 +293,10 @@ class TimelineDetailGridContent extends StatelessWidget {
     } else {
       child = null;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
@@ -301,20 +314,20 @@ class TimelineDetailGridContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ListTile(
-            onTap: content.link.isNotEmpty
+            onTap: widget.content.link.isNotEmpty
                 ? () {
-                    _logger.d("Tapped $content");
-                    HelperMethods.launchURL(content.link);
+                    _logger.d("Tapped ${widget.content}");
+                    HelperMethods.launchURL(widget.content.link);
                   }
                 : null,
             title: Text(
-              content.description ?? content.link,
+              widget.content.description ?? widget.content.link,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            leading: content.contentIcon,
+            leading: widget.content.contentIcon,
           ),
-          if (child != null) Expanded(child: child),
+          if (child != null) Expanded(child: child!),
         ],
       ),
     );
