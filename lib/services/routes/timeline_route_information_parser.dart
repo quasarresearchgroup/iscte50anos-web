@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
-import 'package:iscte_spots/pages/timeline/timeline_details_page.dart';
-import 'package:iscte_spots/pages/timeline/timeline_filter_page.dart';
+import 'package:iscte_spots/pages/timeline/details/timeline_details_page.dart';
+import 'package:iscte_spots/pages/timeline/filter/timeline_filter_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/services/routes/timeline_route.dart';
 import 'package:logger/logger.dart';

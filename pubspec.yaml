@@ -34,6 +34,7 @@ dependencies:
   youtube_player_iframe: ^3.1.0
   pinch_zoom: ^1.0.0
   scrollable_positioned_list: ^0.3.5
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.1
@@ -53,4 +54,5 @@ flutter:
     - Resources/Img/Campus/
     - Resources/Img/TimelineIcons/
     - Resources/Img/LeaderBoardIcons/
+    - Resources/Icons/
     - pubspec.yaml

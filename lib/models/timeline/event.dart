@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iscte_spots/models/timeline/content.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/rouded_timeline_icon.dart';
@@ -91,12 +92,17 @@ class Event {
   }
 
   Widget? get scopeIcon {
-    final Image worldMapImage =
-        Image.asset('Resources/Img/TimelineIcons/world-map-819-595.jpg');
-    final Image iscte50AnosImage =
-        Image.asset('Resources/Img/TimelineIcons/logo_50_anos-819-585.jpg');
-    final Image bandeiraPortugalImage =
-        Image.asset('Resources/Img/TimelineIcons/pt-819-585.png');
+    final Widget worldMapImage =
+        //Image.asset('Resources/Img/TimelineIcons/world-map-819-595.jpg');
+        SvgPicture.asset('Resources/Icons/noun-world.svg');
+    final Widget iscte50AnosImage =
+        //Image.asset('Resources/Img/TimelineIcons/logo_50_anos-819-585.jpg');
+        SvgPicture.asset('Resources/Icons/noun-university.svg');
+
+    final Widget bandeiraPortugalImage =
+        //Image.asset('Resources/Img/TimelineIcons/pt-819-585.png');
+        SvgPicture.asset('Resources/Icons/noun-map-of-portugal.svg');
+
     /*final Image bandeiraPortugalImage =
         Image.asset('icons/flags/png/pt.png', package: 'country_icons');*/
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
-import 'package:iscte_spots/pages/timeline/list_view/events_timeline_listview.dart';
+import 'package:iscte_spots/pages/timeline/events/events_timeline_listview.dart';
 import 'package:iscte_spots/pages/timeline/list_view/year_timeline__listview.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 
@@ -68,14 +68,8 @@ class _TimeLineBodyState extends State<TimeLineBody> {
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     height: 100,
-                    decoration: const BoxDecoration(boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 15.0,
-                      )
-                    ]),
                     child: YearTimelineListView(
                       yearsList: snapshot.data!,
                       changeYearFunction: stateHandleYearSelection,
@@ -83,13 +77,16 @@ class _TimeLineBodyState extends State<TimeLineBody> {
                     ),
                   ),
                   Expanded(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(seconds: 1),
-                      child: EventTimelineListView(
-                        key: UniqueKey(),
-                        events: widget.filteredEvents,
-                        timelineYear: stateSelectedYear,
-                        handleEventSelection: widget.handleEventSelection,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(seconds: 1),
+                        child: EventTimelineListView(
+                          key: UniqueKey(),
+                          events: widget.filteredEvents,
+                          timelineYear: stateSelectedYear,
+                          handleEventSelection: widget.handleEventSelection,
+                        ),
                       ),
                     ),
                   ),

@@ -45,7 +45,7 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      decoration: BoxDecoration(color: Colors.transparent),
       child: ScrollConfiguration(
         behavior: WebScrollBehaviour(),
         child: ScrollablePositionedList.builder(
@@ -53,7 +53,10 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
             scrollDirection: Axis.horizontal,
             itemCount: widget.yearsList.length,
             shrinkWrap: false,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (
+              BuildContext context,
+              int index,
+            ) {
               // Key itemKey = ValueKey<int>(widget.yearsList[index]);
               return Padding(
                 // key: itemKey,
@@ -74,14 +77,14 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
 }
 
 class YearTimelineTile extends StatefulWidget {
-  const YearTimelineTile(
-      {Key? key,
-      required this.changeYearFunction,
-      required this.year,
-      required this.isFirst,
-      required this.isLast,
-      required this.isSelected})
-      : super(key: key);
+  const YearTimelineTile({
+    Key? key,
+    required this.changeYearFunction,
+    required this.year,
+    required this.isFirst,
+    required this.isLast,
+    required this.isSelected,
+  }) : super(key: key);
 
   final Function changeYearFunction;
   final int year;
@@ -99,61 +102,53 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
     const double textFontSize = 20.0;
     const double minWidth2 = 90;
     const double radius = 15;
-    final Color color2 = Colors.white.withOpacity(0.3);
+    //final Color color2 = Colors.white.withOpacity(0.3);
     const double timelineIconOffset = 0.7;
-    Color iconTextColor = Theme.of(context).selectedRowColor;
-    LineStyle lineStyle = LineStyle(color: iconTextColor, thickness: 6);
+    LineStyle lineStyle = const LineStyle(color: Colors.black, thickness: 6);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        splashColor: color2,
-        highlightColor: color2,
-        enableFeedback: true,
-        customBorder: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(radius))),
-        onTap: () {
-          setState(() {
-            widget.changeYearFunction(widget.year);
-          });
-        },
-        child: TimelineTile(
-          beforeLineStyle: lineStyle,
-          afterLineStyle: lineStyle,
-          axis: TimelineAxis.horizontal,
-          alignment: TimelineAlign.manual,
-          lineXY: timelineIconOffset,
-          isFirst: widget.isFirst,
-          isLast: widget.isLast,
-          hasIndicator: true,
-          indicatorStyle: IndicatorStyle(
-            drawGap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            indicator: Center(
-                child: widget.isSelected
-                    ? Icon(
-                        FontAwesomeIcons.calendarCheck,
-                        color: iconTextColor,
-                      )
-                    : Icon(
-                        FontAwesomeIcons.calendar,
-                        color: iconTextColor,
-                      )),
+    return InkWell(
+      //splashColor: color2,
+      //highlightColor: color2,
+      enableFeedback: true,
+      customBorder: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(radius))),
+      onTap: () {
+        setState(() {
+          widget.changeYearFunction(widget.year);
+        });
+      },
+      child: TimelineTile(
+        beforeLineStyle: lineStyle,
+        afterLineStyle: lineStyle,
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.manual,
+        lineXY: timelineIconOffset,
+        isFirst: widget.isFirst,
+        isLast: widget.isLast,
+        hasIndicator: true,
+        indicatorStyle: IndicatorStyle(
+          drawGap: true,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          indicator: Center(
+            child: Icon(
+              widget.isSelected
+                  ? FontAwesomeIcons.calendarCheck
+                  : FontAwesomeIcons.calendar,
+            ),
           ),
-          startChild: Container(
-            constraints: const BoxConstraints(minWidth: minWidth2),
-            child: Center(
-              child: Text(
-                widget.year.toString(),
-                style: TextStyle(
-                  fontSize: textFontSize,
-                  color: iconTextColor,
-                ),
+        ),
+        startChild: Container(
+          constraints: const BoxConstraints(minWidth: minWidth2),
+          child: Center(
+            child: Text(
+              widget.year.toString(),
+              style: const TextStyle(
+                fontSize: textFontSize,
               ),
             ),
           ),
-          //),
         ),
+        //),
       ),
     );
   }

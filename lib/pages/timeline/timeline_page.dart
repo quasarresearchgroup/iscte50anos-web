@@ -51,7 +51,6 @@ class _TimelinePageState extends State<TimelinePage> {
                 onPressed: widget.handleFilterNavigation,
                 child: const Icon(
                   CupertinoIcons.search,
-                  color: CupertinoColors.white,
                 ),
               ),
       ),

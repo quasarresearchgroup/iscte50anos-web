@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class IscteTheme {
   static const Color iscteColor = Color.fromRGBO(14, 41, 194, 1);
+  static const Color greyColor = Color.fromRGBO(245, 244, 242, 1);
 
   //static const Color iscteColorLight = iscteColor.withGreen(iscteColor.green + 100);
   //static const Color iscteColorDark = iscteColor.withGreen(iscteColor.green - 100);
@@ -18,17 +20,20 @@ class IscteTheme {
     // This removes the shadow from all App Bars.
     centerTitle: true,
     toolbarHeight: 55,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         bottom: IscteTheme.appbarRadius,
       ),
     ),
-    backgroundColor: iscteColor,
-    iconTheme: const IconThemeData(color: Colors.white),
-    actionsIconTheme: const IconThemeData(color: Colors.white),
-    toolbarTextStyle: const TextStyle(color: Colors.white),
-    titleTextStyle: const TextStyle(color: Colors.white),
-    systemOverlayStyle: SystemUiOverlayStyle(
+    backgroundColor: Colors.transparent,
+    //color: Colors.transparent,
+    iconTheme: const IconThemeData(color: Colors.black),
+    actionsIconTheme: const IconThemeData(color: Colors.black),
+    toolbarTextStyle:
+        GoogleFonts.montserrat(textStyle: TextStyle(color: Colors.black)),
+    titleTextStyle:
+        GoogleFonts.montserrat(textStyle: TextStyle(color: Colors.black)),
+    systemOverlayStyle: const SystemUiOverlayStyle(
       statusBarColor: iscteColor,
       systemNavigationBarColor: iscteColor,
       statusBarIconBrightness: Brightness.light, // For Android (dark icons)
@@ -39,8 +44,8 @@ class IscteTheme {
   static NavigationRailThemeData navigationRailThemeData =
       const NavigationRailThemeData(
     backgroundColor: iscteColor,
-    selectedIconTheme: const IconThemeData(color: Colors.white),
-    unselectedIconTheme: const IconThemeData(color: Colors.white70),
+    selectedIconTheme: const IconThemeData(color: Colors.black),
+    unselectedIconTheme: const IconThemeData(color: Colors.black54),
     useIndicator: false,
   );
 
