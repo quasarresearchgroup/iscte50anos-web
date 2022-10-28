@@ -520,55 +520,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   }
 
   void _submitSelection() async {
-    /*TimelineFilterParams timelineFilterParams = TimelineFilterParams(
-        topics: filterParams.topics, searchText: searchBarController.text);
-
-    widget._logger.d(timelineFilterParams);
-    widget.handleFilterSubmission(timelineFilterParams, true);*/
     filterParams.searchText = searchBarController.text;
     widget.handleFilterSubmission(filterParams, true);
-
-    // Set<Event> setOfEvents = {};
-    // List<int> topicIds = selectedTopics.map((e) => e.id).toList();
-    // setOfEvents
-    //     .addAll(await TimelineTopicService.fetchEvents(topicIds: topicIds));
-    // if (selectedTopics.isEmpty) {
-    //   setOfEvents.addAll(widget.defaultEvents ?? []);
-    // }
-    //
-    // widget._logger.d("events from topics: $setOfEvents");
-    // String textSearchBar = searchBarController.text.toLowerCase();
-    // if (textSearchBar.isNotEmpty) {
-    //   setOfEvents = setOfEvents.where((Event element) {
-    //     String eventTitle = (element.title).toLowerCase();
-    //     return eventTitle.contains(textSearchBar) ||
-    //         textSearchBar.contains(eventTitle);
-    //   }).toSet();
-    //   widget._logger
-    //       .d("filtering with $textSearchBar; resulting events: $setOfEvents");
-    // }
-    // if (mounted) {
-    //   Navigator.of(context).push(MaterialPageRoute(
-    //     builder: (context) => Theme(
-    //       data: Theme.of(context).copyWith(
-    //         appBarTheme: Theme.of(context).appBarTheme.copyWith(
-    //               shape: const ContinuousRectangleBorder(),
-    //             ),
-    //       ),
-    //       child: Scaffold(
-    //         appBar: MyAppBar(
-    //           leading: const DynamicBackIconButton(),
-    //           title: AppLocalizations.of(context)!.timelineSearchResults,
-    //         ),
-    //         body: TimeLineBody(
-    //           filteredEvents: setOfEvents.toList(),
-    //           selectedYear: setOfEvents.last.dateTime.year,
-    //           handleEventSelection: widget.handleEventSelection,
-    //           handleYearSelection: widget.handleYearSelection,
-    //         ),
-    //       ),
-    //     ),
-    //   ));
-    // }
   }
 }

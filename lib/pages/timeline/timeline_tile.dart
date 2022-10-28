@@ -31,7 +31,20 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
   final int flagFlex = 15;
   final int informationFlex = 85;
   final int dateFlex = 10;
-
+  late Color? informationChildTextColor = !isEven
+      ? Theme.of(context).brightness == Brightness.dark
+          ? Colors.white
+          : Colors.black
+      : Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Colors.black;
+  late Color? dateChildTextColor = !isEven
+      ? Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Colors.black
+      : Theme.of(context).brightness == Brightness.dark
+          ? Colors.white
+          : Colors.black;
   @override
   void initState() {
     super.initState();
@@ -85,7 +98,11 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     !widget.isFirst ? verticalConnector : const Spacer(),
-                    EventTimelineIndicator(isEven: isEven, event: widget.event),
+                    EventTimelineIndicator(
+                      isEven: isEven,
+                      event: widget.event,
+                      textColor: dateChildTextColor,
+                    ),
                     !widget.isLast ? verticalConnector : const Spacer(),
                   ],
                 ),
@@ -95,7 +112,10 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TimelineInformationChild(
-                      isEven: isEven, data: widget.event),
+                    isEven: isEven,
+                    data: widget.event,
+                    textColor: informationChildTextColor,
+                  ),
                 ),
               ),
             ],
@@ -111,10 +131,12 @@ class EventTimelineIndicator extends StatelessWidget {
     Key? key,
     required this.isEven,
     required this.event,
+    this.textColor,
   }) : super(key: key);
 
   final bool isEven;
   final Event event;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +155,7 @@ class EventTimelineIndicator extends StatelessWidget {
             Text(
               event.dateTime.monthName(),
               style: TextStyle(
-                color: isEven ? Colors.white : null,
+                color: textColor,
               ),
               textScaleFactor: 1,
               maxLines: 1,
@@ -141,7 +163,7 @@ class EventTimelineIndicator extends StatelessWidget {
             Text(
               event.dateTime.day.toString(),
               style: TextStyle(
-                color: isEven ? Colors.white : null,
+                color: textColor,
               ),
             ),
           ],
@@ -156,15 +178,16 @@ class TimelineInformationChild extends StatelessWidget {
     Key? key,
     required this.isEven,
     required this.data,
+    this.textColor,
   }) : super(key: key);
 
   final bool isEven;
   final Event data;
+  final Color? textColor;
   final double padding = 10;
 
   @override
   Widget build(BuildContext context) {
-    Color? textColor = !isEven ? Colors.white : null;
     return Container(
       decoration: BoxDecoration(
         color: !isEven ? Colors.transparent : Theme.of(context).primaryColor,

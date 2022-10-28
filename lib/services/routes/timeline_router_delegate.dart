@@ -27,7 +27,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   final Future<List<Topic>> availableTopics =
       TimelineTopicService.fetchAllTopics();
   final Future<List<EventScope>> availableScopes =
-      Future.delayed(Duration(seconds: 2), () => EventScope.values);
+      Future(() => EventScope.values);
 
   final Logger _logger = Logger();
 

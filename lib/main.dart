@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       routerDelegate: TimelineRouterDelegate(),
       routeInformationParser: TimelineRouteInformationParser(),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
 
       //home: TimelinePage(),
       //onGenerateRoute: generatedRoutes,
