@@ -27,14 +27,18 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
   @override
   void initState() {
     super.initState();
-    if (itemController.isAttached) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => itemController.scrollTo(
+    //if (itemController.isAttached) {
+    /*WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        Logger().d(
+            "index:${widget.yearsList.indexOf(widget.selectedYear)}\nselectedYear:${widget.selectedYear}");
+        itemController.scrollTo(
           index: widget.yearsList.indexOf(widget.selectedYear),
-          duration: const Duration(milliseconds: 500),
-        ),
-      );
-    }
+          duration: const Duration(milliseconds: 50),
+        );
+      },
+    );*/
+    //}
   }
 
   @override
@@ -44,34 +48,32 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.transparent),
-      child: ScrollConfiguration(
-        behavior: WebScrollBehaviour(),
-        child: ScrollablePositionedList.builder(
-            itemScrollController: itemController,
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.yearsList.length,
-            shrinkWrap: false,
-            itemBuilder: (
-              BuildContext context,
-              int index,
-            ) {
-              // Key itemKey = ValueKey<int>(widget.yearsList[index]);
-              return Padding(
+    return ScrollConfiguration(
+      behavior: WebScrollBehaviour(),
+      child: ScrollablePositionedList.builder(
+          initialScrollIndex: widget.yearsList.indexOf(widget.selectedYear),
+          itemScrollController: itemController,
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.yearsList.length,
+          shrinkWrap: false,
+          itemBuilder: (
+            BuildContext context,
+            int index,
+          ) {
+            // Key itemKey = ValueKey<int>(widget.yearsList[index]);
+            return Padding(
+              // key: itemKey,
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: YearTimelineTile(
                 // key: itemKey,
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: YearTimelineTile(
-                  // key: itemKey,
-                  changeYearFunction: widget.changeYearFunction,
-                  year: widget.yearsList[index],
-                  isSelected: widget.selectedYear == widget.yearsList[index],
-                  isFirst: index == 0,
-                  isLast: index == widget.yearsList.length - 1,
-                ),
-              );
-            }),
-      ),
+                changeYearFunction: widget.changeYearFunction,
+                year: widget.yearsList[index],
+                isSelected: widget.selectedYear == widget.yearsList[index],
+                isFirst: index == 0,
+                isLast: index == widget.yearsList.length - 1,
+              ),
+            );
+          }),
     );
   }
 }
