@@ -11,6 +11,7 @@ import 'package:iscte_spots/pages/unknown_page.dart';
 import 'package:iscte_spots/services/routes/timeline_route.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
+import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 
 class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
@@ -72,13 +73,30 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
       pages: [
         MaterialPage(
           key: TimelinePage.pageKey,
-          child: TimelinePage(
-            selectedYear: _selectedYear,
-            handleEventSelection: _handleEventSelection,
-            handleFilterNavigation: _handleFilterNavigation,
-            handleYearSelection: _handleYearSelection,
-            yearsList: yearsList,
-          ),
+          child: FutureBuilder<List<int>>(
+              future: yearsList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  int year;
+                  if (snapshot.data!.contains(_selectedYear)) {
+                    year = _selectedYear;
+                  } else {
+                    year = snapshot.data!.first;
+                    _handleYearSelection(year);
+                  }
+                  return TimelinePage(
+                    selectedYear: year,
+                    handleEventSelection: _handleEventSelection,
+                    handleFilterNavigation: _handleFilterNavigation,
+                    handleYearSelection: _handleYearSelection,
+                    yearsList: yearsList,
+                  );
+                } else {
+                  return const Scaffold(
+                    body: LoadingWidget(),
+                  );
+                }
+              }),
         ),
         if (show404)
           MaterialPage(key: const ValueKey("UnknownPage"), child: UnknownPage())

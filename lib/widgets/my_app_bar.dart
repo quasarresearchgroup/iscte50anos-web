@@ -41,11 +41,14 @@ class _MyAppBarState extends State<MyAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    var middle = widget.title != null
+    Widget? middle = widget.title != null
         ? Text(
             widget.title!,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context)
+                .textTheme
+                .headline3
+                ?.copyWith(color: IscteTheme.iscteColor),
           )
         : widget.middle;
     Widget bar = !PlatformService.instance.isIos
@@ -54,7 +57,19 @@ class _MyAppBarState extends State<MyAppBar> {
             automaticallyImplyLeading: widget.automaticallyImplyLeading,
             leading: widget.leading,
             title: middle,
-            actions: widget.trailing != null ? [widget.trailing!] : null,
+            iconTheme: Theme.of(context)
+                .iconTheme
+                .copyWith(color: IscteTheme.iscteColor),
+            actionsIconTheme: Theme.of(context)
+                .iconTheme
+                .copyWith(color: IscteTheme.iscteColor),
+            actions: [
+              Image.asset(
+                "Resources/Img/Logo/rgb_iscte_positive.png",
+                height: kToolbarHeight,
+              ),
+              if (widget.trailing != null) widget.trailing!
+            ],
           )
         : CupertinoNavigationBar(
             backgroundColor: IscteTheme.iscteColor,
@@ -69,9 +84,9 @@ class _MyAppBarState extends State<MyAppBar> {
         ? bar
         : Theme(
             data: Theme.of(context).copyWith(
-              appBarTheme: Theme.of(context)
-                  .appBarTheme
-                  .copyWith(shape: const ContinuousRectangleBorder()),
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    shape: const ContinuousRectangleBorder(),
+                  ),
             ),
             child: bar);
   }

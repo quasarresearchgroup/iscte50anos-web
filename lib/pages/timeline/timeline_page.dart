@@ -49,9 +49,7 @@ class _TimelinePageState extends State<TimelinePage> {
               )
             : CupertinoButton(
                 onPressed: widget.handleFilterNavigation,
-                child: const Icon(
-                  CupertinoIcons.search,
-                ),
+                child: const Icon(CupertinoIcons.search),
               ),
       ),
       /*floatingActionButton: TimelineDial(

@@ -23,7 +23,6 @@ class EventTimelineListView extends StatefulWidget {
 
 class _EventTimelineListViewState extends State<EventTimelineListView> {
   late Future<List<Event>> chosenTimelineList;
-  final double tileOffset = 0.4;
 
   @override
   void initState() {
@@ -42,7 +41,6 @@ class _EventTimelineListViewState extends State<EventTimelineListView> {
   Widget build(BuildContext context) {
     final LineStyle lineStyle =
         LineStyle(color: Theme.of(context).focusColor, thickness: 6);
-    List<Widget> timelineTiles = [];
 
     return FutureBuilder<List<Event>>(
         future: chosenTimelineList,

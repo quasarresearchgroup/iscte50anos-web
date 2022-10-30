@@ -23,7 +23,7 @@ class EventTimelineIndicator extends StatelessWidget {
     Widget verticalConnector = Expanded(
       child: Container(
         width: 6,
-        color: Colors.black,
+        color: Theme.of(context).iconTheme.color,
       ),
     );
     return Column(
@@ -56,12 +56,12 @@ class EventTImelineIndicatorDate extends StatelessWidget {
         children: [
           Text(
             event.dateTime.monthName(),
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.titleMedium,
             maxLines: 1,
           ),
           Text(
             event.dateTime.day.toString(),
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.titleMedium,
             maxLines: 1,
           ),
         ],

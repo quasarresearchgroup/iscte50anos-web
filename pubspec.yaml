@@ -56,3 +56,12 @@ flutter:
     - Resources/Img/LeaderBoardIcons/
     - Resources/Icons/
     - pubspec.yaml
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: Resources/Fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-Italic.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-Bold.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-BoldItalic.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-Thin.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-ThinItalic.ttf

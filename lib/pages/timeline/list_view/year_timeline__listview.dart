@@ -60,7 +60,6 @@ class _YearTimelineListViewState extends State<YearTimelineListView> {
             BuildContext context,
             int index,
           ) {
-            // Key itemKey = ValueKey<int>(widget.yearsList[index]);
             return Padding(
               // key: itemKey,
               padding: const EdgeInsets.only(bottom: 8.0),
@@ -106,7 +105,8 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
     const double radius = 15;
     //final Color color2 = Colors.white.withOpacity(0.3);
     const double timelineIconOffset = 0.7;
-    LineStyle lineStyle = const LineStyle(color: Colors.black, thickness: 6);
+    LineStyle lineStyle = LineStyle(
+        color: Theme.of(context).iconTheme.color ?? Colors.black, thickness: 6);
 
     return InkWell(
       //splashColor: color2,
@@ -144,9 +144,9 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
           child: Center(
             child: Text(
               widget.year.toString(),
-              style: const TextStyle(
-                fontSize: textFontSize,
-              ),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Theme.of(context).iconTheme.color,
+                  ),
             ),
           ),
         ),

@@ -46,20 +46,10 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
 
   @override
   Widget build(BuildContext context) {
-    Widget sizedBox = const SizedBox(
-      width: 10,
-    );
-
-    Widget verticalConnector = Expanded(
-      child: Container(
-        width: 5,
-        color: Colors.white,
-      ),
-    );
-
     return SizedBox(
       height: 100,
       child: InkWell(
+        hoverColor: IscteTheme.greyColor,
         onTap: widget.event.contentCount > 0
             ? () {
                 widget.handleEventSelection(widget.event.id);

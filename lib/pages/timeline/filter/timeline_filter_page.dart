@@ -86,7 +86,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                       : CupertinoIcons.settings_solid,
                   semanticLabel: AppLocalizations.of(context)!
                       .timelineSearchHintInsideTopic,
-                  color: Colors.white,
                 ))
             : IconButton(
                 tooltip:
@@ -151,7 +150,11 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                                     dividerWidth, dividerThickness),
                                 selectedScopesWidget(
                                     dividerWidth, dividerThickness),
-                                SliverToBoxAdapter(child: submitTextButton),
+                                SliverToBoxAdapter(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: submitTextButton,
+                                )),
                               ],
                             ),
                           ),
@@ -192,7 +195,10 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                               ],
                             ),
                           ),
-                          submitTextButton,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: submitTextButton,
+                          ),
                         ],
                       );
               }),
@@ -208,22 +214,34 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         child: Row(
           children: [
             Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    AppLocalizations.of(context)!.timelineAvailableTopics)),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                AppLocalizations.of(context)!.timelineAvailableTopics,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: IscteTheme.iscteColor),
+              ),
+            ),
             Expanded(
               child: Container(),
             ),
             DynamicTextButton(
               onPressed: _selectAllTopics,
               child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-                  style: const TextStyle(color: IscteTheme.iscteColor)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: IscteTheme.iscteColor)),
             ),
             DynamicTextButton(
               onPressed: _clearTopicsList,
               child: Text(
                   AppLocalizations.of(context)!.timelineSelectClearButton,
-                  style: const TextStyle(color: IscteTheme.iscteColor)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: IscteTheme.iscteColor)),
             ),
           ],
         ),
@@ -241,7 +259,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       children: filterParams.getTopics
           .map((Topic topic) => Chip(
                 label: Text(topic.title ?? ""),
-                backgroundColor: IscteTheme.iscteColor,
                 onDeleted: () {
                   setState(() {
                     filterParams.removeTopic(topic);
@@ -261,7 +278,12 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        AppLocalizations.of(context)!.timelineSelectedTopics),
+                      AppLocalizations.of(context)!.timelineSelectedTopics,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: IscteTheme.iscteColor),
+                    ),
                   ),
                 ),
                 wrap,
@@ -283,7 +305,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   return CheckboxListTile(
-                    activeColor: IscteTheme.iscteColor,
+                    //activeColor: IscteTheme.iscteColor,
                     value: filterParams.containsTopic(data[index]),
                     title: SingleChildScrollView(
                       controller: ScrollController(),
@@ -341,22 +363,34 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: [
-            const Align(
+            Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Available Scopes...")),
+                child: Text(
+                  "Available Scopes...", //TODO
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: IscteTheme.iscteColor),
+                )),
             Expanded(
               child: Container(),
             ),
             DynamicTextButton(
               onPressed: _selectAllScopes,
               child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-                  style: const TextStyle(color: IscteTheme.iscteColor)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: IscteTheme.iscteColor)),
             ),
             DynamicTextButton(
               onPressed: _clearScopesList,
               child: Text(
                   AppLocalizations.of(context)!.timelineSelectClearButton,
-                  style: const TextStyle(color: IscteTheme.iscteColor)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: IscteTheme.iscteColor)),
             ),
           ],
         ),
@@ -424,7 +458,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       children: filterParams.getScopes
           .map((EventScope scope) => Chip(
                 label: Text(scope.name ?? ""),
-                backgroundColor: IscteTheme.iscteColor,
                 onDeleted: () {
                   setState(() {
                     filterParams.removeScope(scope);
@@ -443,7 +476,13 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Selected Scopes"),
+                    child: Text(
+                      "Selected Scopes",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: IscteTheme.iscteColor),
+                    ),
                   ),
                 ),
                 wrap,
@@ -471,39 +510,33 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   Widget buildSearchBar(BuildContext context, bool isEmptySelectedTopics) {
     return Center(
       child: DynamicTextField(
-        style: const TextStyle(color: Colors.white),
+        style: Theme.of(context)
+            .textTheme
+            .headlineMedium
+            ?.copyWith(color: IscteTheme.iscteColor),
         controller: searchBarController,
-        placeholderStyle: const TextStyle(color: Colors.white70),
+        placeholder: !advancedSearch
+            ? AppLocalizations.of(context)!.timelineSearchHint
+            : AppLocalizations.of(context)!.timelineSearchHintInsideTopic,
+        placeholderStyle: Theme.of(context)
+            .textTheme
+            .headlineMedium
+            ?.copyWith(color: IscteTheme.iscteColor),
         prefix: (PlatformService.instance.isIos)
             ? CupertinoButton(
                 onPressed: _submitSelection,
-                child: const Icon(
-                  CupertinoIcons.search,
-                  color: Colors.white,
-                ))
+                child: const Icon(CupertinoIcons.search))
             : IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.search),
                 onPressed: _submitSelection,
               ),
         suffix: (PlatformService.instance.isIos)
             ? CupertinoButton(
                 onPressed: searchBarController.clear,
-                child: const Icon(
-                  CupertinoIcons.clear,
-                  color: Colors.white,
-                ))
+                child: const Icon(CupertinoIcons.clear))
             : IconButton(
-                icon: const Icon(
-                  Icons.clear,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.clear),
                 onPressed: searchBarController.clear),
-        placeholder: !advancedSearch
-            ? AppLocalizations.of(context)!.timelineSearchHint
-            : AppLocalizations.of(context)!.timelineSearchHintInsideTopic,
         //border: InputBorder.none,
       ),
     );

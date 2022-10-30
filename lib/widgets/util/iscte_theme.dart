@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class IscteTheme {
   static const Color iscteColor = Color.fromRGBO(14, 41, 194, 1);
@@ -14,26 +13,22 @@ class IscteTheme {
   static const BorderRadius borderRadious =
       BorderRadius.all(Radius.circular(10));
 
-  static final AppBarTheme _appBarTheme = AppBarTheme(
+  static const AppBarTheme _appBarTheme = AppBarTheme(
     //backgroundColor: Color.fromRGBO(14, 41, 194, 1),
     elevation: 0,
     // This removes the shadow from all App Bars.
     centerTitle: true,
     toolbarHeight: 55,
-    shape: const RoundedRectangleBorder(
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         bottom: IscteTheme.appbarRadius,
       ),
     ),
     backgroundColor: Colors.transparent,
     //color: Colors.transparent,
-    iconTheme: const IconThemeData(color: Colors.black),
-    actionsIconTheme: const IconThemeData(color: Colors.black),
-    toolbarTextStyle:
-        GoogleFonts.montserrat(textStyle: TextStyle(color: Colors.black)),
-    titleTextStyle:
-        GoogleFonts.montserrat(textStyle: TextStyle(color: Colors.black)),
-    systemOverlayStyle: const SystemUiOverlayStyle(
+    iconTheme: IconThemeData(color: Colors.black),
+    actionsIconTheme: IconThemeData(color: Colors.black),
+    systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: iscteColor,
       systemNavigationBarColor: iscteColor,
       statusBarIconBrightness: Brightness.light, // For Android (dark icons)
@@ -44,8 +39,8 @@ class IscteTheme {
   static NavigationRailThemeData navigationRailThemeData =
       const NavigationRailThemeData(
     backgroundColor: iscteColor,
-    selectedIconTheme: const IconThemeData(color: Colors.black),
-    unselectedIconTheme: const IconThemeData(color: Colors.black54),
+    selectedIconTheme: IconThemeData(color: Colors.black),
+    unselectedIconTheme: IconThemeData(color: Colors.black54),
     useIndicator: false,
   );
 
@@ -69,15 +64,23 @@ class IscteTheme {
       primaryColor: iscteColor,
       errorColor: Colors.deepOrangeAccent,
       bottomAppBarColor: iscteColor,
-      iconTheme: const IconThemeData(color: Colors.black),
+      iconTheme: ThemeData.light().iconTheme.copyWith(color: Colors.black),
       appBarTheme: _appBarTheme,
       navigationRailTheme: navigationRailThemeData,
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor:
-              MaterialStateColor.resolveWith((states) => iscteColor),
-        ),
-      ),
+      textTheme: Typography().black.apply(
+            fontFamily: "Montserrat",
+          ),
+      buttonTheme: ThemeData.light().buttonTheme.copyWith(
+            buttonColor: iscteColor,
+          ),
+      chipTheme:
+          ThemeData.light().chipTheme.copyWith(backgroundColor: greyColor),
+      checkboxTheme: ThemeData.light().checkboxTheme.copyWith(
+            fillColor: const MaterialStatePropertyAll(iscteColor),
+          ),
+      textButtonTheme: const TextButtonThemeData(
+          style: ButtonStyle(
+              foregroundColor: MaterialStatePropertyAll(iscteColor))),
       elevatedButtonTheme: elevatedButtonTheme,
     );
   }

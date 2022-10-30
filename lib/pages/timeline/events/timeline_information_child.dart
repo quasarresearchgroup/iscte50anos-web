@@ -27,7 +27,7 @@ class TimelineInformationChild extends StatelessWidget {
               maxLines: 3,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.titleLarge,
 
               //fontSize: MediaQuery.of(context).size.width * 0.05,
             ),
@@ -52,7 +52,10 @@ class TimelineInformationChild extends StatelessWidget {
                   child: Center(
                     child: Text(
                       "#${data.contentCount.toString()}",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Theme.of(context).iconTheme.color),
                     ),
                   ),
                 )
