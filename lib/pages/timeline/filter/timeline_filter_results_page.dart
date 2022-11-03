@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
-import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
@@ -41,11 +40,10 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
 
     Future<List<Event>> setOfEvents;
 
-      setOfEvents = TimelineTopicService.fetchEvents(
-          topicIds: topicIds,
-          scopes: widget.timelineFilterParams.getScopes
-              .map((e) => e.name)
-              .toList());
+    setOfEvents = TimelineTopicService.fetchEvents(
+        topicIds: topicIds,
+        scopes:
+            widget.timelineFilterParams.getScopes.map((e) => e.name).toList());
     filteredEvents = setOfEvents.then((value) {
       widget._logger.d("events from topics: $setOfEvents");
       String textSearchBar =
@@ -77,7 +75,7 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
               if (snapshot.data!.isEmpty) {
                 return const Center(child: Text("No results"));
               } else {
-                return TimeLineBody(
+                return TimeLineBodyBuilder(
                   filteredEvents: snapshot.data!,
                   selectedYear: snapshot.data!.last.dateTime.year,
                   handleEventSelection: widget.handleEventSelection,

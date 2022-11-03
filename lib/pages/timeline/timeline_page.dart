@@ -57,7 +57,7 @@ class _TimelinePageState extends State<TimelinePage> {
               deleteTimelineData: deleteTimelineData,
               refreshTimelineData: deleteGetAllEvents,
             ),*/
-      body: TimeLineBody(
+      body: TimeLineBodyBuilder(
         handleEventSelection: widget.handleEventSelection,
         selectedYear: widget.selectedYear,
         handleYearSelection: widget.handleYearSelection,
