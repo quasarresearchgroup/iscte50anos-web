@@ -69,20 +69,17 @@ class _EventTimelineListViewBuilderState
                             lineStyle: lineStyle,
                             handleEventSelection: widget.handleEventSelection,
                           );
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: index == value
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                      color: IscteTheme.iscteColor,
-                                      width: 2,
-                                      strokeAlign: StrokeAlign.outside,
-                                    )),
-                                    child: eventTimelineTile,
-                                  )
-                                : eventTimelineTile,
-                          );
+                          return index == value
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                    color: IscteTheme.iscteColor,
+                                    width: 2,
+                                    strokeAlign: StrokeAlign.inside,
+                                  )),
+                                  child: eventTimelineTile,
+                                )
+                              : eventTimelineTile;
                         },
                       ),
                     );

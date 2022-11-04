@@ -115,10 +115,27 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                         scrollDirection: Axis.vertical,
                         slivers: [
                           SliverToBoxAdapter(
-                            child: ListTile(
-                              leading: snapshotEvent.scopeIcon,
-                              title: Text(snapshotEvent.title),
-                              subtitle: Text(subtitleText),
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: [
+                                if (snapshotEvent.scopeIcon != null)
+                                  Flexible(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: kToolbarHeight,
+                                      child: snapshotEvent.scopeIcon!,
+                                    ),
+                                  ),
+                                Flexible(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      Text(snapshotEvent.title),
+                                      Text(subtitleText)
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SliverToBoxAdapter(
@@ -218,9 +235,9 @@ class TimelineDetailListContent extends StatelessWidget {
           HelperMethods.launchURL(content.link);
         }
       },
-      tileColor: isEven ? IscteTheme.iscteColor : Colors.transparent,
+      tileColor: !isEven ? IscteTheme.greyColor : Colors.transparent,
       leading: content.contentIcon,
-      title: Text(content.description ?? content.link,
+      title: Text(content.title ?? content.link,
           maxLines: 2, overflow: TextOverflow.ellipsis),
     );
   }
@@ -302,9 +319,9 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(
-          color: IscteTheme.iscteColor,
+          color: IscteTheme.greyColor,
           style: BorderStyle.solid,
-          width: 10,
+          width: 2,
         ),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
@@ -321,7 +338,11 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
                   }
                 : null,
             title: Text(
-              widget.content.description ?? widget.content.link,
+              widget.content.title != null
+                  ? (widget.content.title!.isEmpty
+                      ? widget.content.link
+                      : widget.content.title!)
+                  : widget.content.title!,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

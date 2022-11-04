@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
@@ -41,7 +40,8 @@ class _TimelinePageState extends State<TimelinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: AppLocalizations.of(context)!.timelineScreen,
+        //title: AppLocalizations.of(context)!.timelineScreen,
+        title: "Cronologia 50 anos Iscte",
         trailing: (!PlatformService.instance.isIos)
             ? IconButton(
                 onPressed: widget.handleFilterNavigation,
@@ -63,6 +63,13 @@ class _TimelinePageState extends State<TimelinePage> {
         handleYearSelection: widget.handleYearSelection,
         yearsList: widget.yearsList,
       ),
+      persistentFooterAlignment: AlignmentDirectional.bottomStart,
+      persistentFooterButtons: [
+        Image.asset(
+          "Resources/Img/Logo/rgb_iscte_pt_horizontal.png",
+          height: kToolbarHeight + 25,
+        )
+      ],
     );
   }
 }

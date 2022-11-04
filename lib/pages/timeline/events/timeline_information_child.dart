@@ -24,7 +24,7 @@ class TimelineInformationChild extends StatelessWidget {
             padding: EdgeInsets.all(padding),
             child: Text(
               data.title,
-              maxLines: 3,
+              maxLines: 2,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleLarge,

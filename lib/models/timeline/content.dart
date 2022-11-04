@@ -21,14 +21,14 @@ ContentType? contentTypefromString(String? input) {
 class Content {
   Content({
     required this.id,
-    this.description,
+    this.title,
     required this.link,
     this.type,
     this.eventId,
   });
 
   final int id;
-  final String? description;
+  final String? title;
   final String link;
   final ContentType? type;
   final int? eventId;
@@ -37,12 +37,12 @@ class Content {
 
   @override
   String toString() {
-    return 'Content{id: $id, description: $description, link: $link, type: $type, eventId: $eventId}';
+    return 'Content{id: $id, title: $title, link: $link, type: $type, eventId: $eventId}';
   }
 
   factory Content.fromMap(Map<String, dynamic> json) => Content(
         id: json["id"],
-        description: json["description"],
+        title: json["title"],
         link: json["link"],
         type: contentTypefromString(json["type"]),
         eventId: json["event_id"],
@@ -51,7 +51,7 @@ class Content {
   Map<String, dynamic> toMap() {
     return {
       "id": id,
-      "description": description,
+      "title": title,
       "link": link,
       "type": type != null ? type!.name : null,
       "event_id": eventId,

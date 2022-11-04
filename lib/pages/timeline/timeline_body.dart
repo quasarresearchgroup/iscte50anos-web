@@ -111,19 +111,21 @@ class TimelineBody extends StatefulWidget {
 
 class _TimelineBodyState extends State<TimelineBody> {
   ValueNotifier<int?> selectedEventIndex = ValueNotifier(0);
+  late ValueNotifier<int?> selectedYearIndex = ValueNotifier(null);
+
   void changeSelectedEvent(int index) {
     Logger().d(
         "index: $index ; widget.filteredEvents?.length ${widget.filteredEvents}");
-    if (index >= 0 && index < (widget.filteredEvents?.length ?? 0)) {
+    if (index >= 0) {
       selectedEventIndex.value = index;
+      selectedYearIndex.value = null;
     }
   }
-
-  late ValueNotifier<int?> selectedYearIndex = ValueNotifier(null);
 
   void changeSelectedYear(int index) {
     if (index >= 0 && index < widget.yearsList.length) {
       selectedYearIndex.value = index;
+      selectedEventIndex.value = null;
     }
   }
 
@@ -147,28 +149,36 @@ class _TimelineBodyState extends State<TimelineBody> {
       child: Actions(
         actions: <Type, Action<Intent>>{
           IncrementYearsIntent: CallbackAction<IncrementYearsIntent>(
-            onInvoke: (IncrementYearsIntent intent) => changeSelectedYear(
-                selectedYearIndex.value != null
-                    ? selectedYearIndex.value! + 1
-                    : widget.yearsList.indexOf(widget.currentYear)),
+            onInvoke: (IncrementYearsIntent intent) {
+              Logger().d("IncrementYearsIntent");
+              changeSelectedYear(selectedYearIndex.value != null
+                  ? selectedYearIndex.value! + 1
+                  : widget.yearsList.indexOf(widget.currentYear));
+            },
           ),
           DecrementYearsIntent: CallbackAction<DecrementYearsIntent>(
-            onInvoke: (DecrementYearsIntent intent) => changeSelectedYear(
-                selectedYearIndex.value != null
-                    ? selectedYearIndex.value! - 1
-                    : widget.yearsList.indexOf(widget.currentYear)),
+            onInvoke: (DecrementYearsIntent intent) {
+              Logger().d("DecrementYearsIntent");
+              changeSelectedYear(selectedYearIndex.value != null
+                  ? selectedYearIndex.value! - 1
+                  : widget.yearsList.indexOf(widget.currentYear));
+            },
           ),
           IncrementEventsIntent: CallbackAction<IncrementEventsIntent>(
-            onInvoke: (IncrementEventsIntent intent) => changeSelectedEvent(
-                selectedEventIndex.value != null
-                    ? selectedEventIndex.value! + 1
-                    : 0),
+            onInvoke: (IncrementEventsIntent intent) {
+              Logger().d("IncrementEventsIntent");
+              changeSelectedEvent(selectedEventIndex.value != null
+                  ? selectedEventIndex.value! + 1
+                  : 0);
+            },
           ),
           DecrementEventsIntent: CallbackAction<DecrementEventsIntent>(
-            onInvoke: (DecrementEventsIntent intent) => changeSelectedEvent(
-                selectedEventIndex.value != null
-                    ? selectedEventIndex.value! - 1
-                    : 0),
+            onInvoke: (DecrementEventsIntent intent) {
+              Logger().d("DecrementEventsIntent");
+              changeSelectedEvent(selectedEventIndex.value != null
+                  ? selectedEventIndex.value! - 1
+                  : 0);
+            },
           ),
           EnterIntent: CallbackAction<EnterIntent>(
               onInvoke: (EnterIntent intent) => Logger().d(

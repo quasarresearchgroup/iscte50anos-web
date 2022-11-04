@@ -64,10 +64,10 @@ class _MyAppBarState extends State<MyAppBar> {
                 .iconTheme
                 .copyWith(color: IscteTheme.iscteColor),
             actions: [
-              Image.asset(
-                "Resources/Img/Logo/rgb_iscte_positive.png",
+/*              Image.asset(
+                "Resources/Img/Logo/rgb_iscte_pt_horizontal.png",
                 height: kToolbarHeight,
-              ),
+              ),*/
               if (widget.trailing != null) widget.trailing!
             ],
           )
