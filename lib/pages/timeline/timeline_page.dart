@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
@@ -13,6 +14,7 @@ class TimelinePage extends StatefulWidget {
     required this.handleEventSelection,
     required this.handleYearSelection,
     required this.handleFilterNavigation,
+    required this.filteredEvents,
   }) : super(key: key);
   final Logger _logger = Logger();
   final Function(int) handleEventSelection;
@@ -21,6 +23,7 @@ class TimelinePage extends StatefulWidget {
   static const String pageRoute = "timeline";
   static const ValueKey pageKey = ValueKey(pageRoute);
   final int selectedYear;
+  final List<Event> filteredEvents;
   final Future<List<int>> yearsList;
 
   @override
@@ -62,6 +65,8 @@ class _TimelinePageState extends State<TimelinePage> {
         selectedYear: widget.selectedYear,
         handleYearSelection: widget.handleYearSelection,
         yearsList: widget.yearsList,
+        filteredEvents: widget.filteredEvents,
+        isFilterTimeline: false,
       ),
       persistentFooterAlignment: AlignmentDirectional.bottomStart,
       persistentFooterButtons: [

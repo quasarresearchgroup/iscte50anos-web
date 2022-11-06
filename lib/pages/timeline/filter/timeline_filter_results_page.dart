@@ -76,10 +76,15 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
                 return const Center(child: Text("No results"));
               } else {
                 return TimeLineBodyBuilder(
+                  yearsList: Future(() => snapshot.data!
+                      .map((e) => e.dateTime.year)
+                      .toSet()
+                      .toList()),
                   filteredEvents: snapshot.data!,
                   selectedYear: snapshot.data!.last.dateTime.year,
                   handleEventSelection: widget.handleEventSelection,
                   handleYearSelection: widget.handleYearSelection,
+                  isFilterTimeline: true,
                 );
               }
             } else if (snapshot.hasError) {

@@ -50,6 +50,8 @@ class Event {
     return 'Event{id: $id, title: $title, date: $date, scope: $scope, visited: $visited,contentCount: $contentCount}';
   }
 
+  bool get isVisitable => contentCount > 0;
+
   String getDateString() {
     DateTime dateDateTime = DateTime.fromMillisecondsSinceEpoch(date);
     return "${dateDateTime.year}-${dateDateTime.month}-${dateDateTime.day}";

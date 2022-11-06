@@ -84,12 +84,32 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
                     year = snapshot.data!.first;
                     _handleYearSelection(year);
                   }
-                  return TimelinePage(
-                    selectedYear: year,
-                    handleEventSelection: _handleEventSelection,
-                    handleFilterNavigation: _handleFilterNavigation,
-                    handleYearSelection: _handleYearSelection,
-                    yearsList: yearsList,
+                  return FutureBuilder<List<Event>>(
+                      future: TimelineEventService.fetchEventsFromYear(
+                          year: _selectedYear),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return TimelinePage(
+                            selectedYear: year,
+                            handleEventSelection: _handleEventSelection,
+                            handleFilterNavigation: _handleFilterNavigation,
+                            handleYearSelection: _handleYearSelection,
+                            yearsList: yearsList,
+                            filteredEvents: snapshot.data!,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Scaffold(
+                            body: ErrorWidget(snapshot.error!),
+                          );
+                        } else {
+                          return const Scaffold(
+                            body: LoadingWidget(),
+                          );
+                        }
+                      });
+                } else if (snapshot.hasError) {
+                  return Scaffold(
+                    body: ErrorWidget(snapshot.error!),
                   );
                 } else {
                   return const Scaffold(

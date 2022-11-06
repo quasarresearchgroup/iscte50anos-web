@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 
 class EventCustomTimelineTile extends StatelessWidget {
@@ -66,3 +67,4 @@ class EventCustomTimelineTile extends StatelessWidget {
     );
   }
 }
+*/

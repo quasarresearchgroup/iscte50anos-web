@@ -12,17 +12,19 @@ class TimeLineBodyBuilder extends StatefulWidget {
   const TimeLineBodyBuilder({
     Key? key,
     required this.selectedYear,
-    this.filteredEvents,
-    this.yearsList,
+    required this.filteredEvents,
+    required this.yearsList,
     required this.handleYearSelection,
     required this.handleEventSelection,
+    required this.isFilterTimeline,
   }) : super(key: key);
 
   final int selectedYear;
-  final Future<List<int>>? yearsList;
-  final List<Event>? filteredEvents;
+  final Future<List<int>> yearsList;
+  final List<Event> filteredEvents;
   final void Function(int) handleYearSelection;
   final void Function(int) handleEventSelection;
+  final bool isFilterTimeline;
 
   @override
   State<TimeLineBodyBuilder> createState() => _TimeLineBodyBuilderState();
@@ -35,17 +37,17 @@ class _TimeLineBodyBuilderState extends State<TimeLineBodyBuilder> {
   @override
   void initState() {
     super.initState();
-    assert(widget.filteredEvents != null && widget.yearsList == null ||
-        widget.filteredEvents == null && widget.yearsList != null);
-    if (widget.filteredEvents != null) {
+    //assert(widget.filteredEvents != null && widget.yearsList == null || widget.filteredEvents == null && widget.yearsList != null);
+    /*if (widget.filteredEvents != null) {
       stateYears = Future(() =>
           widget.filteredEvents!.map((e) => e.dateTime.year).toSet().toList());
     } else {
       stateYears = widget.yearsList!;
-    }
+    }*/
+    stateYears = widget.yearsList;
     stateSelectedYear = widget.selectedYear;
 
-    if (widget.filteredEvents != null) {
+    if (widget.isFilterTimeline) {
       stateHandleYearSelection = (int year) {
         setState(() {
           stateSelectedYear = year;
@@ -94,15 +96,15 @@ class TimelineBody extends StatefulWidget {
     Key? key,
     required this.stateHandleYearSelection,
     required this.currentYear,
-    this.filteredEvents,
+    required this.filteredEvents,
     required this.handleEventSelection,
     required this.yearsList,
   }) : super(key: key);
 
-  final Function(int p1) stateHandleYearSelection;
   final int currentYear;
-  final List<Event>? filteredEvents;
-  final void Function(int) handleEventSelection;
+  final List<Event> filteredEvents;
+  final Function(int year) stateHandleYearSelection;
+  final void Function(int eventId) handleEventSelection;
   final List<int> yearsList;
 
   @override
@@ -110,21 +112,53 @@ class TimelineBody extends StatefulWidget {
 }
 
 class _TimelineBodyState extends State<TimelineBody> {
-  ValueNotifier<int?> selectedEventIndex = ValueNotifier(0);
-  late ValueNotifier<int?> selectedYearIndex = ValueNotifier(null);
+  ValueNotifier<int?> selectedEventIndex = ValueNotifier(null);
+  ValueNotifier<int?> selectedYearIndex = ValueNotifier(null);
+  int? lastYearIndex;
 
-  void changeSelectedEvent(int index) {
+  void handleEnterEvent() {
+    assert((selectedEventIndex.value == null &&
+            selectedYearIndex.value != null) ||
+        (selectedEventIndex.value != null && selectedYearIndex.value == null));
+    if (selectedEventIndex.value != null) {
+      Event selectedEvent = widget.filteredEvents[selectedEventIndex.value!];
+      if (selectedEvent.isVisitable) {
+        widget.handleEventSelection(selectedEvent.id);
+      }
+    } else if (selectedYearIndex.value != null) {
+      widget
+          .stateHandleYearSelection(widget.yearsList[selectedYearIndex.value!]);
+    }
     Logger().d(
-        "index: $index ; widget.filteredEvents?.length ${widget.filteredEvents}");
-    if (index >= 0) {
+        "selectedEventIndex: ${selectedEventIndex.value} ; selectedYearIndex: ${selectedYearIndex.value}");
+  }
+
+  void changeSelectedEvent(bool increase) {
+    Logger().d(
+        "increase: $increase ; widget.filteredEvents?.length ${widget.filteredEvents}");
+
+    int index = selectedEventIndex.value != null
+        ? increase
+            ? selectedEventIndex.value! + 1
+            : selectedEventIndex.value! - 1
+        : 0;
+
+    if (index >= 0 && index < widget.filteredEvents.length) {
       selectedEventIndex.value = index;
       selectedYearIndex.value = null;
     }
   }
 
-  void changeSelectedYear(int index) {
+  void changeSelectedYear(bool increase) {
+    int index = selectedYearIndex.value != null
+        ? increase
+            ? selectedYearIndex.value! + 1
+            : selectedYearIndex.value! - 1
+        : lastYearIndex ?? widget.yearsList.indexOf(widget.currentYear);
+
     if (index >= 0 && index < widget.yearsList.length) {
       selectedYearIndex.value = index;
+      lastYearIndex = index;
       selectedEventIndex.value = null;
     }
   }
@@ -151,38 +185,29 @@ class _TimelineBodyState extends State<TimelineBody> {
           IncrementYearsIntent: CallbackAction<IncrementYearsIntent>(
             onInvoke: (IncrementYearsIntent intent) {
               Logger().d("IncrementYearsIntent");
-              changeSelectedYear(selectedYearIndex.value != null
-                  ? selectedYearIndex.value! + 1
-                  : widget.yearsList.indexOf(widget.currentYear));
+              changeSelectedYear(true);
             },
           ),
           DecrementYearsIntent: CallbackAction<DecrementYearsIntent>(
             onInvoke: (DecrementYearsIntent intent) {
               Logger().d("DecrementYearsIntent");
-              changeSelectedYear(selectedYearIndex.value != null
-                  ? selectedYearIndex.value! - 1
-                  : widget.yearsList.indexOf(widget.currentYear));
+              changeSelectedYear(false);
             },
           ),
           IncrementEventsIntent: CallbackAction<IncrementEventsIntent>(
             onInvoke: (IncrementEventsIntent intent) {
               Logger().d("IncrementEventsIntent");
-              changeSelectedEvent(selectedEventIndex.value != null
-                  ? selectedEventIndex.value! + 1
-                  : 0);
+              changeSelectedEvent(true);
             },
           ),
           DecrementEventsIntent: CallbackAction<DecrementEventsIntent>(
             onInvoke: (DecrementEventsIntent intent) {
               Logger().d("DecrementEventsIntent");
-              changeSelectedEvent(selectedEventIndex.value != null
-                  ? selectedEventIndex.value! - 1
-                  : 0);
+              changeSelectedEvent(false);
             },
           ),
           EnterIntent: CallbackAction<EnterIntent>(
-              onInvoke: (EnterIntent intent) => Logger().d(
-                  "selectedEventIndex: ${selectedEventIndex.value} ; selectedYearIndex: ${selectedYearIndex.value}")),
+              onInvoke: (EnterIntent intent) => handleEnterEvent()),
           EscapeIntent: CallbackAction<EscapeIntent>(
             onInvoke: (EscapeIntent intent) {
               selectedYearIndex.value = null;

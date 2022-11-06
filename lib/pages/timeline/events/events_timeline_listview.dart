@@ -3,7 +3,6 @@ import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/events/timeline_tile.dart';
 import 'package:iscte_spots/pages/timeline/web_scroll_behaviour.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
-import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -60,27 +59,15 @@ class _EventTimelineListViewBuilderState
                       behavior: WebScrollBehaviour(),
                       child: ListView.builder(
                         itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          var eventTimelineTile = EventTimelineTile(
-                            index: index,
-                            event: data[index],
-                            isFirst: index == 0,
-                            isLast: index == data.length - 1,
-                            lineStyle: lineStyle,
-                            handleEventSelection: widget.handleEventSelection,
-                          );
-                          return index == value
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                    color: IscteTheme.iscteColor,
-                                    width: 2,
-                                    strokeAlign: StrokeAlign.inside,
-                                  )),
-                                  child: eventTimelineTile,
-                                )
-                              : eventTimelineTile;
-                        },
+                        itemBuilder: (context, index) => EventTimelineTile(
+                          index: index,
+                          event: data[index],
+                          isFirst: index == 0,
+                          isLast: index == data.length - 1,
+                          lineStyle: lineStyle,
+                          handleEventSelection: widget.handleEventSelection,
+                          isSelected: index == value,
+                        ),
                       ),
                     );
                   });
@@ -96,7 +83,7 @@ class _EventTimelineListViewBuilderState
   }
 }
 
-class EventTimelineListView extends StatefulWidget {
+class EventTimelineListView extends StatelessWidget {
   const EventTimelineListView({
     Key? key,
     required this.lineStyle,
@@ -111,43 +98,23 @@ class EventTimelineListView extends StatefulWidget {
   final ValueNotifier<int?> selectedEventIndex;
 
   @override
-  State<EventTimelineListView> createState() => _EventTimelineListViewState();
-}
-
-class _EventTimelineListViewState extends State<EventTimelineListView> {
-  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int?>(
-        valueListenable: widget.selectedEventIndex,
+        valueListenable: selectedEventIndex,
         builder: (context, value, _) {
           return ScrollConfiguration(
             behavior: WebScrollBehaviour(),
             child: ListView.builder(
-              itemCount: widget.data.length,
-              itemBuilder: (context, index) {
-                var eventTimelineTile = EventTimelineTile(
-                  index: index,
-                  event: widget.data[index],
-                  isFirst: index == 0,
-                  isLast: index == widget.data.length - 1,
-                  lineStyle: widget.lineStyle,
-                  handleEventSelection: widget.handleEventSelection,
-                );
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: index == value
-                      ? Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                            color: IscteTheme.iscteColor,
-                            width: 2,
-                            strokeAlign: StrokeAlign.outside,
-                          )),
-                          child: eventTimelineTile,
-                        )
-                      : eventTimelineTile,
-                );
-              },
+              itemCount: data.length,
+              itemBuilder: (context, index) => EventTimelineTile(
+                index: index,
+                event: data[index],
+                isFirst: index == 0,
+                isLast: index == data.length - 1,
+                lineStyle: lineStyle,
+                handleEventSelection: handleEventSelection,
+                isSelected: index == value,
+              ),
             ),
           );
         });

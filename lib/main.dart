@@ -9,6 +9,17 @@ const int qrPageIndex = 1;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ErrorWidget.builder = (details) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Ocorreu um problema!"),
+              Text(details.summary.toString()),
+            ],
+          ),
+        ),
+      );
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //usePathUrlStrategy();
   runApp(const MyApp());
