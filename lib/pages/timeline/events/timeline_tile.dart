@@ -34,11 +34,11 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
 
   late bool isEven = widget.index % 2 == 0;
 
-  final int flagFlex = 15;
+  static const int flagFlex = 15;
+  static const int informationFlex = 85;
+  static const int dateFlex = 10;
+  static const int totalFlex = flagFlex + informationFlex + dateFlex;
 
-  final int informationFlex = 85;
-
-  final int dateFlex = 10;
   late bool isHover = widget.isSelected;
   @override
   Widget build(BuildContext context) {
@@ -76,11 +76,15 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                 children: [
                   if (widget.event.scopeIcon != null)
                     Flexible(
-                        flex: flagFlex,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: widget.event.scopeIcon!,
-                        )),
+                      flex: flagFlex,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width *
+                                (flagFlex / totalFlex),
+                            child: widget.event.scopeIcon!),
+                      ),
+                    ),
                   Flexible(
                     flex: dateFlex,
                     child: EventTimelineIndicator(
