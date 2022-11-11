@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 class IscteTheme {
   static const Color iscteColor = Color.fromRGBO(14, 41, 194, 1);
+  static const Color iscteColorSmooth = Color(0xFF0E83C2);
   static const Color greyColor = Color.fromRGBO(245, 244, 242, 1);
 
   //static const Color iscteColorLight = iscteColor.withGreen(iscteColor.green + 100);
@@ -61,9 +62,9 @@ class IscteTheme {
       ),
       scaffoldBackgroundColor: Colors.white,
       backgroundColor: Colors.white,
-      primaryColor: iscteColor,
+      primaryColor: Colors.white,
       errorColor: Colors.deepOrangeAccent,
-      bottomAppBarColor: iscteColor,
+      bottomAppBarColor: Colors.white,
       iconTheme: ThemeData.light().iconTheme.copyWith(color: Colors.black),
       appBarTheme: _appBarTheme,
       navigationRailTheme: navigationRailThemeData,

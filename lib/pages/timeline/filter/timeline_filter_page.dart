@@ -48,7 +48,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       TimelineFilterParams(topics: {}, scopes: {}, searchText: "");
 
   late final TextEditingController searchBarController;
-
+  final double childAspectRatio = 31 / 4;
   @override
   void initState() {
     searchBarController = TextEditingController();
@@ -77,7 +77,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
     return Scaffold(
       appBar: MyAppBar(
         leading: const DynamicBackIconButton(),
-        trailing: (PlatformService.instance.isIos)
+        /*trailing: (PlatformService.instance.isIos)
             ? CupertinoButton(
                 onPressed: _enableAdvancedSearch,
                 child: Icon(
@@ -95,8 +95,8 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                   advancedSearch ? Icons.filter_alt : Icons.filter_alt_outlined,
                   semanticLabel: AppLocalizations.of(context)!
                       .timelineSearchHintInsideTopic,
-                )),
-        middle: buildSearchBar(context, filterParams.isTopicsEmpty()),
+                )),*/
+        middle: buildSearchBar(context),
       ),
       body: buildBody(context),
     );
@@ -142,6 +142,22 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
+                            flex: rightProportion,
+                            child: CustomScrollView(
+                              scrollDirection: Axis.vertical,
+                              slivers: [
+                                buildAvailableEventScopeHeader(),
+                                buildEventScopesCheckBoxList(),
+                                buildAvailableTopicsHeader(context),
+                                buildTopicsCheckBoxList(),
+                              ],
+                            ),
+                          ),
+                          const VerticalDivider(
+                            width: dividerWidth,
+                            thickness: dividerThickness,
+                          ),
+                          Flexible(
                             flex: 100 - rightProportion,
                             child: CustomScrollView(
                               scrollDirection: Axis.vertical,
@@ -158,22 +174,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                               ],
                             ),
                           ),
-                          const VerticalDivider(
-                            width: dividerWidth,
-                            thickness: dividerThickness,
-                          ),
-                          Flexible(
-                            flex: rightProportion,
-                            child: CustomScrollView(
-                              scrollDirection: Axis.vertical,
-                              slivers: [
-                                buildAvailableEventScopeHeader(),
-                                buildEventScopesCheckBoxList(),
-                                buildAvailableTopicsHeader(context),
-                                buildTopicsCheckBoxList(),
-                              ],
-                            ),
-                          )
                         ],
                       )
                     : Column(
@@ -300,8 +300,8 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         if (snapshot.hasData) {
           List<Topic> data = snapshot.data!;
           return SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 16 / 4),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: childAspectRatio),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   return CheckboxListTile(
@@ -405,9 +405,9 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         if (snapshot.hasData) {
           List<EventScope> data = snapshot.data!;
           return SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 16 / 4,
+              childAspectRatio: childAspectRatio,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -507,7 +507,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
 
   //endregion
 
-  Widget buildSearchBar(BuildContext context, bool isEmptySelectedTopics) {
+  Widget buildSearchBar(BuildContext context) {
     return Center(
       child: DynamicTextField(
         style: Theme.of(context)
@@ -515,9 +515,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
             .headlineMedium
             ?.copyWith(color: IscteTheme.iscteColor),
         controller: searchBarController,
-        placeholder: !advancedSearch
-            ? AppLocalizations.of(context)!.timelineSearchHint
-            : AppLocalizations.of(context)!.timelineSearchHintInsideTopic,
+        placeholder: "Pesquise aqui",
         placeholderStyle: Theme.of(context)
             .textTheme
             .headlineMedium

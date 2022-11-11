@@ -36,7 +36,6 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   final List<YoutubePlayerController> _videoControllers = [];
   late Future<List<Topic>> allTopicFromEvent;
   late Future<List<Content>> allContentFromEvent;
-  String subtitleText = "";
 
   @override
   void initState() {
@@ -46,11 +45,6 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
     event.then((value) {
       allContentFromEvent = value.getContentList;
       allTopicFromEvent = value.getTopicsList;
-      subtitleText = "id: ${value.id}";
-      allTopicFromEvent.then((value) {
-        subtitleText +=
-            "; topics: ${value.map((e) => e.title ?? "").join(", ")}";
-      });
     });
   }
 
@@ -66,9 +60,21 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
             future: eventTitle,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text("Details: ${snapshot.data!}");
+                return Text(
+                  "Details: ${snapshot.data!}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      ?.copyWith(color: IscteTheme.iscteColor),
+                );
               } else {
-                return const Text("Details");
+                return Text(
+                  "Details",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      ?.copyWith(color: IscteTheme.iscteColor),
+                );
               }
             }),
         leading: const DynamicBackIconButton(),
@@ -114,33 +120,6 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                       return CustomScrollView(
                         scrollDirection: Axis.vertical,
                         slivers: [
-                          SliverToBoxAdapter(
-                            child: Flex(
-                              direction: Axis.horizontal,
-                              children: [
-                                if (snapshotEvent.scopeIcon != null)
-                                  Flexible(
-                                    flex: 1,
-                                    child: SizedBox(
-                                      height: kToolbarHeight,
-                                      child: snapshotEvent.scopeIcon!,
-                                    ),
-                                  ),
-                                Flexible(
-                                  flex: 3,
-                                  child: Column(
-                                    children: [
-                                      Text(snapshotEvent.title),
-                                      Text(subtitleText)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SliverToBoxAdapter(
-                            child: Divider(),
-                          ),
                           if (listContents.isNotEmpty)
                             SliverList(
                               delegate: SliverChildBuilderDelegate(
@@ -235,10 +214,17 @@ class TimelineDetailListContent extends StatelessWidget {
           HelperMethods.launchURL(content.link);
         }
       },
+      hoverColor: IscteTheme.iscteColorSmooth,
       tileColor: !isEven ? IscteTheme.greyColor : Colors.transparent,
       leading: content.contentIcon,
-      title: Text(content.title ?? content.link,
-          maxLines: 2, overflow: TextOverflow.ellipsis),
+      title: Text(
+          content.title != null
+              ? content.title!.isNotEmpty
+                  ? content.title!
+                  : content.link
+              : content.link,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis),
     );
   }
 }

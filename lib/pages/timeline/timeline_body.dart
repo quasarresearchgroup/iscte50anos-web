@@ -60,33 +60,36 @@ class _TimeLineBodyBuilderState extends State<TimeLineBodyBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<int>>(
-      future: stateYears,
-      builder: (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.isEmpty) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: FutureBuilder<List<int>>(
+        future: stateYears,
+        builder: (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.isEmpty) {
+              return Center(
+                child: Text(
+                    AppLocalizations.of(context)?.timelineNothingFound ?? ""),
+              );
+            } else {
+              return TimelineBody(
+                stateHandleYearSelection: stateHandleYearSelection,
+                currentYear: stateSelectedYear,
+                filteredEvents: widget.filteredEvents,
+                handleEventSelection: widget.handleEventSelection,
+                yearsList: snapshot.data!,
+              );
+            }
+          } else if (snapshot.connectionState != ConnectionState.done) {
+            return const LoadingWidget();
+          } else if (snapshot.hasError) {
             return Center(
-              child: Text(
-                  AppLocalizations.of(context)?.timelineNothingFound ?? ""),
-            );
+                child: Text(AppLocalizations.of(context)!.generalError));
           } else {
-            return TimelineBody(
-              stateHandleYearSelection: stateHandleYearSelection,
-              currentYear: stateSelectedYear,
-              filteredEvents: widget.filteredEvents,
-              handleEventSelection: widget.handleEventSelection,
-              yearsList: snapshot.data!,
-            );
+            return const LoadingWidget();
           }
-        } else if (snapshot.connectionState != ConnectionState.done) {
-          return const LoadingWidget();
-        } else if (snapshot.hasError) {
-          return Center(
-              child: Text(AppLocalizations.of(context)!.generalError));
-        } else {
-          return const LoadingWidget();
-        }
-      },
+        },
+      ),
     );
   }
 }

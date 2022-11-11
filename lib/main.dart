@@ -14,7 +14,7 @@ void main() async {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Ocorreu um problema!"),
+              const Text("Ocorreu um problema!"),
               Text(details.summary.toString()),
             ],
           ),
@@ -54,44 +54,13 @@ class _MyAppState extends State<MyApp> {
       //showSemanticsDebugger: true,
       debugShowCheckedModeBanner: false,
       title: 'IscteSpots',
-      darkTheme: IscteTheme.darkThemeData,
+      //darkTheme: IscteTheme.darkThemeData,
       theme: IscteTheme.lightThemeData,
+      themeMode: ThemeMode.light,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerDelegate: TimelineRouterDelegate(),
       routeInformationParser: TimelineRouteInformationParser(),
-      themeMode: ThemeMode.light,
-
-      //home: TimelinePage(),
-      //onGenerateRoute: generatedRoutes,
-      //routes: PageRouter.routes,
-      /*onUnknownRoute: (settings) => PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation<double> animation,
-                    Animation<double> secondaryAnimation) =>
-                UnknownPage()),
-        initialRoute: PageRouter.initialRoute,
-        */
     );
   }
 }
-/*
-Route? generatedRoutes(RouteSettings routeSettings) {
-  Widget widget =
-      PageRouter.resolve(routeSettings.name ?? "", routeSettings.arguments);
-  //var buildPageAsync = await _buildPageAsync(page: widget);
-  return PageRouteBuilder(
-    transitionDuration: const Duration(seconds: 1),
-    maintainState: true,
-    pageBuilder: (context, animation, secondaryAnimation) => widget,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      Animatable<Offset> tween =
-          Tween(begin: const Offset(1.0, 0.0), end: Offset.zero).chain(
-        CurveTween(curve: Curves.ease),
-      );
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}*/

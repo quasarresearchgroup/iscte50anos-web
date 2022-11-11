@@ -20,35 +20,8 @@ class EventTimelineIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget verticalConnector = Expanded(
-      child: Container(
-        width: 6,
-        color: Theme.of(context).iconTheme.color,
-      ),
-    );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        !isFirst ? verticalConnector : const Spacer(),
-        EventTImelineIndicatorDate(event: event),
-        !isLast ? verticalConnector : const Spacer(),
-      ],
-    );
-  }
-}
-
-class EventTImelineIndicatorDate extends StatelessWidget {
-  const EventTImelineIndicatorDate({
-    Key? key,
-    required this.event,
-  }) : super(key: key);
-
-  final Event event;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
+    return Center(
+        child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -66,6 +39,6 @@ class EventTImelineIndicatorDate extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

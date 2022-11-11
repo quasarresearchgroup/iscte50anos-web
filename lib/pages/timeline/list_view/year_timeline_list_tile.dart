@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:timeline_tile/timeline_tile.dart';
+import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 
 class YearTimelineTile extends StatefulWidget {
   const YearTimelineTile({
@@ -34,9 +33,6 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
   late bool isHover = widget.isHover;
   @override
   Widget build(BuildContext context) {
-    LineStyle lineStyle = LineStyle(
-        color: Theme.of(context).iconTheme.color ?? Colors.black, thickness: 6);
-
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (event) => setState(() => isHover = true),
@@ -49,50 +45,20 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
         onTap: () {
           widget.changeYearFunction(widget.year);
         },
-        child: TimelineTile(
-          beforeLineStyle: lineStyle,
-          afterLineStyle: lineStyle,
-          axis: TimelineAxis.horizontal,
-          alignment: TimelineAlign.manual,
-          lineXY: timelineIconOffset,
-          isFirst: widget.isFirst,
-          isLast: widget.isLast,
-          hasIndicator: true,
-          indicatorStyle: IndicatorStyle(
-            drawGap: true,
-            padding: EdgeInsets.symmetric(
-                horizontal: widget.isHover || isHover ? 16 : 8.0),
-            indicator: Center(
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 500),
-                child: Icon(
-                  widget.isSelected
-                      ? FontAwesomeIcons.calendarCheck
-                      : FontAwesomeIcons.calendar,
-                  size: widget.isHover || isHover ? 34 : 24,
-                ),
-              ),
-            ),
-          ),
-          startChild: Container(
+        child: Card(
+          elevation: 2,
+          color: widget.isHover || isHover ? IscteTheme.iscteColorSmooth : null,
+          child: Container(
             constraints: BoxConstraints(minWidth: minWidth2),
             child: Center(
-              child: AnimatedDefaultTextStyle(
-                style: (widget.isHover || isHover
-                            ? Theme.of(context).textTheme.headlineMedium
-                            : Theme.of(context).textTheme.headlineSmall)
-                        ?.copyWith(
-                      color: Theme.of(context).iconTheme.color,
-                    ) ??
-                    const TextStyle(),
-                duration: const Duration(milliseconds: 500),
-                child: Text(
-                  widget.year.toString(),
-                ),
+              child: Text(
+                widget.year.toString(),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: widget.isSelected ? IscteTheme.iscteColor : null,
+                    ),
               ),
             ),
           ),
-          //),
         ),
       ),
     );

@@ -3,12 +3,10 @@ import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/events/event_timeline_indicator.dart';
 import 'package:iscte_spots/pages/timeline/events/timeline_information_child.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class EventTimelineTile extends StatefulWidget {
   EventTimelineTile({
     Key? key,
-    required this.lineStyle,
     required this.isFirst,
     required this.isLast,
     required this.event,
@@ -22,7 +20,6 @@ class EventTimelineTile extends StatefulWidget {
   final bool isLast;
   final bool isSelected;
   final Event event;
-  final LineStyle lineStyle;
   final void Function(int) handleEventSelection;
 
   @override
@@ -58,56 +55,57 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
             : SystemMouseCursors.forbidden,
         onEnter: (event) => setState(() => isHover = true),
         onExit: (event) => setState(() => isHover = false),
-        child: AnimatedSize(
-          duration: const Duration(milliseconds: 300),
-          child: SizedBox(
-            height: widget.isSelected || isHover ? 130 : 100,
-            child: Card(
-              margin: EdgeInsets.zero,
-              color: !isEven ? Colors.transparent : IscteTheme.greyColor,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (widget.event.scopeIcon != null)
-                    Flexible(
-                      flex: flagFlex,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                            width: MediaQuery.of(context).size.width *
-                                (flagFlex / totalFlex),
-                            child: widget.event.scopeIcon!),
-                      ),
-                    ),
+        child: SizedBox(
+          height: 100,
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: widget.isSelected || isHover
+                ? IscteTheme.iscteColorSmooth
+                : isEven
+                    ? IscteTheme.greyColor
+                    : null,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (widget.event.scopeIcon != null)
                   Flexible(
-                    flex: dateFlex,
-                    child: EventTimelineIndicator(
-                      isEven: isEven,
-                      event: widget.event,
-                      textColor: informationChildTextColor,
-                      isFirst: widget.isFirst,
-                      isLast: widget.isLast,
-                    ),
-                  ),
-                  Expanded(
-                    flex: informationFlex,
+                    flex: flagFlex,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: TimelineInformationChild(
-                        isEven: isEven,
-                        data: widget.event,
-                        //textColor: informationChildTextColor,
-                      ),
+                      child: SizedBox(
+                          width: MediaQuery.of(context).size.width *
+                              (flagFlex / totalFlex),
+                          child: widget.event.scopeIcon!),
                     ),
                   ),
-                ],
-              ),
+                Flexible(
+                  flex: dateFlex,
+                  child: EventTimelineIndicator(
+                    isEven: isEven,
+                    event: widget.event,
+                    textColor: informationChildTextColor,
+                    isFirst: widget.isFirst,
+                    isLast: widget.isLast,
+                  ),
+                ),
+                Expanded(
+                  flex: informationFlex,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TimelineInformationChild(
+                      isEven: isEven,
+                      data: widget.event,
+                      //textColor: informationChildTextColor,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

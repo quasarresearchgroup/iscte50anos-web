@@ -4,7 +4,6 @@ import 'package:iscte_spots/pages/timeline/events/timeline_tile.dart';
 import 'package:iscte_spots/pages/timeline/web_scroll_behaviour.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class EventTimelineListViewBuilder extends StatefulWidget {
   const EventTimelineListViewBuilder({
@@ -43,9 +42,6 @@ class _EventTimelineListViewBuilderState
 
   @override
   Widget build(BuildContext context) {
-    final LineStyle lineStyle =
-        LineStyle(color: Theme.of(context).focusColor, thickness: 6);
-
     return FutureBuilder<List<Event>>(
         future: currentEvents,
         builder: (context, snapshot) {
@@ -64,7 +60,6 @@ class _EventTimelineListViewBuilderState
                           event: data[index],
                           isFirst: index == 0,
                           isLast: index == data.length - 1,
-                          lineStyle: lineStyle,
                           handleEventSelection: widget.handleEventSelection,
                           isSelected: index == value,
                         ),
@@ -86,13 +81,11 @@ class _EventTimelineListViewBuilderState
 class EventTimelineListView extends StatelessWidget {
   const EventTimelineListView({
     Key? key,
-    required this.lineStyle,
     required this.data,
     required this.handleEventSelection,
     required this.selectedEventIndex,
   }) : super(key: key);
 
-  final LineStyle lineStyle;
   final List<Event> data;
   final void Function(int) handleEventSelection;
   final ValueNotifier<int?> selectedEventIndex;
@@ -111,7 +104,6 @@ class EventTimelineListView extends StatelessWidget {
                 event: data[index],
                 isFirst: index == 0,
                 isLast: index == data.length - 1,
-                lineStyle: lineStyle,
                 handleEventSelection: handleEventSelection,
                 isSelected: index == value,
               ),
