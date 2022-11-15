@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
+import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
+import 'package:iscte_spots/pages/timeline/filter/timeline_filter_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:logger/logger.dart';
+
+import '../../services/timeline/timeline_topic_service.dart';
 
 class TimelinePage extends StatefulWidget {
   TimelinePage({
@@ -15,11 +19,14 @@ class TimelinePage extends StatefulWidget {
     required this.handleYearSelection,
     required this.handleFilterNavigation,
     required this.filteredEvents,
+    required this.handleFilterSubmission,
   }) : super(key: key);
   final Logger _logger = Logger();
   final Function(int) handleEventSelection;
   final Function(int) handleYearSelection;
   final Function() handleFilterNavigation;
+  void Function(TimelineFilterParams filters, bool showResults)
+      handleFilterSubmission;
   static const String pageRoute = "timeline";
   static const ValueKey pageKey = ValueKey(pageRoute);
   final int selectedYear;
@@ -46,10 +53,12 @@ class _TimelinePageState extends State<TimelinePage> {
         //title: AppLocalizations.of(context)!.timelineScreen,
         title: "Cronologia 50 anos Iscte",
         trailing: (!PlatformService.instance.isIos)
-            ? IconButton(
-                onPressed: widget.handleFilterNavigation,
-                icon: const Icon(Icons.search),
-              )
+            ? Builder(builder: (context) {
+                return IconButton(
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  icon: const Icon(Icons.search),
+                );
+              })
             : CupertinoButton(
                 onPressed: widget.handleFilterNavigation,
                 child: const Icon(CupertinoIcons.search),
@@ -60,10 +69,21 @@ class _TimelinePageState extends State<TimelinePage> {
               deleteTimelineData: deleteTimelineData,
               refreshTimelineData: deleteGetAllEvents,
             ),*/
+
+      endDrawer: Drawer(
+          width: MediaQuery.of(context).size.width * 0.4,
+          child: TimelineFilterPage(
+            handleEventSelection: widget.handleEventSelection,
+            handleYearSelection: widget.handleYearSelection,
+            handleFilterSubmission: widget.handleFilterSubmission,
+            yearsList: widget.yearsList,
+            availableTopics: TimelineTopicService.fetchAllTopics(),
+            availableScopes: Future(() => EventScope.values),
+          )),
       body: TimeLineBodyBuilder(
         handleEventSelection: widget.handleEventSelection,
-        selectedYear: widget.selectedYear,
         handleYearSelection: widget.handleYearSelection,
+        selectedYear: widget.selectedYear,
         yearsList: widget.yearsList,
         filteredEvents: widget.filteredEvents,
         isFilterTimeline: false,

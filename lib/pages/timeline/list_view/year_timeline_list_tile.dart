@@ -38,10 +38,6 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
       onEnter: (event) => setState(() => isHover = true),
       onExit: (event) => setState(() => isHover = false),
       child: GestureDetector(
-        //splashColor: color2,
-        //highlightColor: color2,
-        //enableFeedback: true,
-
         onTap: () {
           widget.changeYearFunction(widget.year);
         },

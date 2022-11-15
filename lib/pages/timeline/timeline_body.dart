@@ -145,7 +145,6 @@ class _TimelineBodyState extends State<TimelineBody> {
             ? selectedEventIndex.value! + 1
             : selectedEventIndex.value! - 1
         : 0;
-
     if (index >= 0 && index < widget.filteredEvents.length) {
       selectedEventIndex.value = index;
       selectedYearIndex.value = null;

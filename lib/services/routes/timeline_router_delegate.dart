@@ -93,6 +93,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
                             selectedYear: year,
                             handleEventSelection: _handleEventSelection,
                             handleFilterNavigation: _handleFilterNavigation,
+                            handleFilterSubmission: _handleFilterSubmission,
                             handleYearSelection: _handleYearSelection,
                             yearsList: yearsList,
                             filteredEvents: snapshot.data!,

@@ -61,9 +61,20 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
     searchBarController.addListener(() {
       filterParams.searchText = searchBarController.text;
     });*/
-    filterParams.addListener(() {
-      widget.handleFilterSubmission(filterParams, false);
-    });
+    // filterParams.addListener(() {
+    //   widget.handleFilterSubmission(filterParams, false);
+    // });
+  }
+
+  int gridCont(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return width > 2000
+        ? 4
+        : width > 1500
+            ? 3
+            : width > 1000
+                ? 2
+                : 1;
   }
 
   @override
@@ -148,7 +159,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                               slivers: [
                                 buildAvailableEventScopeHeader(),
                                 buildEventScopesCheckBoxList(),
-                                buildAvailableTopicsHeader(context),
+                                buildAvailableTopicsHeader(),
                                 buildTopicsCheckBoxList(),
                               ],
                             ),
@@ -188,7 +199,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                                     dividerWidth, dividerThickness),
                                 buildAvailableEventScopeHeader(),
                                 buildEventScopesCheckBoxList(),
-                                buildAvailableTopicsHeader(context),
+                                buildAvailableTopicsHeader(),
                                 buildTopicsCheckBoxList(),
                                 //SliverToBoxAdapter(child: divider),
                                 //SliverToBoxAdapter(child: submitTextButton),
@@ -207,46 +218,49 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   }
 
   //region Topics
-  Widget buildAvailableTopicsHeader(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                AppLocalizations.of(context)!.timelineAvailableTopics,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: IscteTheme.iscteColor),
+  Widget buildAvailableTopicsHeader() {
+    return Builder(builder: (context) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)!.timelineAvailableTopics,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: IscteTheme.iscteColor),
+                ),
               ),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            DynamicTextButton(
-              onPressed: _selectAllTopics,
-              child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: IscteTheme.iscteColor)),
-            ),
-            DynamicTextButton(
-              onPressed: _clearTopicsList,
-              child: Text(
-                  AppLocalizations.of(context)!.timelineSelectClearButton,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: IscteTheme.iscteColor)),
-            ),
-          ],
+              Expanded(
+                child: Container(),
+              ),
+              DynamicTextButton(
+                onPressed: _selectAllTopics,
+                child: Text(
+                    AppLocalizations.of(context)!.timelineSelectAllButton,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(color: IscteTheme.iscteColor)),
+              ),
+              DynamicTextButton(
+                onPressed: _clearTopicsList,
+                child: Text(
+                    AppLocalizations.of(context)!.timelineSelectClearButton,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(color: IscteTheme.iscteColor)),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget selectedTopicsWidget(
@@ -301,7 +315,8 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
           List<Topic> data = snapshot.data!;
           return SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: childAspectRatio),
+                  crossAxisCount: gridCont(context),
+                  childAspectRatio: childAspectRatio),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   return CheckboxListTile(
@@ -366,7 +381,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
             Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Available Scopes...", //TODO
+                  "Scopes", //TODO
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge
@@ -406,7 +421,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
           List<EventScope> data = snapshot.data!;
           return SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+              crossAxisCount: gridCont(context),
               childAspectRatio: childAspectRatio,
             ),
             delegate: SliverChildBuilderDelegate(
