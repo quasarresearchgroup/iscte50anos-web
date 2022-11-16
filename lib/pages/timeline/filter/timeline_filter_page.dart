@@ -4,13 +4,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
+import 'package:iscte_spots/pages/timeline/filter/timeline_filter_scopes_widget.dart';
+import 'package:iscte_spots/pages/timeline/filter/timeline_filter_topics_widget.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_field.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
-import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 
 class TimelineFilterPage extends StatefulWidget {
@@ -48,7 +49,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       TimelineFilterParams(topics: {}, scopes: {}, searchText: "");
 
   late final TextEditingController searchBarController;
-  final double childAspectRatio = 31 / 4;
+  final double childAspectRatio = 20 / 4;
   @override
   void initState() {
     searchBarController = TextEditingController();
@@ -61,12 +62,13 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
     searchBarController.addListener(() {
       filterParams.searchText = searchBarController.text;
     });*/
-    // filterParams.addListener(() {
-    //   widget.handleFilterSubmission(filterParams, false);
-    // });
+    filterParams.addListener(() {
+      //widget.handleFilterSubmission(filterParams, false);
+      setState(() {});
+    });
   }
 
-  int gridCont(BuildContext context) {
+  int gridCount(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return width > 2000
         ? 4
@@ -157,10 +159,18 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                             child: CustomScrollView(
                               scrollDirection: Axis.vertical,
                               slivers: [
-                                buildAvailableEventScopeHeader(),
-                                buildEventScopesCheckBoxList(),
-                                buildAvailableTopicsHeader(),
-                                buildTopicsCheckBoxList(),
+                                ScopesFilterWidget(
+                                  filterParams: filterParams,
+                                  availableScopes: widget.availableScopes,
+                                  childAspectRatio: childAspectRatio,
+                                  gridCount: gridCount(context),
+                                ),
+                                TopicsFilterWidget(
+                                  filterParams: filterParams,
+                                  availableTopics: widget.availableTopics,
+                                  childAspectRatio: childAspectRatio,
+                                  gridCount: gridCount(context),
+                                ),
                               ],
                             ),
                           ),
@@ -197,10 +207,18 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                                     dividerWidth, dividerThickness),
                                 selectedTopicsWidget(
                                     dividerWidth, dividerThickness),
-                                buildAvailableEventScopeHeader(),
-                                buildEventScopesCheckBoxList(),
-                                buildAvailableTopicsHeader(),
-                                buildTopicsCheckBoxList(),
+                                ScopesFilterWidget(
+                                  filterParams: filterParams,
+                                  availableScopes: widget.availableScopes,
+                                  childAspectRatio: childAspectRatio,
+                                  gridCount: gridCount(context),
+                                ),
+                                TopicsFilterWidget(
+                                  filterParams: filterParams,
+                                  availableTopics: widget.availableTopics,
+                                  childAspectRatio: childAspectRatio,
+                                  gridCount: gridCount(context),
+                                ),
                                 //SliverToBoxAdapter(child: divider),
                                 //SliverToBoxAdapter(child: submitTextButton),
                               ],
@@ -218,69 +236,27 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   }
 
   //region Topics
-  Widget buildAvailableTopicsHeader() {
-    return Builder(builder: (context) {
-      return SliverToBoxAdapter(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  AppLocalizations.of(context)!.timelineAvailableTopics,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: IscteTheme.iscteColor),
-                ),
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              DynamicTextButton(
-                onPressed: _selectAllTopics,
-                child: Text(
-                    AppLocalizations.of(context)!.timelineSelectAllButton,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: IscteTheme.iscteColor)),
-              ),
-              DynamicTextButton(
-                onPressed: _clearTopicsList,
-                child: Text(
-                    AppLocalizations.of(context)!.timelineSelectClearButton,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: IscteTheme.iscteColor)),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
 
   Widget selectedTopicsWidget(
       final double dividerWidth, final double dividerThickness) {
-    Widget wrap = Wrap(
-      spacing: 5,
-      runSpacing: 5,
-      alignment: WrapAlignment.start,
-      direction: Axis.horizontal,
-      children: filterParams.getTopics
-          .map((Topic topic) => Chip(
-                label: Text(topic.title ?? ""),
-                onDeleted: () {
-                  setState(() {
-                    filterParams.removeTopic(topic);
-                  });
-                },
-              ))
-          .toList(),
-    );
+    Widget wrap = AnimatedBuilder(
+        animation: filterParams,
+        builder: (context, child) {
+          return Wrap(
+            spacing: 5,
+            runSpacing: 5,
+            alignment: WrapAlignment.start,
+            direction: Axis.horizontal,
+            children: filterParams.getTopics
+                .map((Topic topic) => Chip(
+                      label: Text(topic.title ?? ""),
+                      onDeleted: () {
+                        filterParams.removeTopic(topic);
+                      },
+                    ))
+                .toList(),
+          );
+        });
     return SliverToBoxAdapter(
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
@@ -307,161 +283,9 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
     );
   }
 
-  Widget buildTopicsCheckBoxList() {
-    return FutureBuilder<List<Topic>>(
-      future: widget.availableTopics,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<Topic> data = snapshot.data!;
-          return SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: gridCont(context),
-                  childAspectRatio: childAspectRatio),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return CheckboxListTile(
-                    //activeColor: IscteTheme.iscteColor,
-                    value: filterParams.containsTopic(data[index]),
-                    title: SingleChildScrollView(
-                      controller: ScrollController(),
-                      scrollDirection: Axis.horizontal,
-                      child: Text(data[index].title ?? ""),
-                    ),
-                    onChanged: (bool? bool) {
-                      if (bool != null) {
-                        if (bool) {
-                          setState(() {
-                            filterParams.addTopic(data[index]);
-                          });
-                        } else {
-                          setState(() {
-                            filterParams.removeTopic(data[index]);
-                          });
-                        }
-                        widget._logger.d(filterParams);
-                      }
-                    },
-                  );
-                },
-                childCount: data.length,
-              ));
-        } else if (snapshot.hasError) {
-          return SliverToBoxAdapter(
-              child: ErrorWidget(AppLocalizations.of(context)!.generalError));
-        } else {
-          return const SliverToBoxAdapter(child: LoadingWidget());
-        }
-      },
-    );
-  }
-
-  void _selectAllTopics() async {
-    List<Topic> allTopics = await widget.availableTopics;
-    setState(() {
-      filterParams.addAllTopic(allTopics);
-    });
-  }
-
-  void _clearTopicsList() {
-    setState(() {
-      filterParams.clearTopics();
-    });
-  }
-
   //endregion
 
   //region EventScopes
-
-  Widget buildAvailableEventScopeHeader() {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Scopes", //TODO
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: IscteTheme.iscteColor),
-                )),
-            Expanded(
-              child: Container(),
-            ),
-            DynamicTextButton(
-              onPressed: _selectAllScopes,
-              child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: IscteTheme.iscteColor)),
-            ),
-            DynamicTextButton(
-              onPressed: _clearScopesList,
-              child: Text(
-                  AppLocalizations.of(context)!.timelineSelectClearButton,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: IscteTheme.iscteColor)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildEventScopesCheckBoxList() {
-    return FutureBuilder<List<EventScope>>(
-      future: widget.availableScopes,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<EventScope> data = snapshot.data!;
-          return SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: gridCont(context),
-              childAspectRatio: childAspectRatio,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return CheckboxListTile(
-                  activeColor: IscteTheme.iscteColor,
-                  value: filterParams.containsScope(data[index]),
-                  title: SingleChildScrollView(
-                    controller: ScrollController(),
-                    scrollDirection: Axis.horizontal,
-                    child: Text(data[index].name ?? ""),
-                  ),
-                  onChanged: (bool? bool) {
-                    if (bool != null) {
-                      if (bool) {
-                        setState(() {
-                          filterParams.addScope(data[index]);
-                        });
-                      } else {
-                        setState(() {
-                          filterParams.removeScope(data[index]);
-                        });
-                      }
-                    }
-                  },
-                );
-              },
-              childCount: data.length,
-              addAutomaticKeepAlives: true,
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return SliverToBoxAdapter(
-              child: ErrorWidget(AppLocalizations.of(context)!.generalError));
-        } else {
-          return const SliverToBoxAdapter(child: LoadingWidget());
-        }
-      },
-    );
-  }
 
   Widget selectedScopesWidget(
       final double dividerWidth, final double dividerThickness) {
@@ -505,19 +329,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
               ]),
       ),
     );
-  }
-
-  Future<void> _selectAllScopes() async {
-    List<EventScope> allScopes = await widget.availableScopes;
-    setState(() {
-      filterParams.addAllScope(allScopes);
-    });
-  }
-
-  Future<void> _clearScopesList() async {
-    setState(() {
-      filterParams.clearScopes();
-    });
   }
 
   //endregion

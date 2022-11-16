@@ -59,10 +59,12 @@ class _TimelinePageState extends State<TimelinePage> {
                   icon: const Icon(Icons.search),
                 );
               })
-            : CupertinoButton(
-                onPressed: widget.handleFilterNavigation,
-                child: const Icon(CupertinoIcons.search),
-              ),
+            : Builder(builder: (context) {
+                return CupertinoButton(
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  child: const Icon(CupertinoIcons.search),
+                );
+              }),
       ),
       /*floatingActionButton: TimelineDial(
               isDialOpen: isDialOpen,

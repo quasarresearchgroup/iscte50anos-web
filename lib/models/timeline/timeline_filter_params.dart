@@ -24,6 +24,7 @@ class TimelineFilterParams with ChangeNotifier {
   set searchText(String value) {
     _searchText = value;
     notifyListeners();
+    _logger.i(this);
   }
 
   //region Topics
@@ -31,6 +32,7 @@ class TimelineFilterParams with ChangeNotifier {
   set topics(Set<Topic> value) {
     _topics = value;
     notifyListeners();
+    _logger.i(this);
   }
 
   bool isTopicsEmpty() => _topics.isEmpty;
@@ -38,22 +40,26 @@ class TimelineFilterParams with ChangeNotifier {
   void addTopic(Topic topic) {
     _topics.add(topic);
     notifyListeners();
+    _logger.i(this);
   }
 
   void removeTopic(Topic topic) {
     _topics.remove(topic);
     notifyListeners();
+    _logger.i(this);
   }
 
   void clearTopics() {
     _topics.clear();
     notifyListeners();
+    _logger.i(this);
   }
 
   bool containsTopic(Topic topic) => _topics.contains(topic);
 
   void addAllTopic(Iterable<Topic> iterableTopics) {
     _topics.addAll(iterableTopics);
+    _logger.i(this);
     notifyListeners();
   }
   //endregion
@@ -64,6 +70,7 @@ class TimelineFilterParams with ChangeNotifier {
 
   set scopes(Set<EventScope> value) {
     _scopes = value;
+    _logger.i(this);
     notifyListeners();
   }
 
@@ -71,16 +78,19 @@ class TimelineFilterParams with ChangeNotifier {
 
   void addScope(EventScope scope) {
     _scopes.add(scope);
+    _logger.i(this);
     notifyListeners();
   }
 
   void removeScope(EventScope scope) {
     _scopes.remove(scope);
+    _logger.i(this);
     notifyListeners();
   }
 
   void clearScopes() {
     _scopes.clear();
+    _logger.i(this);
     notifyListeners();
   }
 
@@ -88,6 +98,7 @@ class TimelineFilterParams with ChangeNotifier {
 
   void addAllScope(Iterable<EventScope> iterableScopes) {
     _scopes.addAll(iterableScopes);
+    _logger.i(this);
     notifyListeners();
   }
 

@@ -73,9 +73,11 @@
 
 
     "timelineSearchResults" : "Resultados da pesquisa",
-    "timelineNothingFound" : "Nada encontrado...",
-    "timelineAvailableTopics" : "Tópicos disponiveis...",
+    "timelineNothingFound" : "Nada encontrado!",
+    "timelineAvailableTopics" : "Tópicos",
     "timelineSelectedTopics" : "Tópicos selecionados",
+    "timelineAvailableScopes" : "Ambitos",
+    "timelineSelectedScopes" : "Ambitos selecionados",
     "timelineSearchHint" : "Pesquise",
     "timelineSearchHintInsideTopic" : "Pesquisa avançada",
     "timelineSearchButton" : "Submeter",

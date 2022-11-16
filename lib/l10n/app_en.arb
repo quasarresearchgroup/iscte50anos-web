@@ -74,9 +74,11 @@
 
 
     "timelineSearchResults" : "Search results",
-    "timelineNothingFound" : "Nothing found...",
-    "timelineAvailableTopics" : "Available Topics...",
+    "timelineNothingFound" : "Nothing found!",
+    "timelineAvailableTopics" : "Topics",
     "timelineSelectedTopics" : "Selected Topics",
+    "timelineAvailableScopes" : "Scopes",
+    "timelineSelectedScopes" : "Selected Scopes",
     "timelineSearchHint" : "Search",
     "timelineSearchHintInsideTopic" : "Advanced search",
     "timelineSearchButton" : "Submit",
