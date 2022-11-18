@@ -22,19 +22,16 @@ class TopicsFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: CustomScrollView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          slivers: [
-            buildAvailableTopicsHeader(),
-            buildTopicsCheckBoxList(),
-          ]),
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        buildAvailableTopicsHeader(),
+        buildTopicsCheckBoxList(),
+      ]),
     );
   }
 
   Widget buildAvailableTopicsHeader() {
-    return SliverToBoxAdapter(child: Builder(builder: (context) {
+    return Builder(builder: (context) {
       var text = Text(
         AppLocalizations.of(context)!.timelineAvailableTopics,
         style: Theme.of(context)
@@ -73,7 +70,7 @@ class TopicsFilterWidget extends StatelessWidget {
           children: [text, selectAllBtn, clearAllBtn],
         ),
       );
-    }));
+    });
   }
 
   void _selectAllTopics() async {
@@ -91,38 +88,35 @@ class TopicsFilterWidget extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Topic> data = snapshot.data!;
-          return SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: gridCount,
-                  childAspectRatio: childAspectRatio),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return CheckboxListTile(
-                    //activeColor: IscteTheme.iscteColor,
-                    value: filterParams.containsTopic(data[index]),
-                    title: SingleChildScrollView(
-                      controller: ScrollController(),
-                      scrollDirection: Axis.horizontal,
-                      child: Text(data[index].title ?? ""),
-                    ),
-                    onChanged: (bool? bool) {
-                      if (bool != null) {
-                        if (bool) {
-                          filterParams.addTopic(data[index]);
-                        } else {
-                          filterParams.removeTopic(data[index]);
-                        }
-                      }
-                    },
-                  );
+          return GridView.builder(
+            itemCount: data.length,
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: gridCount, childAspectRatio: childAspectRatio),
+            itemBuilder: (context, index) {
+              return CheckboxListTile(
+                //activeColor: IscteTheme.iscteColor,
+                value: filterParams.containsTopic(data[index]),
+                title: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(data[index].title ?? ""),
+                ),
+                onChanged: (bool? bool) {
+                  if (bool != null) {
+                    if (bool) {
+                      filterParams.addTopic(data[index]);
+                    } else {
+                      filterParams.removeTopic(data[index]);
+                    }
+                  }
                 },
-                childCount: data.length,
-              ));
+              );
+            },
+          );
         } else if (snapshot.hasError) {
-          return SliverToBoxAdapter(
-              child: ErrorWidget(AppLocalizations.of(context)!.generalError));
+          return ErrorWidget(AppLocalizations.of(context)!.generalError);
         } else {
-          return const SliverToBoxAdapter(child: LoadingWidget());
+          return const LoadingWidget();
         }
       },
     );
