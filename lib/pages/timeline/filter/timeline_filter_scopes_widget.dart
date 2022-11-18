@@ -22,7 +22,12 @@ class ScopesFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        buildAvailableEventScopeHeader(),
+        buildEventScopesCheckBoxList(),
+      ]),
+    );
   }
 
   Future<void> _selectAllScopes() async {
@@ -35,44 +40,42 @@ class ScopesFilterWidget extends StatelessWidget {
   }
 
   Widget buildAvailableEventScopeHeader() {
-    return SliverToBoxAdapter(
-      child: Builder(builder: (context) {
-        var text = Text(
-          AppLocalizations.of(context)!.timelineAvailableScopes,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(color: IscteTheme.iscteColor),
-        );
-        var selectAllBtn = DynamicTextButton(
-          onPressed: _selectAllScopes,
-          child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: IscteTheme.iscteColor)),
-        );
-        var clearAllBtn = DynamicTextButton(
-          onPressed: _clearScopesList,
-          child: Text(AppLocalizations.of(context)!.timelineSelectClearButton,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: IscteTheme.iscteColor)),
-        );
+    return Builder(builder: (context) {
+      var text = Text(
+        AppLocalizations.of(context)!.timelineAvailableScopes,
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(color: IscteTheme.iscteColor),
+      );
+      var selectAllBtn = DynamicTextButton(
+        onPressed: _selectAllScopes,
+        child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: IscteTheme.iscteColor)),
+      );
+      var clearAllBtn = DynamicTextButton(
+        onPressed: _clearScopesList,
+        child: Text(AppLocalizations.of(context)!.timelineSelectClearButton,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: IscteTheme.iscteColor)),
+      );
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Wrap(
-            runSpacing: 10,
-            spacing: 10,
-            direction: Axis.horizontal,
-            verticalDirection: VerticalDirection.down,
-            children: [text, selectAllBtn, clearAllBtn],
-          ),
-        );
-      }),
-    );
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Wrap(
+          runSpacing: 10,
+          spacing: 10,
+          direction: Axis.horizontal,
+          verticalDirection: VerticalDirection.down,
+          children: [text, selectAllBtn, clearAllBtn],
+        ),
+      );
+    });
   }
 
   Widget buildEventScopesCheckBoxList() {
@@ -81,41 +84,37 @@ class ScopesFilterWidget extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<EventScope> data = snapshot.data!;
-          return SliverGrid(
+          return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: gridCount,
               childAspectRatio: childAspectRatio,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return CheckboxListTile(
-                  activeColor: IscteTheme.iscteColor,
-                  value: filterParams.containsScope(data[index]),
-                  title: SingleChildScrollView(
-                    controller: ScrollController(),
-                    scrollDirection: Axis.horizontal,
-                    child: Text(data[index].name),
-                  ),
-                  onChanged: (bool? bool) {
-                    if (bool != null) {
-                      if (bool) {
-                        filterParams.addScope(data[index]);
-                      } else {
-                        filterParams.removeScope(data[index]);
-                      }
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return CheckboxListTile(
+                activeColor: IscteTheme.iscteColor,
+                value: filterParams.containsScope(data[index]),
+                title: SingleChildScrollView(
+                  controller: ScrollController(),
+                  scrollDirection: Axis.horizontal,
+                  child: Text(data[index].name),
+                ),
+                onChanged: (bool? bool) {
+                  if (bool != null) {
+                    if (bool) {
+                      filterParams.addScope(data[index]);
+                    } else {
+                      filterParams.removeScope(data[index]);
                     }
-                  },
-                );
-              },
-              childCount: data.length,
-              addAutomaticKeepAlives: true,
-            ),
+                  }
+                },
+              );
+            },
           );
         } else if (snapshot.hasError) {
-          return SliverToBoxAdapter(
-              child: ErrorWidget(AppLocalizations.of(context)!.generalError));
+          return ErrorWidget(AppLocalizations.of(context)!.generalError);
         } else {
-          return const SliverToBoxAdapter(child: LoadingWidget());
+          return const LoadingWidget();
         }
       },
     );
