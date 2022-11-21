@@ -132,12 +132,12 @@ class _TimelineBodyState extends State<TimelineBody> {
       widget
           .stateHandleYearSelection(widget.yearsList[selectedYearIndex.value!]);
     }
-    Logger().d(
+    Logger().i(
         "selectedEventIndex: ${selectedEventIndex.value} ; selectedYearIndex: ${selectedYearIndex.value}");
   }
 
   void changeSelectedEvent(bool increase) {
-    Logger().d(
+    Logger().i(
         "increase: $increase ; widget.filteredEvents?.length ${widget.filteredEvents}");
 
     int index = selectedEventIndex.value != null
@@ -186,25 +186,25 @@ class _TimelineBodyState extends State<TimelineBody> {
         actions: <Type, Action<Intent>>{
           IncrementYearsIntent: CallbackAction<IncrementYearsIntent>(
             onInvoke: (IncrementYearsIntent intent) {
-              Logger().d("IncrementYearsIntent");
+              Logger().i("IncrementYearsIntent");
               changeSelectedYear(true);
             },
           ),
           DecrementYearsIntent: CallbackAction<DecrementYearsIntent>(
             onInvoke: (DecrementYearsIntent intent) {
-              Logger().d("DecrementYearsIntent");
+              Logger().i("DecrementYearsIntent");
               changeSelectedYear(false);
             },
           ),
           IncrementEventsIntent: CallbackAction<IncrementEventsIntent>(
             onInvoke: (IncrementEventsIntent intent) {
-              Logger().d("IncrementEventsIntent");
+              Logger().i("IncrementEventsIntent");
               changeSelectedEvent(true);
             },
           ),
           DecrementEventsIntent: CallbackAction<DecrementEventsIntent>(
             onInvoke: (DecrementEventsIntent intent) {
-              Logger().d("DecrementEventsIntent");
+              Logger().i("DecrementEventsIntent");
               changeSelectedEvent(false);
             },
           ),

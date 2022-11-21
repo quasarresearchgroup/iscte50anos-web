@@ -4,6 +4,7 @@ import 'package:iscte_spots/pages/timeline/events/timeline_tile.dart';
 import 'package:iscte_spots/pages/timeline/web_scroll_behaviour.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
+import 'package:logger/logger.dart';
 
 class EventTimelineListViewBuilder extends StatefulWidget {
   const EventTimelineListViewBuilder({
@@ -40,6 +41,33 @@ class _EventTimelineListViewBuilderState
     }
   }
 
+  List<int> eventsTimelineTileGenerator({required List<Event> eventsList}) {
+    List<List<Event>> newList = [[]];
+    Event storedObj = eventsList.first;
+    for (Event item in eventsList) {
+      if (storedObj.scope != item.scope) {
+        newList.add([item]);
+        storedObj = item;
+      } else {
+        newList.last.add(item);
+      }
+    }
+    Logger().d(newList.map((e) => e.map((e) => e.scope)).toList());
+    List<int> result = [];
+    for (List<Event> innerList in newList) {
+      for (int i = 0; i < innerList.length; i++) {
+        if (i == 0) {
+          result.add(0);
+        } else if (i == innerList.length - 1) {
+          result.add(2);
+        } else {
+          result.add(1);
+        }
+      }
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Event>>(
@@ -47,21 +75,22 @@ class _EventTimelineListViewBuilderState
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != null && snapshot.data!.isNotEmpty) {
-              List<Event> data = snapshot.data!;
+              List<int> positionData =
+                  eventsTimelineTileGenerator(eventsList: snapshot.data!);
               return ValueListenableBuilder<int?>(
                   valueListenable: widget.selectedEventIndex,
                   builder: (context, value, _) {
                     return ScrollConfiguration(
                       behavior: WebScrollBehaviour(),
                       child: ListView.builder(
-                        itemCount: data.length,
+                        itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) => EventTimelineTile(
+                          isFirst: positionData[index] == 0,
+                          isLast: positionData[index] == 2,
+                          event: snapshot.data![index],
                           index: index,
-                          event: data[index],
-                          isFirst: index == 0,
-                          isLast: index == data.length - 1,
                           handleEventSelection: widget.handleEventSelection,
-                          isSelected: index == value,
+                          isSelected: value == index,
                         ),
                       ),
                     );

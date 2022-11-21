@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/events/event_timeline_indicator.dart';
+import 'package:iscte_spots/pages/timeline/events/inverd_T_clipper.dart';
 import 'package:iscte_spots/pages/timeline/events/timeline_information_child.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 
@@ -15,11 +16,22 @@ class EventTimelineTile extends StatefulWidget {
     required this.isSelected,
   }) : super(key: key);
 
+  /// Index for isEven production
   final int index;
+
+  ///isFirst : Bool used for different display of tile
   final bool isFirst;
+
+  ///isLast : Bool used for different display of tile
   final bool isLast;
+
+  /// isSelected bool for coloring
   final bool isSelected;
+
+  /// Event that the tile is going to display
   final Event event;
+
+  ///Function for handling what hapens when this event/tile is selected, should navigate to a screen showing details on the event
   final void Function(int) handleEventSelection;
 
   @override
@@ -35,6 +47,7 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
   static const int informationFlex = 85;
   static const int dateFlex = 10;
   static const int totalFlex = flagFlex + informationFlex + dateFlex;
+  static const double separatorWidth = 5;
 
   late bool isHover = widget.isSelected;
   @override
@@ -76,19 +89,39 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                 if (widget.event.scopeIcon != null)
                   Flexible(
                     flex: flagFlex,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width *
-                              (flagFlex / totalFlex),
-                          child: widget.event.scopeIcon!),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          (flagFlex / totalFlex),
+                      child: widget.isFirst
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.event.scopeIcon!,
+                            )
+                          : widget.isLast
+                              ? Center(
+                                  child: ClipPath(
+                                    clipper:
+                                        InvertedTClipper(width: separatorWidth),
+                                    child: Container(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                )
+                              : Center(
+                                  child: SizedBox(
+                                    width: separatorWidth,
+                                    child: Container(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                     ),
                   ),
                 Flexible(
                   flex: dateFlex,
                   child: EventTimelineIndicator(
                     isEven: isEven,
-                    event: widget.event,
+                    time: widget.event.dateTime,
                     textColor: informationChildTextColor,
                     isFirst: widget.isFirst,
                     isLast: widget.isLast,
