@@ -3,11 +3,11 @@ import 'package:logger/logger.dart';
 class Topic {
   Topic({
     required this.id,
-    this.title,
+    required this.title,
   });
 
   final int id;
-  final String? title;
+  final String title;
 
   static Logger logger = Logger();
 

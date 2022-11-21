@@ -99,7 +99,7 @@ class TopicsFilterWidget extends StatelessWidget {
                 value: filterParams.containsTopic(data[index]),
                 title: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Text(data[index].title ?? ""),
+                  child: Text(data[index].title),
                 ),
                 onChanged: (bool? bool) {
                   if (bool != null) {

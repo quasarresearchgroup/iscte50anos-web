@@ -7,7 +7,6 @@ import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_scopes_widget.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_topics_widget.dart';
 import 'package:iscte_spots/services/platform_service.dart';
-import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_field.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
@@ -89,7 +88,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        leading: const DynamicBackIconButton(),
         /*trailing: (PlatformService.instance.isIos)
             ? CupertinoButton(
                 onPressed: _enableAdvancedSearch,
@@ -249,7 +247,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
             direction: Axis.horizontal,
             children: filterParams.getTopics
                 .map((Topic topic) => Chip(
-                      label: Text(topic.title ?? ""),
+                      label: Text(topic.title),
                       onDeleted: () {
                         filterParams.removeTopic(topic);
                       },
@@ -296,7 +294,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       direction: Axis.horizontal,
       children: filterParams.getScopes
           .map((EventScope scope) => Chip(
-                label: Text(scope.name ?? ""),
+                label: Text(scope.name),
                 onDeleted: () {
                   setState(() {
                     filterParams.removeScope(scope);
@@ -334,33 +332,32 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
   //endregion
 
   Widget buildSearchBar(BuildContext context) {
-    return Center(
-      child: DynamicTextField(
-        style: Theme.of(context)
-            .textTheme
-            .headlineMedium
-            ?.copyWith(color: IscteTheme.iscteColor),
+    TextStyle? theme = Theme.of(context)
+        .textTheme
+        .bodyMedium
+        ?.copyWith(color: IscteTheme.iscteColor);
+    return ListTile(
+      leading: (PlatformService.instance.isIos)
+          ? CupertinoButton(
+              onPressed: _submitSelection,
+              child: const Icon(CupertinoIcons.search))
+          : IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _submitSelection,
+            ),
+      trailing: (PlatformService.instance.isIos)
+          ? CupertinoButton(
+              onPressed: searchBarController.clear,
+              child: const Icon(CupertinoIcons.clear))
+          : IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: searchBarController.clear),
+      title: DynamicTextField(
+        style: theme,
         controller: searchBarController,
         placeholder: "Pesquise aqui",
-        placeholderStyle: Theme.of(context)
-            .textTheme
-            .headlineMedium
-            ?.copyWith(color: IscteTheme.iscteColor),
-        prefix: (PlatformService.instance.isIos)
-            ? CupertinoButton(
-                onPressed: _submitSelection,
-                child: const Icon(CupertinoIcons.search))
-            : IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _submitSelection,
-              ),
-        suffix: (PlatformService.instance.isIos)
-            ? CupertinoButton(
-                onPressed: searchBarController.clear,
-                child: const Icon(CupertinoIcons.clear))
-            : IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: searchBarController.clear),
+        placeholderStyle: theme,
+
         //border: InputBorder.none,
       ),
     );

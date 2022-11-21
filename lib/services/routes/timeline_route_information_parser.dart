@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 class TimelineRouteInformationParser
     extends RouteInformationParser<TimelineRoute> {
   final Logger _logger = Logger();
+  final int defaultYear = 1972;
 
   @override
   Future<TimelineRoute> parseRouteInformation(
@@ -24,35 +25,53 @@ class TimelineRouteInformationParser
           String remaining = uri.pathSegments[1];
           int? timelineYear = int.tryParse(remaining);
           Logger().d(timelineYear);
-          if (timelineYear == null) return TimelineRoute.home(year: 1972);
+          if (timelineYear == null)
+            return TimelineRoute.home(year: defaultYear);
           return TimelineRoute.home(year: timelineYear);
         }
       }
     }
-
-    // Handle '/timeline/filter/:params'
-    if ((uri.pathSegments.length == 3 || uri.pathSegments.length == 4) &&
-        uri.pathSegments[0] == TimelinePage.pageRoute) {
-      if (uri.pathSegments[1] == TimelineFilterPage.pageRoute) {
-        try {
-          TimelineFilterParams timelineFilterParams =
-              TimelineFilterParams.decode(uri.pathSegments[2]);
-          // Handle '/timeline/filter/:params/result'
-          if (uri.pathSegments.length == 4) {
-            if (uri.pathSegments[3] == "results") {
-              return TimelineRoute.filterResult(
-                filterParams: timelineFilterParams,
-              );
-            }
-          } else {
-            return TimelineRoute.filter(filterParams: timelineFilterParams);
-          }
-        } catch (e, stacktrace) {
-          _logger.e("$e");
-          return TimelineRoute.filter();
-        }
+    // Handle '/timeline/filter/:params/result'
+    if (uri.pathSegments.length == 4 &&
+        uri.pathSegments[0] == TimelinePage.pageRoute &&
+        uri.pathSegments[1] == TimelineFilterPage.pageRoute &&
+        uri.pathSegments[3] == "results") {
+      try {
+        TimelineFilterParams timelineFilterParams =
+            TimelineFilterParams.decode(uri.pathSegments[2]);
+        return TimelineRoute.filterResult(
+          filterParams: timelineFilterParams,
+        );
+      } catch (e, stacktrace) {
+        _logger.e(e);
+        return TimelineRoute.home(year: defaultYear);
       }
     }
+
+    // Handle '/timeline/filter/:params'
+    //if ((uri.pathSegments.length == 3 || uri.pathSegments.length == 4) &&
+    //    uri.pathSegments[0] == TimelinePage.pageRoute) {
+    //  if (uri.pathSegments[1] == TimelineFilterPage.pageRoute) {
+    //    try {
+    //      TimelineFilterParams timelineFilterParams =
+    //          TimelineFilterParams.decode(uri.pathSegments[2]);
+    // Handle '/timeline/filter/:params/result'
+    //    if (uri.pathSegments.length == 4) {
+    //      if (uri.pathSegments[3] == "results") {
+    //        return TimelineRoute.filterResult(
+    //          filterParams: timelineFilterParams,
+    //        );
+    //      }
+    //    } else {
+    //      return TimelineRoute.filter(filterParams: timelineFilterParams);
+    //    }
+    //  } catch (e, stacktrace) {
+    //    _logger.e("$e");
+    //    //return TimelineRoute.filter();
+    //    return TimelineRoute.home(year: timelineYear);
+    //  }
+    //}
+    //}
 
     // Handle '/timeline/event/:id'
     if (uri.pathSegments.length == 3 &&
@@ -78,9 +97,9 @@ class TimelineRouteInformationParser
     } else if (configuration.isDetailsPage) {
       location =
           '/${TimelinePage.pageRoute}/${TimeLineDetailsPage.pageRoute}/${configuration.event_id}';
-    } else if (configuration.isFilterPage) {
-      location =
-          '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}';
+      //} else if (configuration.isFilterPage) {
+      //  location =
+      //      '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}';
     } else if (configuration.isFilterResultPage) {
       location =
           '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}/results';

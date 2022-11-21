@@ -4,7 +4,6 @@ import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/details/timeline_details_page.dart';
-import 'package:iscte_spots/pages/timeline/filter/timeline_filter_page.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_results_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/pages/unknown_page.dart';
@@ -20,7 +19,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
 
   int? _selectedEventId;
   int _selectedYear = 1972;
-  bool _showFilterPage = false;
+  //bool _showFilterPage = false;
   bool _showFilterPageResult = false;
   TimelineFilterParams? _selectedFilterParams;
 
@@ -42,16 +41,16 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
     notifyListeners();
   }
 
-  void _handleFilterNavigation() {
-    _showFilterPage = true;
-    notifyListeners();
-  }
+  //void _handleFilterNavigation() {
+  //  _showFilterPage = true;
+  //  notifyListeners();
+  //}
 
   void _handleFilterSubmission(TimelineFilterParams filters, bool showResults) {
     Logger()
         .d("handledFilterSubmission with $filters ; showResults: $showResults");
     if (showResults) {
-      _showFilterPage = false;
+      //  _showFilterPage = false;
       _showFilterPageResult = true;
     }
     _selectedFilterParams = filters;
@@ -59,7 +58,8 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   }
 
   String _logAll() {
-    return 'TimelineRouterDelegate{show404: $show404, _selectedEventId: $_selectedEventId, _selectedYear: $_selectedYear, _showFilterPage: $_showFilterPage, _showFilterPageResult: $_showFilterPageResult, _selectedFilterParams: $_selectedFilterParams, yearsList: $yearsList, _logger: $_logger}';
+    //return 'TimelineRouterDelegate{show404: $show404, _selectedEventId: $_selectedEventId, _selectedYear: $_selectedYear, _showFilterPage: $_showFilterPage, _showFilterPageResult: $_showFilterPageResult, _selectedFilterParams: $_selectedFilterParams, yearsList: $yearsList, _logger: $_logger}';
+    return 'TimelineRouterDelegate{show404: $show404, _selectedEventId: $_selectedEventId, _selectedYear: $_selectedYear, _showFilterPageResult: $_showFilterPageResult, _selectedFilterParams: $_selectedFilterParams, yearsList: $yearsList, _logger: $_logger}';
   }
 
   @override
@@ -92,7 +92,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
                           return TimelinePage(
                             selectedYear: year,
                             handleEventSelection: _handleEventSelection,
-                            handleFilterNavigation: _handleFilterNavigation,
+                            //handleFilterNavigation: _handleFilterNavigation,
                             handleFilterSubmission: _handleFilterSubmission,
                             handleYearSelection: _handleYearSelection,
                             yearsList: yearsList,
@@ -128,7 +128,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
               eventId: _selectedEventId!,
             ),
           )
-        else if (_showFilterPage)
+/*        else if (_showFilterPage)
           MaterialPage(
             key: TimelineFilterPage.pageKey,
             child: TimelineFilterPage(
@@ -140,7 +140,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
               availableTopics: availableTopics,
               availableScopes: availableScopes,
             ),
-          )
+          )*/
         else if (_showFilterPageResult)
           MaterialPage(
             key: TimelineFilterResultsPage.pageKey,
@@ -159,12 +159,12 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
         if (page.key == TimeLineDetailsPage.pageKey) {
           _selectedEventId = null;
         }
-        if (page.key == TimelineFilterPage.pageKey) {
-          _showFilterPage = false;
-        }
+        //if (page.key == TimelineFilterPage.pageKey) {
+        //   _showFilterPage = false;
+        //}
         if (page.key == TimelineFilterResultsPage.pageKey) {
           _showFilterPageResult = false;
-          _showFilterPage = true;
+          //  _showFilterPage = true;
         }
         show404 = false;
 
@@ -180,7 +180,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
     _logAll();
     if (path.isUnknown) {
       _selectedEventId = null;
-      _showFilterPage = false;
+      //_showFilterPage = false;
       show404 = true;
       return;
     }
@@ -195,12 +195,12 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
       _selectedEventId = null;
     }
 
-    if (path.isFilterPage) {
+    /*if (path.isFilterPage) {
       _selectedFilterParams = path.filterParams;
-      _showFilterPage = true;
+        _showFilterPage = true;
     } else {
-      _showFilterPage = false;
-    }
+        _showFilterPage = false;
+    }*/
 
     if (path.isFilterResultPage) {
       _selectedFilterParams = path.filterParams;
@@ -220,9 +220,9 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
     if (show404) {
       return TimelineRoute.unknown();
     }
-    if (_showFilterPage) {
-      return TimelineRoute.filter(filterParams: _selectedFilterParams);
-    }
+    //if (_showFilterPage) {
+    //  return TimelineRoute.filter(filterParams: _selectedFilterParams);
+    //}
     if (_showFilterPageResult) {
       return TimelineRoute.filterResult(filterParams: _selectedFilterParams);
     }

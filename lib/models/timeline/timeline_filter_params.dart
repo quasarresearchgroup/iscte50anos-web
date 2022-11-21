@@ -137,7 +137,9 @@ class TimelineFilterParams with ChangeNotifier {
     try {
       List<String> topicsString = split[0].split("«");
       topics = topicsString.map((e) => Topic.fromString(e)).toSet();
-    } catch (_) {}
+    } catch (_) {
+      rethrow;
+    }
     try {
       List<String> scopesString = split[1].split("«");
       for (String entry in scopesString) {
@@ -146,10 +148,14 @@ class TimelineFilterParams with ChangeNotifier {
           scopes.add(eventScope);
         }
       }
-    } catch (_) {}
+    } catch (_) {
+      rethrow;
+    }
     try {
       searchText = split[2];
-    } catch (_) {}
+    } catch (_) {
+      rethrow;
+    }
 
     return TimelineFilterParams(
         scopes: scopes, searchText: searchText, topics: topics);

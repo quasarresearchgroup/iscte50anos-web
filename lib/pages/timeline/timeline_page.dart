@@ -17,14 +17,14 @@ class TimelinePage extends StatefulWidget {
     required this.yearsList,
     required this.handleEventSelection,
     required this.handleYearSelection,
-    required this.handleFilterNavigation,
+    //required this.handleFilterNavigation,
     required this.filteredEvents,
     required this.handleFilterSubmission,
   }) : super(key: key);
   final Logger _logger = Logger();
   final Function(int) handleEventSelection;
   final Function(int) handleYearSelection;
-  final Function() handleFilterNavigation;
+  //final Function() handleFilterNavigation;
   void Function(TimelineFilterParams filters, bool showResults)
       handleFilterSubmission;
   static const String pageRoute = "timeline";
