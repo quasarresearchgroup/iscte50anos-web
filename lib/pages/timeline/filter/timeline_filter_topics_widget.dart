@@ -7,8 +7,10 @@ import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 
 class TopicsFilterWidget extends StatelessWidget {
-  const TopicsFilterWidget({
+  TopicsFilterWidget({
     Key? key,
+    this.titleStyle,
+    this.textStyle,
     required this.filterParams,
     required this.availableTopics,
     required this.gridCount,
@@ -19,9 +21,21 @@ class TopicsFilterWidget extends StatelessWidget {
   final Future<List<Topic>> availableTopics;
   final int gridCount;
   final double childAspectRatio;
+  TextStyle? titleStyle;
+  TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
+    titleStyle = titleStyle ??
+        Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(color: IscteTheme.iscteColor);
+    textStyle = textStyle ??
+        Theme.of(context)
+            .textTheme
+            .bodyMedium
+            ?.copyWith(color: IscteTheme.iscteColor);
     return SliverList(
       delegate: SliverChildListDelegate([
         buildAvailableTopicsHeader(),
@@ -34,29 +48,20 @@ class TopicsFilterWidget extends StatelessWidget {
     return Builder(builder: (context) {
       var text = Text(
         AppLocalizations.of(context)!.timelineAvailableTopics,
-        style: Theme.of(context)
-            .textTheme
-            .titleLarge
-            ?.copyWith(color: IscteTheme.iscteColor),
+        style: titleStyle,
       );
       var selectAllBtn = DynamicTextButton(
         style: IscteTheme.greyColor,
         onPressed: _selectAllTopics,
         child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(color: IscteTheme.iscteColor)),
+            style: titleStyle),
       );
       var clearAllBtn = DynamicTextButton(
         style: IscteTheme.greyColor,
         onPressed: _clearTopicsList,
         child: Text(
           AppLocalizations.of(context)!.timelineSelectClearButton,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(color: IscteTheme.iscteColor),
+          style: titleStyle,
         ),
       );
 
@@ -66,6 +71,7 @@ class TopicsFilterWidget extends StatelessWidget {
           runSpacing: 10,
           spacing: 10,
           direction: Axis.horizontal,
+          crossAxisAlignment: WrapCrossAlignment.center,
           verticalDirection: VerticalDirection.down,
           children: [text, selectAllBtn, clearAllBtn],
         ),
@@ -99,7 +105,10 @@ class TopicsFilterWidget extends StatelessWidget {
                 value: filterParams.containsTopic(data[index]),
                 title: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Text(data[index].title),
+                  child: Text(
+                    data[index].title,
+                    style: textStyle,
+                  ),
                 ),
                 onChanged: (bool? bool) {
                   if (bool != null) {

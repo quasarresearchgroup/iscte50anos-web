@@ -50,6 +50,8 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
   static const double separatorWidth = 5;
 
   late bool isHover = widget.isSelected;
+  final int widthEventScopeThreshold = 500;
+  final int widthDateThreshold = 400;
   @override
   Widget build(BuildContext context) {
     late Color? informationChildTextColor =
@@ -65,7 +67,7 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
       child: MouseRegion(
         cursor: widget.event.isVisitable
             ? SystemMouseCursors.click
-            : SystemMouseCursors.forbidden,
+            : SystemMouseCursors.basic,
         onEnter: (event) => setState(() => isHover = true),
         onExit: (event) => setState(() => isHover = false),
         child: SizedBox(
@@ -86,7 +88,9 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                if (widget.event.scopeIcon != null)
+                if (widget.event.scopeIcon != null &&
+                    MediaQuery.of(context).size.width >
+                        widthEventScopeThreshold)
                   Flexible(
                     flex: flagFlex,
                     child: SizedBox(
@@ -117,16 +121,18 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
                                 ),
                     ),
                   ),
-                Flexible(
-                  flex: dateFlex,
-                  child: EventTimelineIndicator(
-                    isEven: isEven,
-                    time: widget.event.dateTime,
-                    textColor: informationChildTextColor,
-                    isFirst: widget.isFirst,
-                    isLast: widget.isLast,
+                if (widget.event.scopeIcon != null &&
+                    MediaQuery.of(context).size.width > widthDateThreshold)
+                  Flexible(
+                    flex: dateFlex,
+                    child: EventTimelineIndicator(
+                      isEven: isEven,
+                      time: widget.event.dateTime,
+                      textColor: informationChildTextColor,
+                      isFirst: widget.isFirst,
+                      isLast: widget.isLast,
+                    ),
                   ),
-                ),
                 Expanded(
                   flex: informationFlex,
                   child: Padding(

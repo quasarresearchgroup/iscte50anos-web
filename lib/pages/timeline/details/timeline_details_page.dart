@@ -217,6 +217,9 @@ class TimelineDetailListContent extends StatelessWidget {
       hoverColor: IscteTheme.iscteColorSmooth,
       tileColor: !isEven ? IscteTheme.greyColor : Colors.transparent,
       leading: content.contentIcon,
+      trailing: content.validated != null && content.validated!
+          ? Icon(Icons.check_box)
+          : null,
       title: Text(
           content.title != null
               ? content.title!.isNotEmpty
@@ -333,6 +336,10 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
               overflow: TextOverflow.ellipsis,
             ),
             leading: widget.content.contentIcon,
+            trailing:
+                widget.content.validated != null && widget.content.validated!
+                    ? Icon(Icons.check_box)
+                    : null,
           ),
           if (child != null) Expanded(child: child!),
         ],

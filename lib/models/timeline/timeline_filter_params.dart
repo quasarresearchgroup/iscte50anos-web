@@ -7,11 +7,11 @@ import 'package:logger/logger.dart';
 
 class TimelineFilterParams with ChangeNotifier {
   TimelineFilterParams({
-    Set<Topic> topics = const {},
-    Set<EventScope> scopes = const {},
+    Set<Topic>? topics,
+    Set<EventScope>? scopes,
     String searchText = "",
-  })  : _topics = topics,
-        _scopes = scopes,
+  })  : _topics = topics ?? {},
+        _scopes = scopes ?? {},
         _searchText = searchText;
 
   final Logger _logger = Logger();

@@ -87,6 +87,14 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle? titleStyle = Theme.of(context)
+        .textTheme
+        .titleSmall
+        ?.copyWith(color: IscteTheme.iscteColor);
+    TextStyle? textStyle = Theme.of(context)
+        .textTheme
+        .bodySmall
+        ?.copyWith(color: IscteTheme.iscteColor);
     return Scaffold(
       appBar: MyAppBar(
         /*trailing: (PlatformService.instance.isIos)
@@ -108,13 +116,17 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                   semanticLabel: AppLocalizations.of(context)!
                       .timelineSearchHintInsideTopic,
                 )),*/
-        middle: buildSearchBar(context),
+        middle: buildSearchBar(context: context, titleStyle: titleStyle),
       ),
-      body: buildBody(context),
+      body: buildBody(
+          context: context, titleStyle: titleStyle, textStyle: textStyle),
     );
   }
 
-  Padding buildBody(BuildContext context) {
+  Padding buildBody(
+      {required BuildContext context,
+      TextStyle? titleStyle,
+      TextStyle? textStyle}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: AnimatedSwitcher(
@@ -125,15 +137,19 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
               child: CustomScrollView(
                 scrollDirection: Axis.vertical,
                 slivers: [
-                  selectedScopesWidget(dividerWidth, dividerThickness),
-                  selectedTopicsWidget(dividerWidth, dividerThickness),
+                  //selectedScopesWidget(dividerWidth, dividerThickness),
+                  //selectedTopicsWidget(dividerWidth, dividerThickness),
                   ScopesFilterWidget(
+                    titleStyle: titleStyle,
+                    textStyle: textStyle,
                     filterParams: filterParams,
                     availableScopes: widget.availableScopes,
                     childAspectRatio: childAspectRatio,
                     gridCount: gridCount(context),
                   ),
                   TopicsFilterWidget(
+                    titleStyle: titleStyle,
+                    textStyle: textStyle,
                     filterParams: filterParams,
                     availableTopics: widget.availableTopics,
                     childAspectRatio: childAspectRatio,
@@ -294,7 +310,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
         child: filterParams.isTopicsEmpty()
-            ? Container()
+            ? null
             : Column(children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -366,11 +382,8 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
 
   //endregion
 
-  Widget buildSearchBar(BuildContext context) {
-    TextStyle? theme = Theme.of(context)
-        .textTheme
-        .bodyMedium
-        ?.copyWith(color: IscteTheme.iscteColor);
+  Widget buildSearchBar(
+      {required BuildContext context, TextStyle? titleStyle}) {
     return ListTile(
       leading: (PlatformService.instance.isIos)
           ? CupertinoButton(
@@ -388,10 +401,10 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
               icon: const Icon(Icons.clear),
               onPressed: searchBarController.clear),
       title: DynamicTextField(
-        style: theme,
+        style: titleStyle,
         controller: searchBarController,
-        placeholder: "Pesquise aqui",
-        placeholderStyle: theme,
+        placeholder: "Pesquise aqui", // TODO
+        placeholderStyle: titleStyle,
 
         //border: InputBorder.none,
       ),

@@ -7,8 +7,10 @@ import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 
 class ScopesFilterWidget extends StatelessWidget {
-  const ScopesFilterWidget({
+  ScopesFilterWidget({
     Key? key,
+    this.titleStyle,
+    this.textStyle,
     required this.filterParams,
     required this.availableScopes,
     required this.gridCount,
@@ -19,9 +21,21 @@ class ScopesFilterWidget extends StatelessWidget {
   final Future<List<EventScope>> availableScopes;
   final int gridCount;
   final double childAspectRatio;
+  TextStyle? titleStyle;
+  TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
+    titleStyle = titleStyle ??
+        Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(color: IscteTheme.iscteColor);
+    textStyle = textStyle ??
+        Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(color: IscteTheme.iscteColor);
     return SliverList(
       delegate: SliverChildListDelegate([
         buildAvailableEventScopeHeader(),
@@ -41,30 +55,23 @@ class ScopesFilterWidget extends StatelessWidget {
 
   Widget buildAvailableEventScopeHeader() {
     return Builder(builder: (context) {
-      var text = Text(
+      Text text = Text(
         AppLocalizations.of(context)!.timelineAvailableScopes,
-        style: Theme.of(context)
-            .textTheme
-            .titleLarge
-            ?.copyWith(color: IscteTheme.iscteColor),
+        style: titleStyle,
       );
-      var selectAllBtn = DynamicTextButton(
+
+      DynamicTextButton selectAllBtn = DynamicTextButton(
         style: IscteTheme.greyColor,
         onPressed: _selectAllScopes,
         child: Text(AppLocalizations.of(context)!.timelineSelectAllButton,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(color: IscteTheme.iscteColor)),
+            style: titleStyle),
       );
-      var clearAllBtn = DynamicTextButton(
+
+      DynamicTextButton clearAllBtn = DynamicTextButton(
         style: IscteTheme.greyColor,
         onPressed: _clearScopesList,
         child: Text(AppLocalizations.of(context)!.timelineSelectClearButton,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(color: IscteTheme.iscteColor)),
+            style: titleStyle),
       );
 
       return Padding(
@@ -73,6 +80,7 @@ class ScopesFilterWidget extends StatelessWidget {
           runSpacing: 10,
           spacing: 10,
           direction: Axis.horizontal,
+          crossAxisAlignment: WrapCrossAlignment.center,
           verticalDirection: VerticalDirection.down,
           children: [text, selectAllBtn, clearAllBtn],
         ),
@@ -100,7 +108,10 @@ class ScopesFilterWidget extends StatelessWidget {
                 title: SingleChildScrollView(
                   controller: ScrollController(),
                   scrollDirection: Axis.horizontal,
-                  child: Text(data[index].name),
+                  child: Text(
+                    data[index].name,
+                    style: textStyle,
+                  ),
                 ),
                 onChanged: (bool? bool) {
                   if (bool != null) {

@@ -47,7 +47,7 @@ class _MyAppBarState extends State<MyAppBar> {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
-                .headline3
+                .titleLarge
                 ?.copyWith(color: IscteTheme.iscteColor),
           )
         : widget.middle;

@@ -11,6 +11,7 @@ class TimelineInformationChild extends StatelessWidget {
   final bool isEven;
   final Event data;
   final double padding = 10;
+  final int widthThreshold = 500;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,12 @@ class TimelineInformationChild extends StatelessWidget {
             padding: EdgeInsets.all(padding),
             child: Text(
               data.title,
-              maxLines: 2,
+              maxLines: 3,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: (MediaQuery.of(context).size.width > widthThreshold
+                  ? Theme.of(context).textTheme.titleSmall
+                  : Theme.of(context).textTheme.bodyMedium),
 
               //fontSize: MediaQuery.of(context).size.width * 0.05,
             ),
@@ -52,9 +55,9 @@ class TimelineInformationChild extends StatelessWidget {
                   child: Center(
                     child: Text(
                       "#${data.contentCount.toString()}",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
+                      style: (MediaQuery.of(context).size.width > widthThreshold
+                              ? Theme.of(context).textTheme.titleSmall
+                              : Theme.of(context).textTheme.bodyMedium)
                           ?.copyWith(color: Theme.of(context).iconTheme.color),
                     ),
                   ),

@@ -25,6 +25,7 @@ class Content {
     required this.link,
     this.type,
     this.eventId,
+    this.validated,
   });
 
   final int id;
@@ -32,12 +33,13 @@ class Content {
   final String link;
   final ContentType? type;
   final int? eventId;
+  final bool? validated;
 
   static Logger _logger = Logger();
 
   @override
   String toString() {
-    return 'Content{id: $id, title: $title, link: $link, type: $type, eventId: $eventId}';
+    return 'Content{id: $id, title: $title, link: $link, type: $type, eventId: $eventId, validated: $validated}';
   }
 
   factory Content.fromMap(Map<String, dynamic> json) => Content(
@@ -46,6 +48,7 @@ class Content {
         link: json["link"],
         type: contentTypefromString(json["type"]),
         eventId: json["event_id"],
+        validated: json["validated"],
       );
 
   Map<String, dynamic> toMap() {
@@ -55,6 +58,7 @@ class Content {
       "link": link,
       "type": type != null ? type!.name : null,
       "event_id": eventId,
+      "validated": validated,
     };
   }
 

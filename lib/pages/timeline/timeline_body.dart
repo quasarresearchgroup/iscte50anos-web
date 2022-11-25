@@ -229,7 +229,7 @@ class _TimelineBodyState extends State<TimelineBody> {
                 }
               },
               child: SizedBox(
-                height: 100,
+                height: kToolbarHeight,
                 child: YearTimelineListView(
                   yearsList: widget.yearsList,
                   changeYearFunction: widget.stateHandleYearSelection,
@@ -241,15 +241,12 @@ class _TimelineBodyState extends State<TimelineBody> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
-                  child: EventTimelineListViewBuilder(
-                    key: UniqueKey(),
-                    events: widget.filteredEvents,
-                    timelineYear: widget.currentYear,
-                    handleEventSelection: widget.handleEventSelection,
-                    selectedEventIndex: selectedEventIndex,
-                  ),
+                child: EventTimelineListViewBuilder(
+                  key: UniqueKey(),
+                  events: widget.filteredEvents,
+                  timelineYear: widget.currentYear,
+                  handleEventSelection: widget.handleEventSelection,
+                  selectedEventIndex: selectedEventIndex,
                 ),
               ),
             ),

@@ -71,14 +71,8 @@ class _TimelinePageState extends State<TimelinePage> {
                 );
               }),
       ),
-      /*floatingActionButton: TimelineDial(
-              isDialOpen: isDialOpen,
-              deleteTimelineData: deleteTimelineData,
-              refreshTimelineData: deleteGetAllEvents,
-            ),*/
-
       endDrawer: Drawer(
-        width: MediaQuery.of(context).size.width * 0.5,
+        width: MediaQuery.of(context).size.width * 0.4,
         child: TimelineFilterPage(
           handleEventSelection: widget.handleEventSelection,
           handleYearSelection: widget.handleYearSelection,
@@ -97,12 +91,14 @@ class _TimelinePageState extends State<TimelinePage> {
         isFilterTimeline: false,
       ),
       persistentFooterAlignment: AlignmentDirectional.bottomStart,
-      persistentFooterButtons: [
-        Image.asset(
-          "Resources/Img/Logo/rgb_iscte_pt_horizontal.png",
-          height: kToolbarHeight + 25,
-        )
-      ],
+      persistentFooterButtons: (MediaQuery.of(context).size.height < 700)
+          ? null
+          : [
+              Image.asset(
+                "Resources/Img/Logo/rgb_iscte_pt_horizontal.png",
+                height: kToolbarHeight + 25,
+              )
+            ],
     );
   }
 }

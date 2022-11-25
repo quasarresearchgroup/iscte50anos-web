@@ -28,12 +28,16 @@ class EventTimelineIndicator extends StatelessWidget {
         children: [
           Text(
             time.monthName(),
-            style: Theme.of(context).textTheme.titleMedium,
+            style: MediaQuery.of(context).size.width > 500
+                ? Theme.of(context).textTheme.titleSmall
+                : Theme.of(context).textTheme.bodySmall,
             maxLines: 1,
           ),
           Text(
             time.day.toString(),
-            style: Theme.of(context).textTheme.titleMedium,
+            style: MediaQuery.of(context).size.width > 500
+                ? Theme.of(context).textTheme.titleSmall
+                : Theme.of(context).textTheme.bodySmall,
             maxLines: 1,
           ),
         ],
