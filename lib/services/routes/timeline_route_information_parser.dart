@@ -25,9 +25,8 @@ class TimelineRouteInformationParser
           String remaining = uri.pathSegments[1];
           int? timelineYear = int.tryParse(remaining);
           Logger().d(timelineYear);
-          if (timelineYear == null)
-            return TimelineRoute.home(year: defaultYear);
-          return TimelineRoute.home(year: timelineYear);
+
+          return TimelineRoute.home(year: timelineYear ?? defaultYear);
         }
       }
     }

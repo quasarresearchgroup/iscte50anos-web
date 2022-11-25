@@ -43,12 +43,13 @@ class TimelineFilterPage extends StatefulWidget {
 
 class _TimelineFilterPageState extends State<TimelineFilterPage> {
   // Set<Topic> selectedTopics = {};
-  bool advancedSearch = true;
-  TimelineFilterParams filterParams =
-      TimelineFilterParams(topics: {}, scopes: {}, searchText: "");
+  TimelineFilterParams filterParams = TimelineFilterParams();
 
   late final TextEditingController searchBarController;
   final double childAspectRatio = 20 / 4;
+  final double dividerWidth = 20;
+  final double dividerThickness = 2;
+
   @override
   void initState() {
     searchBarController = TextEditingController();
@@ -118,35 +119,100 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
-        child: !advancedSearch
-            ? Center(
-                child: DynamicTextButton(
-                  style: IscteTheme.iscteColor,
-                  onPressed: _submitSelection,
-                  child:
-                      Text(AppLocalizations.of(context)!.timelineSearchButton),
-                ),
-              )
-            : OrientationBuilder(
-                builder: (BuildContext context, Orientation orientation) {
-                const double dividerWidth = 20;
-                const double dividerThickness = 2;
-                Widget divider = (orientation == Orientation.landscape)
+        child: Column(
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                scrollDirection: Axis.vertical,
+                slivers: [
+                  selectedScopesWidget(dividerWidth, dividerThickness),
+                  selectedTopicsWidget(dividerWidth, dividerThickness),
+                  ScopesFilterWidget(
+                    filterParams: filterParams,
+                    availableScopes: widget.availableScopes,
+                    childAspectRatio: childAspectRatio,
+                    gridCount: gridCount(context),
+                  ),
+                  TopicsFilterWidget(
+                    filterParams: filterParams,
+                    availableTopics: widget.availableTopics,
+                    childAspectRatio: childAspectRatio,
+                    gridCount: gridCount(context),
+                  ),
+                  //SliverToBoxAdapter(child: divider),
+                  //SliverToBoxAdapter(child: submitTextButton),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DynamicTextButton(
+                style: IscteTheme.iscteColor,
+                onPressed: _submitSelection,
+                child: Text(AppLocalizations.of(context)!.timelineSearchButton),
+              ),
+            ),
+          ],
+        ),
+/*OrientationBuilder(
+          builder: (BuildContext context, Orientation orientation) {
+            const double dividerWidth = 20;
+            const double dividerThickness = 2;
+            */ /*            Widget divider = (orientation == Orientation.landscape)
                     ? const VerticalDivider(
                         width: dividerWidth,
                         thickness: dividerThickness,
                       )
                     : const Divider(
-                        height: dividerWidth, thickness: dividerThickness);
+                        height: dividerWidth, thickness: dividerThickness)
+                ;*/ /*
 
-                var submitTextButton = DynamicTextButton(
-                  style: IscteTheme.iscteColor,
-                  onPressed: _submitSelection,
-                  child:
-                      Text(AppLocalizations.of(context)!.timelineSearchButton),
-                );
-                int rightProportion = 50;
-                return (orientation == Orientation.landscape)
+            var submitTextButton = DynamicTextButton(
+              style: IscteTheme.iscteColor,
+              onPressed: _submitSelection,
+              child: Text(AppLocalizations.of(context)!.timelineSearchButton),
+            );
+
+            return Column(
+              children: [
+                Expanded(
+                  child: CustomScrollView(
+                    scrollDirection: Axis.vertical,
+                    slivers: [
+                      */ /* selectedScopesWidget(
+                                    dividerWidth, dividerThickness),
+                                selectedTopicsWidget(
+                                    dividerWidth, dividerThickness),*/ /*
+                      ScopesFilterWidget(
+                        filterParams: filterParams,
+                        availableScopes: widget.availableScopes,
+                        childAspectRatio: childAspectRatio,
+                        gridCount: gridCount(context),
+                      ),
+                      TopicsFilterWidget(
+                        filterParams: filterParams,
+                        availableTopics: widget.availableTopics,
+                        childAspectRatio: childAspectRatio,
+                        gridCount: gridCount(context),
+                      ),
+                      //SliverToBoxAdapter(child: divider),
+                      //SliverToBoxAdapter(child: submitTextButton),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DynamicTextButton(
+                    style: IscteTheme.iscteColor,
+                    onPressed: _submitSelection,
+                    child: Text(AppLocalizations.of(context)!.timelineSearchButton),
+                  ),
+                ),
+              ],
+            );
+
+            */ /*int rightProportion = 50;
+          return (orientation == Orientation.landscape)
                     ? Flex(
                         direction: Axis.horizontal,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -195,40 +261,9 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
                           ),
                         ],
                       )
-                    : Column(
-                        children: [
-                          Expanded(
-                            child: CustomScrollView(
-                              scrollDirection: Axis.vertical,
-                              slivers: [
-                                selectedScopesWidget(
-                                    dividerWidth, dividerThickness),
-                                selectedTopicsWidget(
-                                    dividerWidth, dividerThickness),
-                                ScopesFilterWidget(
-                                  filterParams: filterParams,
-                                  availableScopes: widget.availableScopes,
-                                  childAspectRatio: childAspectRatio,
-                                  gridCount: gridCount(context),
-                                ),
-                                TopicsFilterWidget(
-                                  filterParams: filterParams,
-                                  availableTopics: widget.availableTopics,
-                                  childAspectRatio: childAspectRatio,
-                                  gridCount: gridCount(context),
-                                ),
-                                //SliverToBoxAdapter(child: divider),
-                                //SliverToBoxAdapter(child: submitTextButton),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: submitTextButton,
-                          ),
-                        ],
-                      );
-              }),
+                    : */ /*
+          },
+        ),*/
       ),
     );
   }
@@ -361,16 +396,6 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         //border: InputBorder.none,
       ),
     );
-  }
-
-  void _enableAdvancedSearch() {
-    setState(() {
-      advancedSearch = !advancedSearch;
-      if (!advancedSearch) {
-        filterParams.clearTopics();
-      }
-    });
-    widget._logger.d("advancedSearch: $advancedSearch");
   }
 
   void _submitSelection() async {

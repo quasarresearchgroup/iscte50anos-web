@@ -6,11 +6,11 @@ import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:logger/logger.dart';
 
 class TimelineFilterParams with ChangeNotifier {
-  TimelineFilterParams(
-      {required Set<Topic> topics,
-      required Set<EventScope> scopes,
-      required String searchText})
-      : _topics = topics,
+  TimelineFilterParams({
+    Set<Topic> topics = const {},
+    Set<EventScope> scopes = const {},
+    String searchText = "",
+  })  : _topics = topics,
         _scopes = scopes,
         _searchText = searchText;
 

@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       theme: IscteTheme.lightThemeData,
       themeMode: ThemeMode.light,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: const [Locale('pt', '')],
       routerDelegate: TimelineRouterDelegate(),
       routeInformationParser: TimelineRouteInformationParser(),
     );

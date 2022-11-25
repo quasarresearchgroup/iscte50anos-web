@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
+import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/services/platform_service.dart';
@@ -39,6 +40,10 @@ class TimelinePage extends StatefulWidget {
 
 class _TimelinePageState extends State<TimelinePage> {
   late ValueNotifier<bool> isDialOpen;
+  Future<List<Topic>> availableTopicsFuture =
+      TimelineTopicService.fetchAllTopics();
+  Future<List<EventScope>> availableScopesFuture =
+      Future(() => EventScope.values);
 
   @override
   void initState() {
@@ -73,15 +78,16 @@ class _TimelinePageState extends State<TimelinePage> {
             ),*/
 
       endDrawer: Drawer(
-          width: MediaQuery.of(context).size.width * 0.4,
-          child: TimelineFilterPage(
-            handleEventSelection: widget.handleEventSelection,
-            handleYearSelection: widget.handleYearSelection,
-            handleFilterSubmission: widget.handleFilterSubmission,
-            yearsList: widget.yearsList,
-            availableTopics: TimelineTopicService.fetchAllTopics(),
-            availableScopes: Future(() => EventScope.values),
-          )),
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: TimelineFilterPage(
+          handleEventSelection: widget.handleEventSelection,
+          handleYearSelection: widget.handleYearSelection,
+          handleFilterSubmission: widget.handleFilterSubmission,
+          yearsList: widget.yearsList,
+          availableTopics: availableTopicsFuture,
+          availableScopes: availableScopesFuture,
+        ),
+      ),
       body: TimeLineBodyBuilder(
         handleEventSelection: widget.handleEventSelection,
         handleYearSelection: widget.handleYearSelection,

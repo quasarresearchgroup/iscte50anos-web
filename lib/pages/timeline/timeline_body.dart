@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -221,13 +222,20 @@ class _TimelineBodyState extends State<TimelineBody> {
           autofocus: true,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
-              height: 100,
-              child: YearTimelineListView(
-                yearsList: widget.yearsList,
-                changeYearFunction: widget.stateHandleYearSelection,
-                currentYear: widget.currentYear,
-                selectedYearIndex: selectedYearIndex,
+            Listener(
+              onPointerSignal: (PointerSignalEvent event) {
+                if (event is PointerScrollEvent) {
+                  changeSelectedYear(event.scrollDelta.direction > 0);
+                }
+              },
+              child: SizedBox(
+                height: 100,
+                child: YearTimelineListView(
+                  yearsList: widget.yearsList,
+                  changeYearFunction: widget.stateHandleYearSelection,
+                  currentYear: widget.currentYear,
+                  selectedYearIndex: selectedYearIndex,
+                ),
               ),
             ),
             Expanded(
