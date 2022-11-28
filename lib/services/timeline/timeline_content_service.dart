@@ -9,14 +9,13 @@ class TimelineContentService {
   static final Logger _logger = Logger();
 
   static Future<List<Content>> fetchContents({required int eventId}) async {
-    http.Response response = await http.get(
-        Uri.parse(
-            '${BackEndConstants.API_ADDRESS}/api/events/$eventId/contents'),
-        headers: <String, String>{
-          'content-type': 'application/json',
-        });
+    String uri = '${BackEndConstants.API_ADDRESS}/api/events/$eventId/contents';
+    http.Response response =
+        await http.get(Uri.parse(uri), headers: <String, String>{
+      'content-type': 'application/json',
+    });
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
-    _logger.d(decodedResponse);
+    _logger.d("$uri\n$decodedResponse");
     // return response.statusCode;
     List<Content> eventsList = [];
     for (var entry in decodedResponse) {

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/services/routes/timeline_route_information_parser.dart';
@@ -9,7 +8,18 @@ const int puzzlePageIndex = 0;
 const int qrPageIndex = 1;
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+  ErrorWidget.builder = (details) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Ocorreu um problema!"),
+              Text(details.summary.toString()),
+            ],
+          ),
+        ),
+      );
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //usePathUrlStrategy();
   runApp(const MyApp());
@@ -44,44 +54,13 @@ class _MyAppState extends State<MyApp> {
       //showSemanticsDebugger: true,
       debugShowCheckedModeBanner: false,
       title: 'IscteSpots',
-      darkTheme: IscteTheme.darkThemeData,
+      //darkTheme: IscteTheme.darkThemeData,
       theme: IscteTheme.lightThemeData,
+      themeMode: ThemeMode.light,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: const [Locale('pt', '')],
       routerDelegate: TimelineRouterDelegate(),
       routeInformationParser: TimelineRouteInformationParser(),
-      themeMode: ThemeMode.dark,
-
-      //home: TimelinePage(),
-      //onGenerateRoute: generatedRoutes,
-      //routes: PageRouter.routes,
-      /*onUnknownRoute: (settings) => PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation<double> animation,
-                    Animation<double> secondaryAnimation) =>
-                UnknownPage()),
-        initialRoute: PageRouter.initialRoute,
-        */
     );
   }
 }
-/*
-Route? generatedRoutes(RouteSettings routeSettings) {
-  Widget widget =
-      PageRouter.resolve(routeSettings.name ?? "", routeSettings.arguments);
-  //var buildPageAsync = await _buildPageAsync(page: widget);
-  return PageRouteBuilder(
-    transitionDuration: const Duration(seconds: 1),
-    maintainState: true,
-    pageBuilder: (context, animation, secondaryAnimation) => widget,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      Animatable<Offset> tween =
-          Tween(begin: const Offset(1.0, 0.0), end: Offset.zero).chain(
-        CurveTween(curve: Curves.ease),
-      );
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}*/

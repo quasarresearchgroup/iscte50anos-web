@@ -1,33 +1,33 @@
+import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
+
 class TimelineRoute {
-  final int? event_id;
-  //final int? timelineYear;
-  final bool _isUnknown;
-  final bool _isFilter;
+  int? event_id;
+  int? timelineYear;
+  TimelineFilterParams? filterParams;
+  bool _isUnknown = false;
+  // bool _isFilter = false;
 
   //TimelineRoute.home({int? timelineYear})
-  TimelineRoute.home()
-      : event_id = null,
-        //timelineYear = timelineYear,
-        _isFilter = false,
-        _isUnknown = false;
-  TimelineRoute.details(this.event_id)
-      : _isFilter = false,
-        //timelineYear = null,
-        _isUnknown = false;
-  TimelineRoute.unknown()
-      : event_id = null,
-        _isFilter = false,
-        // timelineYear = null,
-        _isUnknown = true;
-  TimelineRoute.filter()
-      : event_id = null,
-        _isFilter = true,
-        //timelineYear = null,
-        _isUnknown = false;
+  TimelineRoute.home({required int year}) : timelineYear = year;
+  TimelineRoute.details(this.event_id);
+  TimelineRoute.unknown() : _isUnknown = true;
+  //TimelineRoute.filter({this.filterParams}) : _isFilter = true;
+  TimelineRoute.filterResult({required this.filterParams});
 
-  bool get isHomePage => event_id == null && !_isFilter;
-  bool get isFilterPage => _isFilter;
-  bool get isDetailsPage => event_id != null;
+  bool get isHomePage =>
+      timelineYear != null &&
+      !isDetailsPage &&
+      // !isFilterPage &&
+      !isFilterResultPage;
+
+  bool get isDetailsPage =>
+      event_id != null && !isHomePage && !isFilterResultPage;
+  //event_id != null && !isHomePage && !isFilterPage && !isFilterResultPage;
+
+  //bool get isFilterPage => _isFilter && !isDetailsPage;
+
+  //bool get isFilterResultPage => filterParams != null && !isFilterPage;
+  bool get isFilterResultPage => filterParams != null;
 
   bool get isUnknown => _isUnknown;
 }

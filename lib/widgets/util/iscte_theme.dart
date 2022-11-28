@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 
 class IscteTheme {
   static const Color iscteColor = Color.fromRGBO(14, 41, 194, 1);
+  static const Color iscteColorSmooth = Color.fromRGBO(14, 41, 194, .3);
+  //static const Color iscteColorSmooth = Color(0xFF00A4FF);
+  static const Color greyColor = Color.fromRGBO(245, 244, 242, 1);
 
   //static const Color iscteColorLight = iscteColor.withGreen(iscteColor.green + 100);
   //static const Color iscteColorDark = iscteColor.withGreen(iscteColor.green - 100);
@@ -12,7 +15,7 @@ class IscteTheme {
   static const BorderRadius borderRadious =
       BorderRadius.all(Radius.circular(10));
 
-  static final AppBarTheme _appBarTheme = AppBarTheme(
+  static const AppBarTheme _appBarTheme = AppBarTheme(
     //backgroundColor: Color.fromRGBO(14, 41, 194, 1),
     elevation: 0,
     // This removes the shadow from all App Bars.
@@ -23,11 +26,10 @@ class IscteTheme {
         bottom: IscteTheme.appbarRadius,
       ),
     ),
-    backgroundColor: iscteColor,
-    iconTheme: const IconThemeData(color: Colors.white),
-    actionsIconTheme: const IconThemeData(color: Colors.white),
-    toolbarTextStyle: const TextStyle(color: Colors.white),
-    titleTextStyle: const TextStyle(color: Colors.white),
+    backgroundColor: Colors.transparent,
+    //color: Colors.transparent,
+    iconTheme: IconThemeData(color: Colors.black),
+    actionsIconTheme: IconThemeData(color: Colors.black),
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: iscteColor,
       systemNavigationBarColor: iscteColor,
@@ -39,8 +41,8 @@ class IscteTheme {
   static NavigationRailThemeData navigationRailThemeData =
       const NavigationRailThemeData(
     backgroundColor: iscteColor,
-    selectedIconTheme: const IconThemeData(color: Colors.white),
-    unselectedIconTheme: const IconThemeData(color: Colors.white70),
+    selectedIconTheme: IconThemeData(color: Colors.black),
+    unselectedIconTheme: IconThemeData(color: Colors.black54),
     useIndicator: false,
   );
 
@@ -61,18 +63,29 @@ class IscteTheme {
       ),
       scaffoldBackgroundColor: Colors.white,
       backgroundColor: Colors.white,
-      primaryColor: iscteColor,
+      primaryColor: Colors.white,
       errorColor: Colors.deepOrangeAccent,
-      bottomAppBarColor: iscteColor,
-      iconTheme: const IconThemeData(color: Colors.black),
+      bottomAppBarColor: Colors.white,
+      iconTheme: ThemeData.light().iconTheme.copyWith(color: Colors.black),
       appBarTheme: _appBarTheme,
       navigationRailTheme: navigationRailThemeData,
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor:
-              MaterialStateColor.resolveWith((states) => iscteColor),
-        ),
-      ),
+      textTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'Montserrat',
+          ),
+      primaryTextTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'Montserrat',
+          ),
+      buttonTheme: ThemeData.light().buttonTheme.copyWith(
+            buttonColor: iscteColor,
+          ),
+      chipTheme:
+          ThemeData.light().chipTheme.copyWith(backgroundColor: greyColor),
+      checkboxTheme: ThemeData.light().checkboxTheme.copyWith(
+            fillColor: const MaterialStatePropertyAll(iscteColor),
+          ),
+      textButtonTheme: const TextButtonThemeData(
+          style: ButtonStyle(
+              foregroundColor: MaterialStatePropertyAll(iscteColor))),
       elevatedButtonTheme: elevatedButtonTheme,
     );
   }

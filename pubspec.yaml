@@ -18,7 +18,7 @@ dependencies:
     sdk: flutter      
   intl: ^0.17.0    
   logger: ^1.1.0
-  timeline_tile: ^2.0.0
+  #timeline_tile: ^2.0.0
   sqflite: ^2.0.0+4
   flutter_svg: ^1.0.0
   image: ^3.1.1
@@ -31,8 +31,10 @@ dependencies:
   change_app_package_name: ^1.0.0
   yaml: ^3.1.1
   url_launcher: ^6.0.12
-  youtube_player_flutter: ^8.0.0
+  youtube_player_iframe: ^3.1.0
   pinch_zoom: ^1.0.0
+  scrollable_positioned_list: ^0.3.5
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_lints: ^2.0.1
@@ -52,4 +54,18 @@ flutter:
     - Resources/Img/Campus/
     - Resources/Img/TimelineIcons/
     - Resources/Img/LeaderBoardIcons/
+    - Resources/Icons/
     - pubspec.yaml
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: Resources/Fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-Italic.ttf
+        - asset: Resources/Fonts/Montserrat/Montserrat-Bold.ttf
+          weight: 700
+        - asset: Resources/Fonts/Montserrat/Montserrat-BoldItalic.ttf
+          weight: 700
+        - asset: Resources/Fonts/Montserrat/Montserrat-Thin.ttf
+          weight: 100
+        - asset: Resources/Fonts/Montserrat/Montserrat-ThinItalic.ttf
+          weight: 100

@@ -12,15 +12,17 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
     this.title,
     this.leading,
     this.middle,
+    this.roundedCorners = false,
     this.automaticallyImplyLeading = false,
   }) : super(key: key);
   final Logger _logger = Logger();
 
-  Widget? trailing;
-  String? title;
-  Widget? leading;
-  Widget? middle;
-  bool automaticallyImplyLeading;
+  final Widget? trailing;
+  final String? title;
+  final Widget? leading;
+  final Widget? middle;
+  final bool automaticallyImplyLeading;
+  final bool roundedCorners;
 
   @override
   State<MyAppBar> createState() => _MyAppBarState();
@@ -39,20 +41,35 @@ class _MyAppBarState extends State<MyAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    var middle = widget.title != null
+    Widget? middle = widget.title != null
         ? Text(
             widget.title!,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: IscteTheme.iscteColor),
           )
         : widget.middle;
-    return !PlatformService.instance.isIos
+    Widget bar = !PlatformService.instance.isIos
         ? AppBar(
-            leadingWidth: 100,
+            centerTitle: true,
             automaticallyImplyLeading: widget.automaticallyImplyLeading,
             leading: widget.leading,
             title: middle,
-            actions: widget.trailing != null ? [widget.trailing!] : null,
+            iconTheme: Theme.of(context)
+                .iconTheme
+                .copyWith(color: IscteTheme.iscteColor),
+            actionsIconTheme: Theme.of(context)
+                .iconTheme
+                .copyWith(color: IscteTheme.iscteColor),
+            actions: [
+/*              Image.asset(
+                "Resources/Img/Logo/rgb_iscte_pt_horizontal.png",
+                height: kToolbarHeight,
+              ),*/
+              if (widget.trailing != null) widget.trailing!
+            ],
           )
         : CupertinoNavigationBar(
             backgroundColor: IscteTheme.iscteColor,
@@ -63,5 +80,14 @@ class _MyAppBarState extends State<MyAppBar> {
             middle: middle,
             trailing: widget.trailing,
           );
+    return widget.roundedCorners
+        ? bar
+        : Theme(
+            data: Theme.of(context).copyWith(
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    shape: const ContinuousRectangleBorder(),
+                  ),
+            ),
+            child: bar);
   }
 }
