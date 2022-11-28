@@ -53,7 +53,7 @@ class _MyAppBarState extends State<MyAppBar> {
         : widget.middle;
     Widget bar = !PlatformService.instance.isIos
         ? AppBar(
-            leadingWidth: 100,
+            centerTitle: true,
             automaticallyImplyLeading: widget.automaticallyImplyLeading,
             leading: widget.leading,
             title: middle,

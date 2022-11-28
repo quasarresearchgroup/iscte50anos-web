@@ -18,6 +18,8 @@ class FeedbackForm extends StatefulWidget {
 class _FeedbackFormState extends State<FeedbackForm> {
   int? selectedYearState;
   late List<int> yearsList = widget.yearsList;
+  late List<DropdownMenuItem<int>> list;
+
   final GlobalKey<FormState> _feedbackFormKey = GlobalKey<FormState>();
   TextEditingController descriptionFieldController = TextEditingController();
   TextEditingController nameFieldController = TextEditingController();
@@ -25,25 +27,27 @@ class _FeedbackFormState extends State<FeedbackForm> {
 
   AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction;
 
-  late List<DropdownMenuItem<int>> list = widget.yearsList
-      .map<DropdownMenuItem<int>>(
-        (int e) => DropdownMenuItem(
-          value: e,
-          child: Builder(builder: (context) {
-            return Text(e != -1
-                ? e.toString()
-                : AppLocalizations.of(context)!
-                    .feedbackFormGeneralFeedbackDropdownText);
-          }),
-        ),
-      )
-      .toList(growable: false);
   @override
   void initState() {
-    setState(() {
-      selectedYearState = widget.selectedYear;
-    });
-    yearsList.insert(0, -1);
+    yearsList = widget.yearsList;
+    selectedYearState = widget.selectedYear;
+    if (!yearsList.contains(-1)) {
+      yearsList.insert(0, -1);
+    }
+    list = widget.yearsList
+        .map<DropdownMenuItem<int>>(
+          (int e) => DropdownMenuItem(
+            value: e,
+            child: Builder(builder: (context) {
+              return Text(e != -1
+                  ? e.toString()
+                  : AppLocalizations.of(context)!
+                      .feedbackFormGeneralFeedbackDropdownText);
+            }),
+          ),
+        )
+        .toList(growable: false);
+    setState(() {});
     super.initState();
   }
 
@@ -103,84 +107,25 @@ class _FeedbackFormState extends State<FeedbackForm> {
           ),
         )
       ],
-      content: SingleChildScrollView(
-        child: Form(
-            key: _feedbackFormKey,
-            autovalidateMode: AutovalidateMode.disabled,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  autofocus: true,
-                  style: base,
-                  autovalidateMode: autovalidateMode,
-                  controller: nameFieldController,
-                  textInputAction: TextInputAction.next,
-                  cursorColor: IscteTheme.iscteColor,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          ?.feedbackFormValidation;
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                      labelStyle: textstyle,
-                      labelText:
-                          AppLocalizations.of(context)?.feedbackFormNameField),
-                ),
-                formSpacer,
-                TextFormField(
-                  style: base,
-                  autovalidateMode: autovalidateMode,
-                  cursorColor: IscteTheme.iscteColor,
-                  textInputAction: TextInputAction.next,
-                  controller: emailFieldController,
-                  decoration: InputDecoration(
-                      labelStyle: textstyle,
-                      labelText:
-                          AppLocalizations.of(context)?.feedbackFormEmailField),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          ?.feedbackFormValidation;
-                    } else if (!RegExp(r"\S+[@]\S+\.\S+").hasMatch(value)) {
-                      //RegExp Explanation (checks for @ followed by any number of non whitespace character followed by a dot "." and then followed by any number of non whitespace characters)
-                      //https://regex101.com/r/TZDJmb/1
-                      return AppLocalizations.of(context)
-                          ?.feedbackFormEmailValidation;
-                    }
-                    return null;
-                  },
-                ),
-                formSpacer,
-                DropdownButtonFormField<int>(
-                  style: textstyle,
-                  onSaved: (val) {},
-                  value: selectedYearState,
-                  autovalidateMode: autovalidateMode,
-                  menuMaxHeight: MediaQuery.of(context).size.height * 0.5,
-                  items: list,
-                  onChanged: (value) {
-                    if (selectedYearState != value) {
-                      setState(() => selectedYearState = value);
-                    }
-                  },
-                ),
-                formSpacer,
-                TextFormField(
-                    maxLines: 10,
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: SingleChildScrollView(
+          child: Form(
+              key: _feedbackFormKey,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    textAlignVertical: TextAlignVertical.top,
+                    textAlign: TextAlign.start,
+                    autofocus: true,
                     style: base,
-                    textInputAction: TextInputAction.done,
                     autovalidateMode: autovalidateMode,
-                    controller: descriptionFieldController,
+                    controller: nameFieldController,
+                    textInputAction: TextInputAction.next,
                     cursorColor: IscteTheme.iscteColor,
-                    decoration: InputDecoration(
-                        labelStyle: textstyle,
-                        labelText: AppLocalizations.of(context)
-                            ?.feedbackFormDescriptionField),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)
@@ -188,9 +133,77 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       } else {
                         return null;
                       }
-                    }),
-              ],
-            )),
+                    },
+                    decoration: InputDecoration(
+                        labelStyle: textstyle,
+                        labelText: AppLocalizations.of(context)
+                            ?.feedbackFormNameField),
+                  ),
+                  formSpacer,
+                  TextFormField(
+                    textAlignVertical: TextAlignVertical.top,
+                    textAlign: TextAlign.start,
+                    style: base,
+                    autovalidateMode: autovalidateMode,
+                    cursorColor: IscteTheme.iscteColor,
+                    textInputAction: TextInputAction.next,
+                    controller: emailFieldController,
+                    decoration: InputDecoration(
+                        labelStyle: textstyle,
+                        labelText: AppLocalizations.of(context)
+                            ?.feedbackFormEmailField),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)
+                            ?.feedbackFormValidation;
+                      } else if (!RegExp(r"\S+[@]\S+\.\S+").hasMatch(value)) {
+                        //RegExp Explanation (checks for @ followed by any number of non whitespace character followed by a dot "." and then followed by any number of non whitespace characters)
+                        //https://regex101.com/r/TZDJmb/1
+                        return AppLocalizations.of(context)
+                            ?.feedbackFormEmailValidation;
+                      }
+                      return null;
+                    },
+                  ),
+                  formSpacer,
+                  DropdownButtonFormField<int>(
+                    style: textstyle,
+                    onSaved: (val) {},
+                    value: selectedYearState,
+                    autovalidateMode: autovalidateMode,
+                    menuMaxHeight: MediaQuery.of(context).size.height * 0.5,
+                    items: list,
+                    onChanged: (value) {
+                      if (selectedYearState != value) {
+                        setState(() => selectedYearState = value);
+                      }
+                    },
+                  ),
+                  formSpacer,
+                  TextFormField(
+                      textAlignVertical: TextAlignVertical.top,
+                      textAlign: TextAlign.start,
+                      maxLines: 10,
+                      style: base,
+                      textInputAction: TextInputAction.done,
+                      autovalidateMode: autovalidateMode,
+                      controller: descriptionFieldController,
+                      cursorColor: IscteTheme.iscteColor,
+                      decoration: InputDecoration(
+                          labelStyle: textstyle,
+                          labelText: AppLocalizations.of(context)
+                              ?.feedbackFormDescriptionField),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)
+                              ?.feedbackFormValidation;
+                        } else {
+                          return null;
+                        }
+                      }),
+                ],
+              )),
+        ),
       ),
     );
   }
