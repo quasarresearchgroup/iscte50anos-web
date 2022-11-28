@@ -17,7 +17,7 @@ class FeedbackForm extends StatefulWidget {
 
 class _FeedbackFormState extends State<FeedbackForm> {
   int? selectedYearState;
-  late List<int> yearsList = widget.yearsList;
+  late List<int> yearsList;
   late List<DropdownMenuItem<int>> list;
 
   final GlobalKey<FormState> _feedbackFormKey = GlobalKey<FormState>();
@@ -29,12 +29,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
 
   @override
   void initState() {
-    yearsList = widget.yearsList;
+    yearsList = List.from(widget.yearsList); //copies initial List
     selectedYearState = widget.selectedYear;
     if (!yearsList.contains(-1)) {
       yearsList.insert(0, -1);
     }
-    list = widget.yearsList
+    list = yearsList
         .map<DropdownMenuItem<int>>(
           (int e) => DropdownMenuItem(
             value: e,
@@ -183,7 +183,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   TextFormField(
                       textAlignVertical: TextAlignVertical.top,
                       textAlign: TextAlign.start,
-                      maxLines: 10,
+                      maxLines: 5,
                       style: base,
                       textInputAction: TextInputAction.done,
                       autovalidateMode: autovalidateMode,

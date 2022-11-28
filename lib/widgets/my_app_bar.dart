@@ -12,6 +12,7 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
     this.title,
     this.leading,
     this.middle,
+    this.actions,
     this.roundedCorners = false,
     this.automaticallyImplyLeading = false,
   }) : super(key: key);
@@ -22,6 +23,7 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   final Widget? leading;
   final Widget? middle;
   final bool automaticallyImplyLeading;
+  final List<Widget>? actions;
   final bool roundedCorners;
 
   @override
@@ -64,6 +66,7 @@ class _MyAppBarState extends State<MyAppBar> {
                 .iconTheme
                 .copyWith(color: IscteTheme.iscteColor),
             actions: [
+              ...?widget.actions,
 /*              Image.asset(
                 "Resources/Img/Logo/rgb_iscte_pt_horizontal.png",
                 height: kToolbarHeight,
