@@ -2,14 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
-import 'package:iscte_spots/models/timeline/topic.dart';
 import 'package:iscte_spots/pages/timeline/details/timeline_details_page.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_results_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/pages/unknown_page.dart';
 import 'package:iscte_spots/services/routes/timeline_route.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
-import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
 
@@ -24,8 +22,8 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   TimelineFilterParams? _selectedFilterParams;
 
   final Future<List<int>> yearsList = TimelineEventService.fetchYearsList();
-  final Future<List<Topic>> availableTopics =
-      TimelineTopicService.fetchAllTopics();
+  /*final Future<List<Topic>> availableTopics =
+      TimelineTopicService.fetchAllTopics();*/
   final Future<List<EventScope>> availableScopes =
       Future(() => EventScope.values);
 
@@ -176,20 +174,20 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   }
 
   @override
-  Future<void> setNewRoutePath(TimelineRoute path) async {
+  Future<void> setNewRoutePath(TimelineRoute configuration) async {
     _logAll();
-    if (path.isUnknown) {
+    if (configuration.isUnknown) {
       _selectedEventId = null;
       //_showFilterPage = false;
       show404 = true;
       return;
     }
 
-    if (path.isDetailsPage) {
-      if (path.event_id!.isNegative) {
+    if (configuration.isDetailsPage) {
+      if (configuration.event_id!.isNegative) {
         show404 = true;
       } else {
-        _selectedEventId = path.event_id;
+        _selectedEventId = configuration.event_id;
       }
     } else {
       _selectedEventId = null;
@@ -202,14 +200,14 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
         _showFilterPage = false;
     }*/
 
-    if (path.isFilterResultPage) {
-      _selectedFilterParams = path.filterParams;
+    if (configuration.isFilterResultPage) {
+      _selectedFilterParams = configuration.filterParams;
       _showFilterPageResult = true;
     } else {
       _showFilterPageResult = false;
     }
 
-    _selectedYear = path.timelineYear ?? _selectedYear;
+    _selectedYear = configuration.timelineYear ?? _selectedYear;
     show404 = false;
     return;
   }

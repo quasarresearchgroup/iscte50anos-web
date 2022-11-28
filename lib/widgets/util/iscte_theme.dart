@@ -69,8 +69,11 @@ class IscteTheme {
       iconTheme: ThemeData.light().iconTheme.copyWith(color: Colors.black),
       appBarTheme: _appBarTheme,
       navigationRailTheme: navigationRailThemeData,
-      textTheme: Typography().black.apply(
-            fontFamily: "Montserrat",
+      textTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'Montserrat',
+          ),
+      primaryTextTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'Montserrat',
           ),
       buttonTheme: ThemeData.light().buttonTheme.copyWith(
             buttonColor: iscteColor,

@@ -62,6 +62,10 @@ flutter:
         - asset: Resources/Fonts/Montserrat/Montserrat-Regular.ttf
         - asset: Resources/Fonts/Montserrat/Montserrat-Italic.ttf
         - asset: Resources/Fonts/Montserrat/Montserrat-Bold.ttf
+          weight: 700
         - asset: Resources/Fonts/Montserrat/Montserrat-BoldItalic.ttf
+          weight: 700
         - asset: Resources/Fonts/Montserrat/Montserrat-Thin.ttf
+          weight: 100
         - asset: Resources/Fonts/Montserrat/Montserrat-ThinItalic.ttf
+          weight: 100

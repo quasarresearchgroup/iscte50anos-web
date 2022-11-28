@@ -9,7 +9,6 @@ import 'package:iscte_spots/pages/timeline/filter/timeline_filter_topics_widget.
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_field.dart';
-import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:logger/logger.dart';
 
@@ -91,33 +90,9 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
         .textTheme
         .titleSmall
         ?.copyWith(color: IscteTheme.iscteColor);
-    TextStyle? textStyle = Theme.of(context)
-        .textTheme
-        .bodySmall
-        ?.copyWith(color: IscteTheme.iscteColor);
+    TextStyle? textStyle =
+        Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.black);
     return Scaffold(
-      appBar: MyAppBar(
-        /*trailing: (PlatformService.instance.isIos)
-            ? CupertinoButton(
-                onPressed: _enableAdvancedSearch,
-                child: Icon(
-                  advancedSearch
-                      ? CupertinoIcons.settings
-                      : CupertinoIcons.settings_solid,
-                  semanticLabel: AppLocalizations.of(context)!
-                      .timelineSearchHintInsideTopic,
-                ))
-            : IconButton(
-                tooltip:
-                    AppLocalizations.of(context)!.timelineSearchHintInsideTopic,
-                onPressed: _enableAdvancedSearch,
-                icon: Icon(
-                  advancedSearch ? Icons.filter_alt : Icons.filter_alt_outlined,
-                  semanticLabel: AppLocalizations.of(context)!
-                      .timelineSearchHintInsideTopic,
-                )),*/
-        middle: buildSearchBar(context: context, titleStyle: titleStyle),
-      ),
       body: buildBody(
           context: context, titleStyle: titleStyle, textStyle: textStyle),
     );
@@ -128,158 +103,51 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
       TextStyle? titleStyle,
       TextStyle? textStyle}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        child: Column(
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                scrollDirection: Axis.vertical,
-                slivers: [
-                  //selectedScopesWidget(dividerWidth, dividerThickness),
-                  //selectedTopicsWidget(dividerWidth, dividerThickness),
-                  ScopesFilterWidget(
-                    titleStyle: titleStyle,
-                    textStyle: textStyle,
-                    filterParams: filterParams,
-                    availableScopes: widget.availableScopes,
-                    childAspectRatio: childAspectRatio,
-                    gridCount: gridCount(context),
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        children: [
+          Expanded(
+            child: CustomScrollView(
+              scrollDirection: Axis.vertical,
+              slivers: [
+                buildSearchBar(context: context),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 10,
                   ),
-                  TopicsFilterWidget(
-                    titleStyle: titleStyle,
-                    textStyle: textStyle,
-                    filterParams: filterParams,
-                    availableTopics: widget.availableTopics,
-                    childAspectRatio: childAspectRatio,
-                    gridCount: gridCount(context),
-                  ),
-                  //SliverToBoxAdapter(child: divider),
-                  //SliverToBoxAdapter(child: submitTextButton),
-                ],
-              ),
+                ),
+                //selectedScopesWidget(dividerWidth, dividerThickness),
+                //selectedTopicsWidget(dividerWidth, dividerThickness),
+                ScopesFilterWidget(
+                  titleStyle: titleStyle,
+                  textStyle: textStyle,
+                  filterParams: filterParams,
+                  availableScopes: widget.availableScopes,
+                  childAspectRatio: childAspectRatio,
+                  gridCount: gridCount(context),
+                ),
+                TopicsFilterWidget(
+                  titleStyle: titleStyle,
+                  textStyle: textStyle,
+                  filterParams: filterParams,
+                  availableTopics: widget.availableTopics,
+                  childAspectRatio: childAspectRatio,
+                  gridCount: gridCount(context),
+                ),
+                //SliverToBoxAdapter(child: divider),
+                //SliverToBoxAdapter(child: submitTextButton),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DynamicTextButton(
-                style: IscteTheme.iscteColor,
-                onPressed: _submitSelection,
-                child: Text(AppLocalizations.of(context)!.timelineSearchButton),
-              ),
-            ),
-          ],
-        ),
-/*OrientationBuilder(
-          builder: (BuildContext context, Orientation orientation) {
-            const double dividerWidth = 20;
-            const double dividerThickness = 2;
-            */ /*            Widget divider = (orientation == Orientation.landscape)
-                    ? const VerticalDivider(
-                        width: dividerWidth,
-                        thickness: dividerThickness,
-                      )
-                    : const Divider(
-                        height: dividerWidth, thickness: dividerThickness)
-                ;*/ /*
-
-            var submitTextButton = DynamicTextButton(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DynamicTextButton(
               style: IscteTheme.iscteColor,
               onPressed: _submitSelection,
               child: Text(AppLocalizations.of(context)!.timelineSearchButton),
-            );
-
-            return Column(
-              children: [
-                Expanded(
-                  child: CustomScrollView(
-                    scrollDirection: Axis.vertical,
-                    slivers: [
-                      */ /* selectedScopesWidget(
-                                    dividerWidth, dividerThickness),
-                                selectedTopicsWidget(
-                                    dividerWidth, dividerThickness),*/ /*
-                      ScopesFilterWidget(
-                        filterParams: filterParams,
-                        availableScopes: widget.availableScopes,
-                        childAspectRatio: childAspectRatio,
-                        gridCount: gridCount(context),
-                      ),
-                      TopicsFilterWidget(
-                        filterParams: filterParams,
-                        availableTopics: widget.availableTopics,
-                        childAspectRatio: childAspectRatio,
-                        gridCount: gridCount(context),
-                      ),
-                      //SliverToBoxAdapter(child: divider),
-                      //SliverToBoxAdapter(child: submitTextButton),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DynamicTextButton(
-                    style: IscteTheme.iscteColor,
-                    onPressed: _submitSelection,
-                    child: Text(AppLocalizations.of(context)!.timelineSearchButton),
-                  ),
-                ),
-              ],
-            );
-
-            */ /*int rightProportion = 50;
-          return (orientation == Orientation.landscape)
-                    ? Flex(
-                        direction: Axis.horizontal,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            flex: rightProportion,
-                            child: CustomScrollView(
-                              scrollDirection: Axis.vertical,
-                              slivers: [
-                                ScopesFilterWidget(
-                                  filterParams: filterParams,
-                                  availableScopes: widget.availableScopes,
-                                  childAspectRatio: childAspectRatio,
-                                  gridCount: gridCount(context),
-                                ),
-                                TopicsFilterWidget(
-                                  filterParams: filterParams,
-                                  availableTopics: widget.availableTopics,
-                                  childAspectRatio: childAspectRatio,
-                                  gridCount: gridCount(context),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const VerticalDivider(
-                            width: dividerWidth,
-                            thickness: dividerThickness,
-                          ),
-                          Flexible(
-                            flex: 100 - rightProportion,
-                            child: CustomScrollView(
-                              scrollDirection: Axis.vertical,
-                              slivers: [
-                                selectedTopicsWidget(
-                                    dividerWidth, dividerThickness),
-                                selectedScopesWidget(
-                                    dividerWidth, dividerThickness),
-                                SliverToBoxAdapter(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: submitTextButton,
-                                )),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : */ /*
-          },
-        ),*/
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -384,22 +252,31 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
 
   Widget buildSearchBar(
       {required BuildContext context, TextStyle? titleStyle}) {
-    return ListTile(
-      leading: (PlatformService.instance.isIos)
-          ? CupertinoButton(
-              onPressed: _submitSelection,
-              child: const Icon(CupertinoIcons.search))
-          : IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: _submitSelection,
-            ),
-      trailing: (PlatformService.instance.isIos)
-          ? CupertinoButton(
-              onPressed: searchBarController.clear,
-              child: const Icon(CupertinoIcons.clear))
-          : IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: searchBarController.clear),
+    return SliverAppBar(
+      iconTheme:
+          Theme.of(context).iconTheme.copyWith(color: IscteTheme.iscteColor),
+      actionsIconTheme:
+          Theme.of(context).iconTheme.copyWith(color: IscteTheme.iscteColor),
+      leading: Hero(
+        tag: "searchIcon",
+        child: (PlatformService.instance.isIos)
+            ? CupertinoButton(
+                onPressed: _submitSelection,
+                child: const Icon(CupertinoIcons.search))
+            : IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _submitSelection,
+              ),
+      ),
+      actions: [
+        (PlatformService.instance.isIos)
+            ? CupertinoButton(
+                onPressed: Navigator.of(context).pop,
+                child: const Icon(CupertinoIcons.clear))
+            : IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: Navigator.of(context).pop)
+      ],
       title: DynamicTextField(
         style: titleStyle,
         controller: searchBarController,

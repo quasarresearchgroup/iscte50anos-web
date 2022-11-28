@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
+import 'package:iscte_spots/pages/timeline/feedback_form.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
 import 'package:iscte_spots/services/platform_service.dart';
+import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
+import 'package:iscte_spots/widgets/util/loading.dart';
 import 'package:logger/logger.dart';
-
-import '../../services/timeline/timeline_topic_service.dart';
 
 class TimelinePage extends StatefulWidget {
   TimelinePage({
@@ -53,26 +55,61 @@ class _TimelinePageState extends State<TimelinePage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: MyAppBar(
-        //title: AppLocalizations.of(context)!.timelineScreen,
-        title: "Cronologia 50 anos Iscte",
-        trailing: (!PlatformService.instance.isIos)
-            ? Builder(builder: (context) {
-                return IconButton(
-                  onPressed: () => Scaffold.of(context).openEndDrawer(),
-                  icon: const Icon(Icons.search),
-                );
-              })
-            : Builder(builder: (context) {
-                return CupertinoButton(
-                  onPressed: () => Scaffold.of(context).openEndDrawer(),
-                  child: const Icon(CupertinoIcons.search),
-                );
-              }),
+        title: AppLocalizations.of(context)!.timelineScreen,
+        //title: "Cronologia 50 anos Iscte",
+        leading: FutureBuilder<List<int>>(
+            future: widget.yearsList,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                  if (snapshot.hasData) {
+                    return IconButton(
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => FeedbackForm(
+                          yearsList: snapshot.data!,
+                          selectedYear: widget.selectedYear,
+                        ),
+                      ),
+                      icon: const Icon(Icons.feedback_outlined),
+                    );
+                  } else {
+                    return LoadingWidget();
+                  }
+
+                  break;
+                default:
+                  return LoadingWidget();
+              }
+            }),
+        trailing: Hero(
+          tag: "searchIcon",
+          child: (!PlatformService.instance.isIos)
+              ? Builder(builder: (context) {
+                  return IconButton(
+                    onPressed: Scaffold.of(context).openEndDrawer,
+                    icon: const Icon(Icons.search),
+                  );
+                })
+              : Builder(builder: (context) {
+                  return CupertinoButton(
+                    onPressed: Scaffold.of(context).openEndDrawer,
+                    child: const Icon(CupertinoIcons.search),
+                  );
+                }),
+        ),
       ),
       endDrawer: Drawer(
-        width: MediaQuery.of(context).size.width * 0.4,
+        width: width > 400
+            ? width > 500
+                ? width > 600
+                    ? width * 0.4
+                    : width * 0.7
+                : width * 0.8
+            : width,
         child: TimelineFilterPage(
           handleEventSelection: widget.handleEventSelection,
           handleYearSelection: widget.handleYearSelection,

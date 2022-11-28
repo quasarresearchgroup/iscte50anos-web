@@ -82,7 +82,17 @@
     "timelineSearchHintInsideTopic" : "Pesquisa avançada",
     "timelineSearchButton" : "Submeter",
     "timelineSelectAllButton" : "Escolher tudo",
-    "timelineSelectClearButton" : "Limpar seleção"
+    "timelineSelectClearButton" : "Limpar seleção",
 
-
+    "feedbackFormTitle":"Sugestão",
+    "feedbackFormNameField":"Nome",
+    "feedbackFormEmailField":"E-mail",
+    "feedbackFormDescriptionField":"Descrição",
+    "feedbackFormGeneralFeedbackDropdownText":"Feedback geral",
+    "feedbackFormSubmissionSuccess":"O seu feedback foi recebido!",
+    "feedbackFormSubmissionError":"Erro no envio do seu feedback, tente novamente mais tarde.",
+    "feedbackFormEmailValidation":"Por favor insira um email válido",
+    "feedbackFormValidation":"Por favor preencha este campo",
+    "feedbackFormSubmit":"Submeter",
+    "feedbackFormCancel":"Cancelar"
 }

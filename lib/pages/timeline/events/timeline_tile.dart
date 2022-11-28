@@ -47,7 +47,7 @@ class _EventTimelineTileState extends State<EventTimelineTile> {
   static const int informationFlex = 85;
   static const int dateFlex = 10;
   static const int totalFlex = flagFlex + informationFlex + dateFlex;
-  static const double separatorWidth = 5;
+  static const double separatorWidth = 2;
 
   late bool isHover = widget.isSelected;
   final int widthEventScopeThreshold = 500;
