@@ -124,26 +124,26 @@ class TimelineFilterParams with ChangeNotifier {
 
   String encode() {
     //return base64Url.encode(utf8.encode(outputString));
-    return "${_topics.map((e) => e.toString()).join("«")}»${_scopes.map((e) => e.name).join("«")}»$_searchText";
+    return "${_topics.map((e) => e.asString).join("&")}_${_scopes.map((e) => e.asString).join("&")}_search=$_searchText";
   }
 
   factory TimelineFilterParams.decode(String hash) {
     //String base64decode = utf8.decode(base64Url.decode(hash));
     //Logger().d(base64decode);
-    List<String> split = hash.split("»");
+    List<String> split = hash.split("_");
     Set<EventScope> scopes = {};
     Set<Topic> topics = {};
     String searchText = "";
     try {
-      List<String> topicsString = split[0].split("«");
+      List<String> topicsString = split[0].split("&");
       topics = topicsString.map((e) => Topic.fromString(e)).toSet();
     } catch (_) {
       rethrow;
     }
     try {
-      List<String> scopesString = split[1].split("«");
+      List<String> scopesString = split[1].split("&");
       for (String entry in scopesString) {
-        EventScope? eventScope = eventScopefromString(entry);
+        EventScope? eventScope = decodeEventScopefromString(entry);
         if (eventScope != null) {
           scopes.add(eventScope);
         }
@@ -152,7 +152,7 @@ class TimelineFilterParams with ChangeNotifier {
       rethrow;
     }
     try {
-      searchText = split[2];
+      searchText = split[2].replaceFirst("search=", "");
     } catch (_) {
       rethrow;
     }

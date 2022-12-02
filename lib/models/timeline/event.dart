@@ -13,6 +13,30 @@ enum EventScope {
   world,
 }
 
+extension EventScopeExtension on EventScope {
+  String get asString {
+    switch (this) {
+      case EventScope.iscte:
+        return "?scope=$name";
+      case EventScope.portugal:
+        return "?scope=$name";
+      case EventScope.world:
+        return "?scope=$name";
+    }
+  }
+}
+
+EventScope? decodeEventScopefromString(String? input) {
+  try {
+    return EventScope.values.firstWhere((element) =>
+        element.name.toLowerCase() ==
+        input?.replaceFirst("?scope=", "").toLowerCase());
+  } on StateError {
+    Logger().e("Error on :$input");
+    return null;
+  }
+}
+
 EventScope? eventScopefromString(String? input) {
   try {
     return EventScope.values.firstWhere(

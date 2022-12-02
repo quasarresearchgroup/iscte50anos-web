@@ -156,9 +156,13 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)
                             ?.feedbackFormValidation;
-                      } else if (!RegExp(r"\S+[@]\S+\.\S+").hasMatch(value)) {
-                        //RegExp Explanation (checks for @ followed by any number of non whitespace character followed by a dot "." and then followed by any number of non whitespace characters)
+                        //} else if (!RegExp(r"\S+[@]\S+\.\S+").hasMatch(value)) {
                         //https://regex101.com/r/TZDJmb/1
+                      } else if (!RegExp(
+                              r"(([_A-Za-z0-9-]+)(\.[_A-Za-z0-9-]+)*|[\[\{\(]([_A-Za-z0-9-,;\/\|\s?]+)(\.[_A-Za-z0-9-,;\/\|\s?]+)*[\}\]\)])\s*@\s*[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*(\.[A-Za-z]{2,})")
+                          .hasMatch(value)) {
+                        //RegExp Explanation (checks for @ followed by any number of non whitespace character followed by a dot "." and then followed by any number of non whitespace characters)
+                        //https://regex101.com/r/pYrcfO/1
                         return AppLocalizations.of(context)
                             ?.feedbackFormEmailValidation;
                       }
@@ -181,26 +185,27 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ),
                   formSpacer,
                   TextFormField(
-                      textAlignVertical: TextAlignVertical.top,
-                      textAlign: TextAlign.start,
-                      maxLines: 5,
-                      style: base,
-                      textInputAction: TextInputAction.done,
-                      autovalidateMode: autovalidateMode,
-                      controller: descriptionFieldController,
-                      cursorColor: IscteTheme.iscteColor,
-                      decoration: InputDecoration(
-                          labelStyle: textstyle,
-                          labelText: AppLocalizations.of(context)
-                              ?.feedbackFormDescriptionField),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)
-                              ?.feedbackFormValidation;
-                        } else {
-                          return null;
-                        }
-                      }),
+                    textAlignVertical: TextAlignVertical.top,
+                    textAlign: TextAlign.start,
+                    maxLines: 5,
+                    style: base,
+                    textInputAction: TextInputAction.newline,
+                    autovalidateMode: autovalidateMode,
+                    controller: descriptionFieldController,
+                    cursorColor: IscteTheme.iscteColor,
+                    decoration: InputDecoration(
+                        labelStyle: textstyle,
+                        labelText: AppLocalizations.of(context)
+                            ?.feedbackFormDescriptionField),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)
+                            ?.feedbackFormValidation;
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
                 ],
               )),
         ),

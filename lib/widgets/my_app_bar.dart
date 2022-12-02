@@ -47,10 +47,9 @@ class _MyAppBarState extends State<MyAppBar> {
         ? Text(
             widget.title!,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(color: IscteTheme.iscteColor),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: IscteTheme.iscteColor,
+                ),
           )
         : widget.middle;
     Widget bar = !PlatformService.instance.isIos

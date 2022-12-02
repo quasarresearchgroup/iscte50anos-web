@@ -106,7 +106,7 @@ class TopicsFilterWidget extends StatelessWidget {
                 title: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
-                    data[index].title,
+                    data[index].title ?? "No Title",
                     style: textStyle,
                   ),
                 ),

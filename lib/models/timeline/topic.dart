@@ -3,35 +3,39 @@ import 'package:logger/logger.dart';
 class Topic {
   Topic({
     required this.id,
-    required this.title,
+    this.title,
   });
 
   final int id;
-  final String title;
+  final String? title;
 
   static Logger logger = Logger();
 
   @override
   String toString() {
-    return '$id|$title';
+    return 'Topic{id: $id, title: $title}';
   }
 
-  factory Topic.fromJson(Map<String, dynamic> json) => Topic(
-        id: json["id"],
-        title: json["title"],
-      );
+  String get asString {
+    return "topic=$id";
+  }
 
   factory Topic.fromString(String string) {
-    final List<String> split = string.split("|");
-    final int? id = int.tryParse(split[0]);
+    //final List<String> split = string.split(":");
+    //final int? id = int.tryParse(split[0]);
+    final int? id = int.tryParse(string.replaceFirst("topic=", ""));
     if (id == null) {
       throw const FormatException();
     }
     return Topic(
       id: id,
-      title: split[1],
+      //title: split[1],
     );
   }
+  factory Topic.fromJson(Map<String, dynamic> json) => Topic(
+        id: json["id"],
+        title: json["title"],
+      );
 
   Map<String, dynamic> toJson() {
     return {

@@ -166,7 +166,7 @@ class _TimelineFilterPageState extends State<TimelineFilterPage> {
             direction: Axis.horizontal,
             children: filterParams.getTopics
                 .map((Topic topic) => Chip(
-                      label: Text(topic.title),
+                      label: Text(topic.title ?? "No Title"),
                       onDeleted: () {
                         filterParams.removeTopic(topic);
                       },

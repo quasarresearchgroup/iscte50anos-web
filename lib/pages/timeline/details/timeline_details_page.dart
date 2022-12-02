@@ -64,7 +64,7 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                   "Details: ${snapshot.data!}",
                   style: Theme.of(context)
                       .textTheme
-                      .headline5
+                      .titleLarge
                       ?.copyWith(color: IscteTheme.iscteColor),
                 );
               } else {
@@ -72,7 +72,7 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                   "Details",
                   style: Theme.of(context)
                       .textTheme
-                      .headline5
+                      .titleLarge
                       ?.copyWith(color: IscteTheme.iscteColor),
                 );
               }
