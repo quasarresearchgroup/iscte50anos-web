@@ -22,8 +22,6 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   TimelineFilterParams? _selectedFilterParams;
 
   final Future<List<int>> yearsList = TimelineEventService.fetchYearsList();
-  /*final Future<List<Topic>> availableTopics =
-      TimelineTopicService.fetchAllTopics();*/
   final Future<List<EventScope>> availableScopes =
       Future(() => EventScope.values);
 
@@ -38,11 +36,6 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
     _selectedYear = year;
     notifyListeners();
   }
-
-  //void _handleFilterNavigation() {
-  //  _showFilterPage = true;
-  //  notifyListeners();
-  //}
 
   void _handleFilterSubmission(TimelineFilterParams filters, bool showResults) {
     Logger()

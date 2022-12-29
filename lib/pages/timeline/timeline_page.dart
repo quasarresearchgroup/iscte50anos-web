@@ -42,14 +42,14 @@ class TimelinePage extends StatefulWidget {
 
 class _TimelinePageState extends State<TimelinePage> {
   late ValueNotifier<bool> isDialOpen;
-  Future<List<Topic>> availableTopicsFuture =
-      TimelineTopicService.fetchAllTopics();
-  Future<List<EventScope>> availableScopesFuture =
-      Future(() => EventScope.values);
+  late Future<List<Topic>> availableTopicsFuture;
+  late Future<List<EventScope>> availableScopesFuture;
 
   @override
   void initState() {
     super.initState();
+    availableTopicsFuture = TimelineTopicService.fetchAllTopics();
+    availableScopesFuture = Future(() => EventScope.values);
     isDialOpen = ValueNotifier<bool>(false);
   }
 
@@ -87,19 +87,17 @@ class _TimelinePageState extends State<TimelinePage> {
             }),
         trailing: Hero(
           tag: "searchIcon",
-          child: (!PlatformService.instance.isIos)
-              ? Builder(builder: (context) {
-                  return IconButton(
+          child: Builder(builder: (context) {
+            return (!PlatformService.instance.isIos)
+                ? IconButton(
                     onPressed: Scaffold.of(context).openEndDrawer,
                     icon: const Icon(Icons.search),
-                  );
-                })
-              : Builder(builder: (context) {
-                  return CupertinoButton(
+                  )
+                : CupertinoButton(
                     onPressed: Scaffold.of(context).openEndDrawer,
                     child: const Icon(CupertinoIcons.search),
                   );
-                }),
+          }),
         ),
       ),
       endDrawer: Drawer(

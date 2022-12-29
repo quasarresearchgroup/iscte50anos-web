@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:iscte_spots/helper/constants.dart';
-import 'package:iscte_spots/models/feedback_form_result.dart';
+import 'package:iscte_spots/models/timeline/feedback_form_result.dart';
 import 'package:logger/logger.dart';
 
 class FeedbackService {

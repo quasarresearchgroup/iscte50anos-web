@@ -32,6 +32,8 @@ class TimelineFilterResultsPage extends StatefulWidget {
 
 class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
   late Future<List<Event>> filteredEvents;
+  late Future<List<int>> filteredYears;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +61,8 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
         return value;
       }
     });
+    filteredYears = filteredEvents
+        .then((value) => value.map((e) => e.dateTime.year).toSet().toList());
   }
 
   @override
@@ -76,10 +80,7 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
                 return const Center(child: Text("No results"));
               } else {
                 return TimeLineBodyBuilder(
-                  yearsList: Future(() => snapshot.data!
-                      .map((e) => e.dateTime.year)
-                      .toSet()
-                      .toList()),
+                  yearsList: filteredYears,
                   filteredEvents: snapshot.data!,
                   selectedYear: snapshot.data!.last.dateTime.year,
                   handleEventSelection: widget.handleEventSelection,
