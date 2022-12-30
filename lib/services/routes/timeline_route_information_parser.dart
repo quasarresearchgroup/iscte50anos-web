@@ -18,9 +18,9 @@ class TimelineRouteInformationParser
     _logger.d(
         "parseRouteInformation\nuri:$uri\n${uri.pathSegments}\n${uri.pathSegments.length}");
 
-    if (uri.pathSegments.length == 2) {
+    // Handle '/timeline/:year'
+    if (uri.pathSegments.length == 1) {
       if (uri.pathSegments[0] == TimelinePage.pageRoute) {
-        // Handle '/timeline/:year'
         if (int.tryParse(uri.pathSegments[1]) != null) {
           String remaining = uri.pathSegments[1];
           int? timelineYear = int.tryParse(remaining);
@@ -30,11 +30,10 @@ class TimelineRouteInformationParser
         }
       }
     }
-    // Handle '/timeline/filter/:params/result'
-    if (uri.pathSegments.length == 4 &&
-        uri.pathSegments[0] == TimelinePage.pageRoute &&
-        uri.pathSegments[1] == TimelineFilterPage.pageRoute &&
-        uri.pathSegments[3] == "results") {
+    // Handle '/filter/:params/result'
+    if (uri.pathSegments.length == 3 &&
+        uri.pathSegments[0] == TimelineFilterPage.pageRoute &&
+        uri.pathSegments[2] == "results") {
       try {
         TimelineFilterParams timelineFilterParams =
             TimelineFilterParams.decode(uri.pathSegments[2]);
@@ -72,10 +71,9 @@ class TimelineRouteInformationParser
     //}
     //}
 
-    // Handle '/timeline/event/:id'
-    if (uri.pathSegments.length == 3 &&
-        uri.pathSegments[0] == TimelinePage.pageRoute &&
-        uri.pathSegments[1] == TimeLineDetailsPage.pageRoute) {
+    // Handle '/event/:id'
+    if (uri.pathSegments.length == 2 &&
+        uri.pathSegments[0] == TimeLineDetailsPage.pageRoute) {
       String remaining = uri.pathSegments[2];
       int? id = int.tryParse(remaining);
       if (id == null) return TimelineRoute.unknown();
@@ -92,16 +90,15 @@ class TimelineRouteInformationParser
     if (configuration.isUnknown) {
       location = '/404';
     } else if (configuration.isHomePage) {
-      location = '/${TimelinePage.pageRoute}/${configuration.timelineYear}';
+      location = '/${configuration.timelineYear}';
     } else if (configuration.isDetailsPage) {
-      location =
-          '/${TimelinePage.pageRoute}/${TimeLineDetailsPage.pageRoute}/${configuration.event_id}';
+      location = '/${TimeLineDetailsPage.pageRoute}/${configuration.event_id}';
       //} else if (configuration.isFilterPage) {
       //  location =
       //      '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}';
     } else if (configuration.isFilterResultPage) {
       location =
-          '/${TimelinePage.pageRoute}/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}/results';
+          '/${TimelineFilterPage.pageRoute}/${(configuration.filterParams?.encode()) ?? ""}/results';
     } else {
       return null;
     }

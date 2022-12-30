@@ -3,12 +3,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/services/routes/timeline_route_information_parser.dart';
 import 'package:iscte_spots/services/routes/timeline_router_delegate.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 const int puzzlePageIndex = 0;
 const int qrPageIndex = 1;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
   ErrorWidget.builder = (details) => Scaffold(
         body: Center(
           child: Column(
