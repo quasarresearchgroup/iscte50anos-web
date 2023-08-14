@@ -3,19 +3,18 @@ import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/pages/timeline/details/timeline_details_page.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 import 'package:iscte_spots/services/routes/timeline_route.dart';
-import 'package:logger/logger.dart';
 
 class TimelineRouteInformationParser
     extends RouteInformationParser<TimelineRoute> {
-  final Logger _logger = Logger();
   final int defaultYear = 1972;
 
   @override
   Future<TimelineRoute> parseRouteInformation(
       RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location ?? "");
-    _logger.d(
+    LoggerService.instance.debug(
         "parseRouteInformation\nuri:$uri\n${uri.pathSegments}\n${uri.pathSegments.length}");
 
     // Handle '/timeline/:year'
@@ -24,7 +23,7 @@ class TimelineRouteInformationParser
         if (int.tryParse(uri.pathSegments[1]) != null) {
           String remaining = uri.pathSegments[1];
           int? timelineYear = int.tryParse(remaining);
-          Logger().d(timelineYear);
+          LoggerService.instance.debug(timelineYear);
 
           return TimelineRoute.home(year: timelineYear ?? defaultYear);
         }
@@ -40,8 +39,8 @@ class TimelineRouteInformationParser
         return TimelineRoute.filterResult(
           filterParams: timelineFilterParams,
         );
-      } catch (e, stacktrace) {
-        _logger.e(e);
+      } catch (e) {
+        LoggerService.instance.error(e);
         return TimelineRoute.home(year: defaultYear);
       }
     }
@@ -102,7 +101,7 @@ class TimelineRouteInformationParser
     } else {
       return null;
     }
-    _logger.d(location);
+    LoggerService.instance.debug(location);
     return RouteInformation(location: location);
   }
 }

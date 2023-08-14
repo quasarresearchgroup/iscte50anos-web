@@ -12,8 +12,10 @@ import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/network/error.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:logger/logger.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import '../../../services/logging/LoggerService.dart';
+import '../../../widgets/dynamic_widgets/dynamic_loading_widget.dart';
 
 class TimeLineDetailsPage extends StatefulWidget {
   const TimeLineDetailsPage({
@@ -30,7 +32,6 @@ class TimeLineDetailsPage extends StatefulWidget {
 
 class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
   final double textweight = 2;
-  final Logger _logger = Logger();
   late final Future<Event> event;
   late final Future<String> eventTitle;
   final List<YoutubePlayerController> _videoControllers = [];
@@ -107,7 +108,7 @@ class _TimeLineDetailsPageState extends State<TimeLineDetailsPage> {
                         }
                       }
 
-                      _logger.d(
+                      LoggerService.instance.debug(
                           "event: $snapshotEvent\ndata:${snapshot.data!}\nlistContents: $listContents\ngridContents: $gridContents");
                       double mediaQuerryWidth =
                           MediaQuery.of(context).size.width;
@@ -204,12 +205,11 @@ class TimelineDetailListContent extends StatelessWidget {
 
   final bool isEven;
   final Content content;
-  final Logger _logger = Logger();
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        _logger.d("Tapped $content");
+        LoggerService.instance.debug("Tapped $content");
         if (content.link.isNotEmpty) {
           HelperMethods.launchURL(content.link);
         }
@@ -218,7 +218,7 @@ class TimelineDetailListContent extends StatelessWidget {
       tileColor: !isEven ? IscteTheme.greyColor : Colors.transparent,
       leading: content.contentIcon,
       trailing: content.validated != null && content.validated!
-          ? Icon(Icons.check_box)
+          ? const Icon(Icons.check_box)
           : null,
       title: Text(
           content.title != null
@@ -233,7 +233,7 @@ class TimelineDetailListContent extends StatelessWidget {
 }
 
 class TimelineDetailGridContent extends StatefulWidget {
-  TimelineDetailGridContent({
+  const TimelineDetailGridContent({
     Key? key,
     required this.content,
     required this.isEven,
@@ -251,9 +251,9 @@ class TimelineDetailGridContent extends StatefulWidget {
 }
 
 class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
-  final Logger _logger = Logger();
-  Widget? child;
-  late YoutubePlayerController controller;
+  late final YoutubePlayerController controller;
+  late final Widget child;
+
   @override
   void initState() {
     super.initState();
@@ -266,9 +266,9 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
           showFullscreenButton: true,
           loop: false,
         ),
-      )..onInit = () {
-          controller.loadVideo(widget.content.link);
-        };
+      );
+      controller.loadVideo(widget.content.link);
+
       widget.addVideoControllerCallback(controller);
 
       child = YoutubePlayer(
@@ -288,7 +288,7 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
                 fadeInDuration: const Duration(seconds: 3),
                 progressIndicatorBuilder: (BuildContext context, String url,
                         DownloadProgress progress) =>
-                    const LoadingWidget(),
+                    const DynamicLoadingWidget(),
               );
             } else if (snapshot.hasError) {
               return NetworkError(onRefresh: () {});
@@ -297,7 +297,14 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
             }
           });
     } else {
-      child = null;
+      child = CachedNetworkImage(
+        imageUrl: widget.content.link,
+        fadeOutDuration: const Duration(seconds: 1),
+        fadeInDuration: const Duration(seconds: 3),
+        progressIndicatorBuilder:
+            (BuildContext context, String url, DownloadProgress progress) =>
+                const DynamicLoadingWidget(),
+      );
     }
   }
 
@@ -322,7 +329,7 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
           ListTile(
             onTap: widget.content.link.isNotEmpty
                 ? () {
-                    _logger.d("Tapped ${widget.content}");
+                    LoggerService.instance.debug("Tapped ${widget.content}");
                     HelperMethods.launchURL(widget.content.link);
                   }
                 : null,
@@ -338,10 +345,10 @@ class _TimelineDetailGridContentState extends State<TimelineDetailGridContent> {
             leading: widget.content.contentIcon,
             trailing:
                 widget.content.validated != null && widget.content.validated!
-                    ? Icon(Icons.check_box)
+                    ? const Icon(Icons.check_box)
                     : null,
           ),
-          if (child != null) Expanded(child: child!),
+          Expanded(child: child),
         ],
       ),
     );

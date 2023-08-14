@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/topic.dart';
-import 'package:logger/logger.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 
 class TimelineFilterParams with ChangeNotifier {
   TimelineFilterParams({
@@ -14,7 +14,6 @@ class TimelineFilterParams with ChangeNotifier {
         _scopes = scopes ?? {},
         _searchText = searchText;
 
-  final Logger _logger = Logger();
 
   Set<Topic> _topics;
   Set<EventScope> _scopes;
@@ -24,7 +23,7 @@ class TimelineFilterParams with ChangeNotifier {
   set searchText(String value) {
     _searchText = value;
     notifyListeners();
-    _logger.i(this);
+    LoggerService.instance.info(this);
   }
 
   //region Topics
@@ -32,7 +31,7 @@ class TimelineFilterParams with ChangeNotifier {
   set topics(Set<Topic> value) {
     _topics = value;
     notifyListeners();
-    _logger.i(this);
+    LoggerService.instance.info(this);
   }
 
   bool isTopicsEmpty() => _topics.isEmpty;
@@ -40,26 +39,26 @@ class TimelineFilterParams with ChangeNotifier {
   void addTopic(Topic topic) {
     _topics.add(topic);
     notifyListeners();
-    _logger.i(this);
+    LoggerService.instance.info(this);
   }
 
   void removeTopic(Topic topic) {
     _topics.remove(topic);
     notifyListeners();
-    _logger.i(this);
+    LoggerService.instance.info(this);
   }
 
   void clearTopics() {
     _topics.clear();
     notifyListeners();
-    _logger.i(this);
+    LoggerService.instance.info(this);
   }
 
   bool containsTopic(Topic topic) => _topics.contains(topic);
 
   void addAllTopic(Iterable<Topic> iterableTopics) {
     _topics.addAll(iterableTopics);
-    _logger.i(this);
+    LoggerService.instance.info(this);
     notifyListeners();
   }
   //endregion
@@ -70,7 +69,7 @@ class TimelineFilterParams with ChangeNotifier {
 
   set scopes(Set<EventScope> value) {
     _scopes = value;
-    _logger.i(this);
+    LoggerService.instance.info(this);
     notifyListeners();
   }
 
@@ -78,19 +77,19 @@ class TimelineFilterParams with ChangeNotifier {
 
   void addScope(EventScope scope) {
     _scopes.add(scope);
-    _logger.i(this);
+    LoggerService.instance.info(this);
     notifyListeners();
   }
 
   void removeScope(EventScope scope) {
     _scopes.remove(scope);
-    _logger.i(this);
+    LoggerService.instance.info(this);
     notifyListeners();
   }
 
   void clearScopes() {
     _scopes.clear();
-    _logger.i(this);
+    LoggerService.instance.info(this);
     notifyListeners();
   }
 
@@ -98,7 +97,7 @@ class TimelineFilterParams with ChangeNotifier {
 
   void addAllScope(Iterable<EventScope> iterableScopes) {
     _scopes.addAll(iterableScopes);
-    _logger.i(this);
+    LoggerService.instance.info(this);
     notifyListeners();
   }
 
@@ -118,7 +117,7 @@ class TimelineFilterParams with ChangeNotifier {
       "scopes": json.encode(_scopes.map((e) => e.name).toList()),
       "searchText": json.encode(_searchText),
     };
-    _logger.d("map\n$map");
+    LoggerService.instance.debug("map\n$map");
     return map;
   }
 

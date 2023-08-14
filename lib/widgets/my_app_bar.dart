@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
-import 'package:logger/logger.dart';
 
 class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   MyAppBar({
@@ -16,7 +15,6 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
     this.roundedCorners = false,
     this.automaticallyImplyLeading = false,
   }) : super(key: key);
-  final Logger _logger = Logger();
 
   final Widget? trailing;
   final String? title;

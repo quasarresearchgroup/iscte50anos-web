@@ -6,8 +6,8 @@ import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/events/events_timeline_listview.dart';
 import 'package:iscte_spots/pages/timeline/list_view/intents.dart';
 import 'package:iscte_spots/pages/timeline/list_view/year_timeline__listview.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:logger/logger.dart';
 
 class TimeLineBodyBuilder extends StatefulWidget {
   const TimeLineBodyBuilder({
@@ -133,12 +133,12 @@ class _TimelineBodyState extends State<TimelineBody> {
       widget
           .stateHandleYearSelection(widget.yearsList[selectedYearIndex.value!]);
     }
-    Logger().i(
+    LoggerService.instance.info(
         "selectedEventIndex: ${selectedEventIndex.value} ; selectedYearIndex: ${selectedYearIndex.value}");
   }
 
   void changeSelectedEvent(bool increase) {
-    Logger().i(
+    LoggerService.instance.info(
         "increase: $increase ; widget.filteredEvents?.length ${widget.filteredEvents}");
 
     int index = selectedEventIndex.value != null
@@ -187,25 +187,25 @@ class _TimelineBodyState extends State<TimelineBody> {
         actions: <Type, Action<Intent>>{
           IncrementYearsIntent: CallbackAction<IncrementYearsIntent>(
             onInvoke: (IncrementYearsIntent intent) {
-              Logger().i("IncrementYearsIntent");
+              LoggerService.instance.info("IncrementYearsIntent");
               changeSelectedYear(true);
             },
           ),
           DecrementYearsIntent: CallbackAction<DecrementYearsIntent>(
             onInvoke: (DecrementYearsIntent intent) {
-              Logger().i("DecrementYearsIntent");
+              LoggerService.instance.info("DecrementYearsIntent");
               changeSelectedYear(false);
             },
           ),
           IncrementEventsIntent: CallbackAction<IncrementEventsIntent>(
             onInvoke: (IncrementEventsIntent intent) {
-              Logger().i("IncrementEventsIntent");
+              LoggerService.instance.info("IncrementEventsIntent");
               changeSelectedEvent(true);
             },
           ),
           DecrementEventsIntent: CallbackAction<DecrementEventsIntent>(
             onInvoke: (DecrementEventsIntent intent) {
-              Logger().i("DecrementEventsIntent");
+              LoggerService.instance.info("DecrementEventsIntent");
               changeSelectedEvent(false);
             },
           ),

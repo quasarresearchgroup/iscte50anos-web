@@ -10,7 +10,6 @@ import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_field.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
-import 'package:logger/logger.dart';
 
 class TimelineFilterPage extends StatefulWidget {
   TimelineFilterPage({
@@ -26,7 +25,6 @@ class TimelineFilterPage extends StatefulWidget {
 
   static const String pageRoute = "filter";
   static const ValueKey pageKey = ValueKey(pageRoute);
-  final Logger _logger = Logger();
 
   final void Function(int) handleEventSelection;
   final void Function(int) handleYearSelection;

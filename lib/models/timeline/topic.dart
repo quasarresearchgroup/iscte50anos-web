@@ -1,5 +1,3 @@
-import 'package:logger/logger.dart';
-
 class Topic {
   Topic({
     required this.id,
@@ -8,8 +6,6 @@ class Topic {
 
   final int id;
   final String? title;
-
-  static Logger logger = Logger();
 
   @override
   String toString() {

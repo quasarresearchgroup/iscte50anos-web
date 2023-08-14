@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/feedback_form_result.dart';
 import 'package:iscte_spots/services/feedback_service.dart';
+import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_snackbar.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_text_button.dart';
 import 'package:iscte_spots/widgets/util/iscte_theme.dart';
 
@@ -62,19 +63,19 @@ class _FeedbackFormState extends State<FeedbackForm> {
           feedbackFormResult: feedbackresult);
 
       if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
+      Navigator.of(context).pop();
+      DynamicSnackBar.showSnackBar(
+        context,
         sendFeedbackSuccess
-            ? SnackBar(
-                content: Text(AppLocalizations.of(context)!
-                    .feedbackFormSubmissionSuccess),
-                backgroundColor: IscteTheme.iscteColor,
+            ? Text(
+                AppLocalizations.of(context)!.feedbackFormSubmissionSuccess,
+                style: const TextStyle(color: IscteTheme.iscteColor),
               )
-            : SnackBar(
-                content: Text(
-                    AppLocalizations.of(context)!.feedbackFormSubmissionError),
-                backgroundColor: Theme.of(context).errorColor,
+            : Text(
+                AppLocalizations.of(context)!.feedbackFormSubmissionError,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
+        const Duration(seconds: 2),
       );
       Navigator.of(context).pop();
     }

@@ -20,16 +20,17 @@ class YearTimelineTile extends StatefulWidget {
   final bool isSelected;
   final bool isHover;
 
-  @override
-  State<YearTimelineTile> createState() => _YearTimelineTileState();
-}
-
-class _YearTimelineTileState extends State<YearTimelineTile> {
   final double textFontSize = 20.0;
   final double minWidth2 = 90;
   final double radius = 15;
   //final Color color2 = Colors.white.withOpacity(0.3);
   final double timelineIconOffset = 0.7;
+
+  @override
+  State<YearTimelineTile> createState() => _YearTimelineTileState();
+}
+
+class _YearTimelineTileState extends State<YearTimelineTile> {
   late bool isHover = widget.isHover;
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class _YearTimelineTileState extends State<YearTimelineTile> {
           ),
           color: widget.isHover || isHover ? IscteTheme.iscteColorSmooth : null,
           child: Container(
-            constraints: BoxConstraints(minWidth: minWidth2),
+            constraints: BoxConstraints(minWidth: widget.minWidth2),
             child: Center(
               child: Text(
                 widget.year.toString(),

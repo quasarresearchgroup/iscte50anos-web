@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/pages/timeline/events/timeline_tile.dart';
 import 'package:iscte_spots/pages/timeline/web_scroll_behaviour.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:logger/logger.dart';
 
 class EventTimelineListViewBuilder extends StatefulWidget {
   const EventTimelineListViewBuilder({
@@ -52,7 +52,7 @@ class _EventTimelineListViewBuilderState
         newList.last.add(item);
       }
     }
-    Logger().d(newList.map((e) => e.map((e) => e.scope)).toList());
+    LoggerService.instance.debug(newList.map((e) => e.map((e) => e.scope)).toList());
     List<int> result = [];
     for (List<Event> innerList in newList) {
       for (int i = 0; i < innerList.length; i++) {

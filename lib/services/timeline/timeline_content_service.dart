@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:iscte_spots/helper/constants.dart';
 import 'package:iscte_spots/models/timeline/content.dart';
-import 'package:logger/logger.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
+
 
 class TimelineContentService {
-  static final Logger _logger = Logger();
-
   static Future<List<Content>> fetchContents({required int eventId}) async {
     String uri = '${BackEndConstants.API_ADDRESS}/api/events/$eventId/contents';
     http.Response response =
@@ -15,11 +14,11 @@ class TimelineContentService {
       'content-type': 'application/json',
     });
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
-    _logger.d("$uri\n$decodedResponse");
+    LoggerService.instance.debug("$uri\n$decodedResponse");
     // return response.statusCode;
     List<Content> eventsList = [];
     for (var entry in decodedResponse) {
-      eventsList.add(Content.fromMap(entry));
+      eventsList.add(Content.fromJson(entry));
     }
     return eventsList;
   }
@@ -32,11 +31,11 @@ class TimelineContentService {
         });
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
 
-    _logger.d(decodedResponse);
+    LoggerService.instance.debug(decodedResponse);
     // return response.statusCode;
     List<Content> eventsList = [];
     for (var entry in decodedResponse) {
-      eventsList.add(Content.fromMap(entry));
+      eventsList.add(Content.fromJson(entry));
     }
     return eventsList;
   }
@@ -51,11 +50,11 @@ class TimelineContentService {
         });
     var decodedResponse = await jsonDecode(utf8.decode(response.bodyBytes));
 
-    _logger.d(decodedResponse);
+    LoggerService.instance.debug(decodedResponse);
     // return response.statusCode;
     List<Content> eventsList = [];
     for (var entry in decodedResponse) {
-      eventsList.add(Content.fromMap(entry));
+      eventsList.add(Content.fromJson(entry));
     }
     return eventsList;
   }

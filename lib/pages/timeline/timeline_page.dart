@@ -11,7 +11,6 @@ import 'package:iscte_spots/services/platform_service.dart';
 import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:logger/logger.dart';
 
 class TimelinePage extends StatefulWidget {
   TimelinePage({
@@ -24,7 +23,6 @@ class TimelinePage extends StatefulWidget {
     required this.filteredEvents,
     required this.handleFilterSubmission,
   }) : super(key: key);
-  final Logger _logger = Logger();
   final Function(int) handleEventSelection;
   final Function(int) handleYearSelection;
   //final Function() handleFilterNavigation;
@@ -79,8 +77,6 @@ class _TimelinePageState extends State<TimelinePage> {
                   } else {
                     return LoadingWidget();
                   }
-
-                  break;
                 default:
                   return LoadingWidget();
               }

@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:logger/logger.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 
 Future<void> showNetworkErrorOverlay(
-    BuildContext context, Logger logger) async {
-  logger.i("Inserted Network error overlay");
+    BuildContext context) async {
+  LoggerService.instance.info("Inserted Network error overlay");
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       backgroundColor: Theme.of(context).errorColor,
@@ -23,12 +23,11 @@ Future<void> showNetworkErrorOverlay(
       ),
     ),
   );
-  logger.i("Removed Network error overlay");
+  LoggerService.instance.info("Removed Network error overlay");
 }
 
 Future<void> showHelpOverlay(
     BuildContext context, Widget image, Orientation orientation) async {
-  Logger _logger = Logger();
 
   OverlayState? overlayState = Overlay.of(context);
   OverlayEntry overlayEntry = OverlayEntry(
@@ -51,9 +50,9 @@ Future<void> showHelpOverlay(
     maintainState: true,
     opaque: false,
   );
-  overlayState?.insert(overlayEntry);
-  _logger.d("Inserted Help overlay");
+  overlayState.insert(overlayEntry);
+  LoggerService.instance.debug("Inserted Help overlay");
   await Future.delayed(const Duration(seconds: 2));
   overlayEntry.remove();
-  _logger.d("Removed Help overlay");
+  LoggerService.instance.debug("Removed Help overlay");
 }

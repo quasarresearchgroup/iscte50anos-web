@@ -6,7 +6,7 @@ class DynamicTextButton extends StatelessWidget {
   const DynamicTextButton({
     Key? key,
     required this.child,
-    required this.onPressed,
+    this.onPressed,
     this.style,
   }) : super(key: key);
   final Widget child;

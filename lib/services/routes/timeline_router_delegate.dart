@@ -6,10 +6,10 @@ import 'package:iscte_spots/pages/timeline/details/timeline_details_page.dart';
 import 'package:iscte_spots/pages/timeline/filter/timeline_filter_results_page.dart';
 import 'package:iscte_spots/pages/timeline/timeline_page.dart';
 import 'package:iscte_spots/pages/unknown_page.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 import 'package:iscte_spots/services/routes/timeline_route.dart';
 import 'package:iscte_spots/services/timeline/timeline_event_service.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:logger/logger.dart';
 
 class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<TimelineRoute> {
@@ -25,8 +25,6 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   final Future<List<EventScope>> availableScopes =
       Future(() => EventScope.values);
 
-  final Logger _logger = Logger();
-
   void _handleEventSelection(int event) {
     _selectedEventId = event;
     notifyListeners();
@@ -38,8 +36,8 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   }
 
   void _handleFilterSubmission(TimelineFilterParams filters, bool showResults) {
-    Logger()
-        .d("handledFilterSubmission with $filters ; showResults: $showResults");
+    LoggerService.instance.debug(
+        "handledFilterSubmission with $filters ; showResults: $showResults");
     if (showResults) {
       //  _showFilterPage = false;
       _showFilterPageResult = true;
@@ -49,8 +47,7 @@ class TimelineRouterDelegate extends RouterDelegate<TimelineRoute>
   }
 
   String _logAll() {
-    //return 'TimelineRouterDelegate{show404: $show404, _selectedEventId: $_selectedEventId, _selectedYear: $_selectedYear, _showFilterPage: $_showFilterPage, _showFilterPageResult: $_showFilterPageResult, _selectedFilterParams: $_selectedFilterParams, yearsList: $yearsList, _logger: $_logger}';
-    return 'TimelineRouterDelegate{show404: $show404, _selectedEventId: $_selectedEventId, _selectedYear: $_selectedYear, _showFilterPageResult: $_showFilterPageResult, _selectedFilterParams: $_selectedFilterParams, yearsList: $yearsList, _logger: $_logger}';
+    return 'TimelineRouterDelegate{show404: $show404, _selectedEventId: $_selectedEventId, _selectedYear: $_selectedYear, _showFilterPageResult: $_showFilterPageResult, _selectedFilterParams: $_selectedFilterParams, yearsList: $yearsList}';
   }
 
   @override

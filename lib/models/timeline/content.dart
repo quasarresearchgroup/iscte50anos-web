@@ -1,5 +1,4 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:logger/logger.dart';
 
 enum ContentType {
   doc,
@@ -35,14 +34,13 @@ class Content {
   final int? eventId;
   final bool? validated;
 
-  static Logger _logger = Logger();
 
   @override
   String toString() {
     return 'Content{id: $id, title: $title, link: $link, type: $type, eventId: $eventId, validated: $validated}';
   }
 
-  factory Content.fromMap(Map<String, dynamic> json) => Content(
+  factory Content.fromJson(Map<String, dynamic> json) => Content(
         id: json["id"],
         title: json["title"],
         link: json["link"],
@@ -51,7 +49,7 @@ class Content {
         validated: json["validated"],
       );
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "title": title,

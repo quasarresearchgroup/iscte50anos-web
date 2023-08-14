@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iscte_spots/models/timeline/event.dart';
 import 'package:iscte_spots/models/timeline/timeline_filter_params.dart';
 import 'package:iscte_spots/pages/timeline/timeline_body.dart';
+import 'package:iscte_spots/services/logging/LoggerService.dart';
 import 'package:iscte_spots/services/timeline/timeline_topic_service.dart';
 import 'package:iscte_spots/widgets/dynamic_widgets/dynamic_back_button.dart';
 import 'package:iscte_spots/widgets/my_app_bar.dart';
 import 'package:iscte_spots/widgets/util/loading.dart';
-import 'package:logger/logger.dart';
 
 class TimelineFilterResultsPage extends StatefulWidget {
   TimelineFilterResultsPage({
@@ -23,7 +23,6 @@ class TimelineFilterResultsPage extends StatefulWidget {
   final void Function(int) handleYearSelection;
   static const String pageRoute = "results";
   static const ValueKey pageKey = ValueKey(pageRoute);
-  final Logger _logger = Logger();
 
   @override
   State<TimelineFilterResultsPage> createState() =>
@@ -47,7 +46,7 @@ class _TimelineFilterResultsPageState extends State<TimelineFilterResultsPage> {
         scopes:
             widget.timelineFilterParams.getScopes.map((e) => e.name).toList());
     filteredEvents = setOfEvents.then((value) {
-      widget._logger.d("events from topics: $setOfEvents");
+      LoggerService.instance.debug("events from topics: $setOfEvents");
       String textSearchBar =
           widget.timelineFilterParams.searchText.toLowerCase();
 
