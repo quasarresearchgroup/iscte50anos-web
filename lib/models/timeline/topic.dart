@@ -1,3 +1,4 @@
+
 class Topic {
   Topic({
     required this.id,
